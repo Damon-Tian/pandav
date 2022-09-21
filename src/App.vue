@@ -1,32 +1,15 @@
 <template>
   <div id="app">
-    <!-- <dv-full-screen-container class="main-container"> -->
-    <div class="main-container">
-      <top-nav />
-      <left-bar />
-      <div class="right-block">
-        <div>12</div>
-        <camera />
-      </div>
-      <router-view />
-    </div>
-    <!-- </dv-full-screen-container> -->
+    <default-layout />
   </div>
 </template>
 
 <script>
-import topNav from "@/components/nav";
-import leftBar from "@/components/leftBar";
-import camera from "@/components/camera.vue";
+import defaultLayout from "@/layout/default"
 
 export default {
-  components: {
-    topNav,
-    leftBar,
-    camera
-  },
-  beforeMount() {}
-};
+  components: { defaultLayout }
+}
 </script>
 
 <style lang="less">

@@ -38,6 +38,7 @@ export default {
   width: 620px;
   height: 932px;
   transition: all 0.5s;
+  position: relative;
 
   &.camera-collapse {
     width: 200px;
@@ -45,7 +46,7 @@ export default {
   .narrow-icon {
     position: absolute;
     top: 45%;
-    left: 7px;
+    left: -12px;
     cursor: pointer;
     transition: all 0.5s ease;
 
