@@ -4,6 +4,7 @@ import router from "./router"
 // import VueRouter from "vue-router";
 import dataV from "@jiaminghi/data-view"
 import "./assets/css/base.css"
+import "reset-css"
 
 import { Menu, MenuItem, Scrollbar } from "element-ui"
 import "element-ui/lib/theme-chalk/index.css"
