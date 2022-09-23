@@ -36,58 +36,59 @@ export default {
     return {
       isCollapse: false,
       activeNav: "首页",
+      currentTab: 1,
       navs: [
         {
           name: "首页",
-          id: "1",
+          id: 1,
           icon: require("@/assets/img/p-leftbar-home.png"),
           iconActive: require("@/assets/img/p-leftbar-home-active.png")
         },
         {
           name: "生态环境",
-          id: "2",
+          id: 2,
           icon: require("@/assets/img/p-leftbar-env.png"),
           iconActive: require("@/assets/img/p-leftbar-env-active.png")
         },
         {
           name: "自然资源",
-          id: "3",
+          id: 3,
           icon: require("@/assets/img/p-leftbar-resource.png"),
           iconActive: require("@/assets/img/p-leftbar-resource-active.png")
         },
         {
           name: "基层站点",
-          id: "4",
+          id: 4,
           icon: require("@/assets/img/p-leftbar-basic-port.png"),
           iconActive: require("@/assets/img/p-leftbar-basic-port-active.png")
         },
         {
           name: "设备管理",
-          id: "5",
+          id: 5,
           icon: require("@/assets/img/p-leftbar-equipment.png"),
           iconActive: require("@/assets/img/p-leftbar-equipment-active.png")
         },
         {
           name: "巡护管理",
-          id: "6",
+          id: 6,
           icon: require("@/assets/img/p-leftbar-round.png"),
           iconActive: require("@/assets/img/p-leftbar-round-active.png")
         },
         {
           name: "电子围栏",
-          id: "7",
+          id: 7,
           icon: require("@/assets/img/p-leftbar-electron.png"),
           iconActive: require("@/assets/img/p-leftbar-electron-active.png")
         },
         {
           name: "社区管理",
-          id: "8",
+          id: 8,
           icon: require("@/assets/img/p-leftbar-house.png")
           // iconActive: require("@/assets/img/p-leftbar-house-active.png")
         },
         {
           name: "基础设施",
-          id: "9",
+          id: 9,
           icon: require("@/assets/img/p-leftbar-basic-equip.png")
           // iconActive: require("@/assets/img/p-leftbar-basic-equip-active.png")
         }
@@ -97,6 +98,12 @@ export default {
   methods: {
     selectMenu(i) {
       this.activeNav = i;
+      this.navs.map(item=>{
+        if(this.activeNav===item.name){
+          this.currentTab = item.id
+        }
+      })
+      this.$emit('select-menu',this.currentTab)
     },
     narrowClick() {
       this.isCollapse = !this.isCollapse;

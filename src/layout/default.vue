@@ -1,9 +1,9 @@
 <template>
   <div class="main-container">
     <top-nav />
-    <left-bar />
+    <left-bar @select-menu="selectMenu"/>
     <div class="right-block">
-      <right-info />
+      <right-info :currentTab="currentTab"/>
       <camera />
     </div>
     <router-view />
@@ -22,6 +22,16 @@ export default {
     leftBar,
     camera,
     rightInfo
+  },
+  data() {
+    return {
+      currentTab: 1,
+    }
+  },
+  methods: {
+    selectMenu(i) {
+      this.currentTab = i;
+    },
   }
 }
 </script>
