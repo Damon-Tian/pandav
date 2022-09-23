@@ -1,6 +1,9 @@
 <template>
   <div class="p-info-block">
-    <div class="info-block__title" v-if="title">{{ title }}</div>
+    <div class="info-block__title">
+      <div class="info-block__title__left" v-if="title">{{ title }}</div>
+      <slot class="info-block__title__right" name="titleRight"></slot>
+    </div>
     <slot />
   </div>
 </template>
@@ -25,6 +28,8 @@ export default {
     font-size: 18px;
     color: white;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between   ;
   }
 }
 

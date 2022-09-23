@@ -4,6 +4,7 @@
     <environment v-else-if="currentTab === 2" />
     <resource v-else-if="currentTab === 3" />
     <basic-port v-else-if="currentTab === 4" />
+    <equipment-management v-else-if="currentTab === 5"/>
   </div>
 </template>
 
@@ -12,11 +13,12 @@ import homeInfo from "./pageInfo/home"
 import environment from "./pageInfo/environment"
 import resource from "./pageInfo/resource"
 import basicPort from "./pageInfo/basicPort"
+import equipmentManagement from './pageInfo/equipmentManagement.vue'
 export default {
-  components: { homeInfo, environment, resource, basicPort },
+  components: { homeInfo, environment, resource, basicPort, equipmentManagement },
   data() {
     return {
-      currentTab: 4
+      currentTab: 5
     }
   }
 }
