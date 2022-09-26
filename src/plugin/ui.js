@@ -9,6 +9,8 @@ import {
   Table,
   TableColumn
 } from "element-ui"
+import InfoBlock from "@/components/pageInfo/infoBlock.vue"
+Vue.component("InfoBlock", InfoBlock)
 
 Vue.use(Menu)
 Vue.use(MenuItem)

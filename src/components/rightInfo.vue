@@ -4,7 +4,7 @@
     <environment v-else-if="currentTab === 2" />
     <resource v-else-if="currentTab === 3" />
     <basic-port v-else-if="currentTab === 4" />
-    <equipment-management v-else-if="currentTab === 5"/>
+    <equipment-management v-else-if="currentTab === 5" />
     <patrol-mgr v-else-if="currentTab === 6" />
   </div>
 </template>
@@ -13,15 +13,22 @@
 import homeInfo from "./pageInfo/home"
 import environment from "./pageInfo/environment"
 import resource from "./pageInfo/resource"
-import basicPort from "./pageInfo/basicPort"
-import equipmentManagement from './pageInfo/equipmentManagement.vue'
+import basicPort from "./pageInfo/basicPort/index"
+import equipmentManagement from "./pageInfo/equipmentManagement.vue"
 import patrolMgr from "./pageInfo/patrolMgr/index"
 export default {
-  components: { homeInfo, environment, resource, basicPort ,patrolMgr, equipmentManagement},
-  props:{
-    currentTab:{
-      type:[String,Number],
-      default:null,
+  components: {
+    homeInfo,
+    environment,
+    resource,
+    basicPort,
+    patrolMgr,
+    equipmentManagement
+  },
+  props: {
+    currentTab: {
+      type: [String, Number],
+      default: null
     }
   },
   data() {

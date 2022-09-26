@@ -1,7 +1,7 @@
 <template>
   <div class="p-info-block">
     <div class="info-block__title">
-      <div class="info-block__title__left" v-if="title">{{ title }}</div>
+      <div v-if="title" class="info-block__title__left">{{ title }}</div>
       <slot class="info-block__title__right" name="titleRight"></slot>
     </div>
     <slot />
@@ -10,32 +10,35 @@
 
 <script>
 export default {
-  props: ["title"]
+  props: {
+    title: {
+      type: String,
+      default: ""
+    }
+  }
 }
 </script>
 
 <style lang="less" scoped>
 .p-info-block {
   width: 470px;
-  padding: 10px 0 0;
   box-sizing: border-box;
-  // background: url("../../assets/img/p-info-back.png") no-repeat;
-  // background-size: 100% 100%;
+  padding: 10px 0 0;
   border: 20px solid;
   border-image: url("../../assets/img/p-info-back.png") 22 fill;
 
   .info-block__title {
-    font-size: 18px;
-    color: white;
-    margin-bottom: 10px;
     display: flex;
-    justify-content: space-between   ;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    color: white;
+    font-size: 18px;
   }
 }
 
 .info-content {
-  background-color: rgba(0, 0, 0, 0.6);
-  color: #d8d8d8;
   box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 60%);
+  color: #d8d8d8;
 }
 </style>

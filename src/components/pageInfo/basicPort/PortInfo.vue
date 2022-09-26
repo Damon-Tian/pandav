@@ -2,11 +2,7 @@
   <div>
     <info-block title="站点信息">
       <div class="info-content info-port">
-        <div
-          v-for="item in portList"
-          :key="item.portList"
-          class="port-block"
-        >
+        <div v-for="item in portList" :key="item.portList" class="port-block">
           <p class="port-name">
             {{ item.position }}
           </p>
@@ -23,21 +19,11 @@
         </div>
       </div>
     </info-block>
-
-    <info-block key="asd" title="详细信息">
-      <div class="info-content port-detail">
-        <p>
-          <span>站点名称：</span>
-        </p>
-      </div>
-    </info-block>
   </div>
 </template>
 
 <script>
-import infoBlock from "./infoBlock"
 export default {
-  components: { infoBlock },
   data() {
     return {
       portList: [
@@ -68,10 +54,10 @@ export default {
 </script>
 <style lang="less" scoped>
 .info-port {
-  padding: 18px 24px 20px 20px;
   display: grid;
-  grid-template-columns: auto auto;
+  padding: 18px 24px 20px 20px;
   grid-gap: 20px;
+  grid-template-columns: auto auto;
 
   .port-block {
     .port-name {
@@ -81,42 +67,41 @@ export default {
     }
 
     .port-content {
-      box-sizing: border-box;
-      margin-top: 11px;
+      position: relative;
+      display: flex;
       width: 183px;
       height: 64px;
-      background: rgb(0 29 155 / 40%);
+      box-sizing: border-box;
       border: 1px solid #1286b1;
-      box-shadow: 0 0 12px 0 rgb(0 175 255 / 40%)
-        inset;
-      display: flex;
-      position: relative;
+      margin-top: 11px;
+      background: rgb(0 29 155 / 40%);
+      box-shadow: 0 0 12px 0 rgb(0 175 255 / 40%) inset;
 
       &::after {
-        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
         width: 0.1px;
         height: 26px;
         background-color: #0c1e6e;
-        position: absolute;
-        left: 50%;
-        top: 50%;
+        content: "";
         transform: translate(-50%, -50%);
       }
 
       & > p {
-        width: 50%;
         display: flex;
-        justify-content: center;
+        width: 50%;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
 
         span {
           font-size: 14px;
 
           &:last-child {
-            font-size: 24px;
-            color: #00eaff;
             margin-top: 9px;
+            color: #00eaff;
+            font-size: 24px;
           }
         }
       }
