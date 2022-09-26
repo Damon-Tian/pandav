@@ -23,50 +23,53 @@
         <stations />
       </div>
     </info-block>
-    <patrol-type/>
-    <patrol-find/>
+    <patrol-type />
+    <patrol-find />
   </div>
 </template>
 
 <script>
-import infoBlock from "../infoBlock";
-import stations from "./stations";
-import patrolType from "./patrolType";
-import patrolFind from "./patrolFind";
+import infoBlock from "../infoBlock"
+import stations from "./stations"
+import patrolType from "./patrolType"
+import patrolFind from "./patrolFind"
 export default {
-  data() {
-    return {
-      dateRange: [new Date(), new Date()],
-    };
-  },
   components: {
     infoBlock,
     stations,
     patrolType,
     patrolFind
   },
-  methods: {},
-};
+  data() {
+    return {
+      dateRange: [new Date(), new Date()]
+    }
+  },
+  methods: {}
+}
 </script>
 <style scoped lang="less">
 .title {
-  font-size: 18px;
-  color: white;
-  margin-bottom: 10px;
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
+  color: white;
+  font-size: 18px;
+
   .count {
+    color: #00eaff;
     font-size: 30px;
     font-weight: 500;
-    color: #00eaff;
     line-height: 30px;
   }
+
   .unit {
-    font-size: 14px;
-    margin-left: 10px;
     margin-bottom: 10px;
+    margin-left: 10px;
+    font-size: 14px;
   }
 }
+
 .patrol-mgr {
   padding: 10px;
 }

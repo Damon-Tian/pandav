@@ -20,9 +20,9 @@
         </div>
         <div class="env-first__bottom">
           <li
-            :class="currentPosition === item.name ? 'active' : ''"
             v-for="item in positionList"
             :key="item.name"
+            :class="currentPosition === item.name ? 'active' : ''"
             @click="positionClick(item)"
           >
             <span></span>
@@ -81,7 +81,7 @@
           <div class="get-more">更多信息></div>
         </div>
         <div class="env-second__form">
-          <div class="form-block" v-for="item in formInfo" :key="item.name">
+          <div v-for="item in formInfo" :key="item.name" class="form-block">
             <span class="form-label">
               {{ item.label }}
             </span>
@@ -138,11 +138,6 @@ export default {
         { label: "PM2.5", content: "11.8ug/m" },
         { label: "PM2.5", content: "13,4ug.m" }
       ]
-    }
-  },
-  methods: {
-    positionClick(item) {
-      this.currentPosition = item.name
     }
   },
   mounted() {
@@ -233,6 +228,11 @@ export default {
       ]
     }
     envChart.setOption(option1)
+  },
+  methods: {
+    positionClick(item) {
+      this.currentPosition = item.name
+    }
   }
 }
 </script>
@@ -240,42 +240,52 @@ export default {
 <style lang="less" scoped>
 .env-first__top {
   display: flex;
-  justify-content: space-around;
   align-items: center;
+  justify-content: space-around;
 
   .top-circle {
+    display: flex;
     width: 106px;
     height: 106px;
-    display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-direction: column;
     background: url("../../assets/img/info-icon__circle.png");
   }
+
   .top-data {
     width: 140px;
+
     p {
       position: relative;
+
+      &:first-child {
+        margin-bottom: 20px;
+      }
+
       span {
         &:last-child {
           display: inline-block;
           margin-left: 30px;
         }
       }
+
       &::before {
-        content: "";
-        background-color: #00ff12;
         display: inline-block;
         width: 8px;
         height: 8px;
-        border-radius: 50%;
         margin-right: 10px;
+        background-color: #00ff12;
+        border-radius: 50%;
+        content: "";
       }
+
       &:nth-child(1) {
         &::before {
           background-color: #00ff12;
         }
       }
+
       &:nth-child(2) {
         &::before {
           background-color: #f82d2d;
@@ -284,37 +294,42 @@ export default {
     }
   }
 }
+
 .env-first__bottom {
-  padding: 10px;
   display: grid;
+  padding: 10px;
   grid-gap: 10px;
   grid-template-columns: auto auto;
 
   li {
-    cursor: pointer;
+    display: inline-flex;
     width: 200px;
     height: 44px;
-    background: rgba(0, 108, 255, 0.2);
-    border: 1px solid #006cff;
-    border-radius: 4px;
-    display: inline-flex;
+    box-sizing: border-box;
     align-items: center;
     padding: 10px;
-    box-sizing: border-box;
+    border: 1px solid #006cff;
+    background: rgb(0 108 255 / 20%);
+    border-radius: 4px;
+    cursor: pointer;
     font-size: 14px;
-    &.active {
-      background: rgba(35, 217, 251, 0.25);
-      span {
-        color: #01d4f9;
-        background: url("../../assets/img/icon-info__position-active.png");
-      }
-    }
+
+    /* stylelint-disable-next-line no-descending-specificity */
     span {
+      display: inline-block;
       width: 24px;
       height: 24px;
-      display: inline-block;
       margin-right: 10px;
       background: url("../../assets/img/icon-info__position.png");
+    }
+
+    &.active {
+      background: rgb(35 217 251 / 25%);
+      /* stylelint-disable-next-line no-descending-specificity */
+      span {
+        background: url("../../assets/img/icon-info__position-active.png");
+        color: #01d4f9;
+      }
     }
   }
 }
@@ -323,79 +338,88 @@ export default {
   padding: 22px 20px;
 
   &__label-info {
-    line-height: 32px;
     letter-spacing: 2px;
+    line-height: 32px;
+
     .label-color {
       color: #7ecef4;
       font-weight: 500;
     }
+
     .label-inline {
       display: flex;
       justify-content: space-between;
+
       & > * {
         width: 50%;
       }
     }
   }
+
   &__form {
     display: flex;
     flex-wrap: wrap;
+    margin-top: 20px;
     font-size: 14px;
     letter-spacing: 1px;
-    margin-top: 20px;
 
     .form-block {
       .form-label {
-        color: #7ecef4;
         width: 78px;
-        background-color: rgba(0, 108, 255, 0.2);
+        background-color: rgb(0 108 255 / 20%);
+        color: #7ecef4;
       }
-
+      /* stylelint-disable-next-line no-descending-specificity */
       span {
-        line-height: 32px;
-        width: 116px;
-        padding-left: 9px;
-        box-sizing: border-box;
-        height: 32px;
         display: inline-block;
-        background: rgba(1, 212, 249, 0.2);
+        width: 116px;
+        height: 32px;
+        box-sizing: border-box;
+        padding-left: 9px;
         border: 1px solid #006cff;
+        background: rgb(1 212 249 / 20%);
+        line-height: 32px;
       }
     }
   }
+
   &__chart {
     width: 100%;
 
     &-title {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       margin-top: 22px;
-
+      /* stylelint-disable-next-line no-descending-specificity */
       & > span {
+        color: #fff;
         font-size: 16px;
-        color: #ffffff;
         line-height: 30px;
       }
     }
 
     .chart-title__legend {
+      /* stylelint-disable-next-line no-descending-specificity */
       span {
         &::before {
-          content: "";
+          position: relative;
+          top: -2px;
           display: inline-block;
           width: 16px;
           height: 8px;
           margin: 0 10px;
-          position: relative;
-          top: -2px;
+          content: "";
         }
+        /* stylelint-disable-next-line no-descending-specificity */
         &:first-child {
           margin-right: 20px;
+
           &::before {
-            background-color: #22ffcc;
+            background-color: #2fc;
           }
         }
+
         &:last-child::before {
           background-color: #229aff;
         }
@@ -403,9 +427,9 @@ export default {
     }
 
     &-content {
-      margin: -30px 0 -25px;
-      height: 250px;
       width: 110%;
+      height: 250px;
+      margin: -30px 0 -25px;
     }
   }
 }

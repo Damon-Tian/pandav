@@ -2,9 +2,11 @@
   <div class="p-leftbar" :class="isCollapse ? 'collapse-menu' : ''">
     <span
       class="narrow-icon"
-      @click="narrowClick"
-      :style="{ right: isCollapse ? '104px' : '-27px' }"
+      :style="{
+        right: isCollapse ? '104px' : '-27px'
+      }"
       :class="isCollapse ? 'narrow-icon-collapse' : ''"
+      @click="narrowClick"
     >
       <img src="@/assets/img/p-leftbar-narrow.png" alt="" />
       <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
@@ -12,14 +14,14 @@
 
     <el-menu
       :default-active="activeNav"
-      @select="selectMenu"
       :collapse="isCollapse"
+      @select="selectMenu"
     >
       <el-menu-item
-        class="nav-item"
         v-for="item in navs"
-        :index="item.name"
         :key="item.name"
+        class="nav-item"
+        :index="item.name"
       >
         <div class="img-wrap">
           <img :src="activeNav === item.name ? item.iconActive : item.icon" />
@@ -93,32 +95,32 @@ export default {
           // iconActive: require("@/assets/img/p-leftbar-basic-equip-active.png")
         }
       ]
-    };
+    }
   },
   methods: {
     selectMenu(i) {
-      this.activeNav = i;
-      this.navs.map(item=>{
-        if(this.activeNav===item.name){
+      this.activeNav = i
+      this.navs.map((item) => {
+        if (this.activeNav === item.name) {
           this.currentTab = item.id
         }
       })
-      this.$emit('select-menu',this.currentTab)
+      this.$emit("select-menu", this.currentTab)
     },
     narrowClick() {
-      this.isCollapse = !this.isCollapse;
+      this.isCollapse = !this.isCollapse
     }
   }
-};
+}
 </script>
 
 <style lang="less" scoped>
 .p-leftbar {
-  width: 230px;
-  height: 945px;
   // margin-top: 34px;
   // background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
   position: relative;
+  width: 230px;
+  height: 945px;
 
   .narrow-icon {
     position: absolute;
@@ -128,68 +130,72 @@ export default {
 
     &.narrow-icon-collapse {
       overflow: hidden;
+
       &::after {
-        content: "";
         position: absolute;
         top: 50%;
         right: 50%;
-        transform: translate(8px, -50%);
         border-width: 5px;
         border-style: solid;
         border-color: transparent transparent transparent white;
-        background-color: rgb(0, 174, 255);
+        background-color: rgb(0 174 255);
+        content: "";
+        transform: translate(8px, -50%);
       }
     }
   }
 }
+
 .el-menu {
   position: relative;
   top: 30px;
   left: 20px;
   width: 230px;
   height: 945px;
-  background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
   border-right: none;
-
-  &.el-menu--collapse {
-    width: 100px;
-    .el-menu-item {
-      width: 95px;
-      left: 0;
-    }
-  }
+  background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
 
   .el-menu-item {
-    color: white;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    padding-left: 28px;
-    font-size: 20px;
-    font-weight: medium;
     position: relative;
     left: 7px;
+    display: flex;
     width: 218px;
+    height: 80px;
+    align-items: center;
+    padding-left: 28px;
+    color: white;
+    font-size: 20px;
+    font-weight: medium;
 
     &:first-child {
       margin-top: 83px;
     }
 
     .img-wrap {
-      width: 30px;
-      margin-left: 8px;
-      margin-right: 14px;
       display: flex;
+      width: 30px;
+      height: 100%;
       align-items: center;
       justify-content: center;
-      height: 100%;
+      margin-right: 14px;
+      margin-left: 8px;
     }
   }
+
+  &.el-menu--collapse {
+    width: 100px;
+
+    .el-menu-item {
+      left: 0;
+      width: 95px;
+    }
+  }
+
   .el-menu-item:focus,
   .el-menu-item:hover,
   .is-active {
-    color: #23d9fb;
     background-color: #23d9fb57;
+    color: #23d9fb;
   }
 }
 </style>

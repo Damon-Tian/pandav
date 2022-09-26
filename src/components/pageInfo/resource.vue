@@ -148,47 +148,51 @@ export default {
 
 <style lang="less" scoped>
 .animal-bottom {
-  padding: 0 20px 20px;
   display: flex;
+  padding: 0 20px 20px;
 
   li {
+    position: relative;
     width: 124px;
     height: 64px;
-    background: rgba(0, 29, 155, 0.4);
-    border: 1px solid #1286b1;
-    box-shadow: 0px 0px 12px 0px rgba(0, 175, 255, 0.4) inset;
     box-sizing: border-box;
     padding: 8px 0 0 10px;
-    position: relative;
+    border: 1px solid #1286b1;
+    background: rgb(0 29 155 / 40%);
+    box-shadow: 0 0 12px 0 rgb(0 175 255 / 40%) inset;
 
     &:nth-child(2) {
       margin: 0 10px;
     }
+
     span {
       font-size: 14px;
 
       &:last-child {
-        font-size: 30px;
         position: absolute;
-        bottom: 3px;
         right: 13px;
+        bottom: 3px;
+        font-size: 30px;
       }
     }
   }
+
   .animal-red {
     color: #f53d3d;
   }
+
   .animal-brown {
     color: #f56e0c;
   }
+
   .animal-yellow {
     color: #dea423;
   }
 }
 
 .ring-chart-block {
-  padding: 20px 16px 16px 20px;
   box-sizing: border-box;
+  padding: 20px 16px 16px 20px;
 
   .ring-chart-title {
     padding-left: 3px;
@@ -196,42 +200,49 @@ export default {
 
   .active-ring-chart {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
     height: 117px;
+    align-items: center;
+    justify-content: space-between;
 
     .active-ring-label {
       li {
         display: flex;
         align-items: center;
+
         &:nth-child(2) {
           margin: 20px 0;
         }
 
         span {
           display: inline-block;
+
           &:last-child {
             margin: 0 17px 0 50px;
           }
         }
+
         .label-dot {
           display: inline-block;
           width: 8px;
           height: 8px;
-          border-radius: 50%;
           margin-right: 20px;
+          border-radius: 50%;
         }
+
         .blue-dot {
           background-color: #2da1fe;
         }
+
         .yellow-dot {
           background-color: #ffbc1c;
         }
+
         .green-dot {
           background-color: #19e194;
         }
       }
     }
+
     .plantClass {
       width: 205px;
       height: 205px;
@@ -242,57 +253,62 @@ export default {
 
 .detail-block {
   margin-top: 14px;
+
   .detail-tab {
-    background: rgba(0, 0, 0, 0.36);
-    color: rgba(151, 151, 151, 1);
-    justify-content: space-around;
-    height: 32px;
     display: flex;
+    height: 32px;
     align-items: center;
+    justify-content: space-around;
+    background: rgb(0 0 0 / 36%);
+    color: rgb(151 151 151 / 100%);
 
     span {
       display: inline-block;
+      width: 210px;
+      height: 32px;
+      cursor: pointer;
+      letter-spacing: 2px;
       line-height: 32px;
       text-align: center;
-      letter-spacing: 2px;
-      height: 32px;
-      width: 210px;
-      cursor: pointer;
 
       &.active {
+        position: relative;
+        width: 216px;
         height: 40px;
-        line-height: 40px;
         background: #0b90c2;
         border-radius: 4px;
         color: white;
-        width: 216px;
-        position: relative;
+        line-height: 40px;
       }
     }
   }
+
   .detail-content {
-    margin-top: 14px;
     padding: 20px;
+    margin-top: 14px;
 
     .content-display {
+      position: relative;
       display: flex;
       justify-content: space-between;
       color: #d8d8d8;
-      position: relative;
 
       & > div {
         position: relative;
-        border-left: 2px solid #34b2ff;
         display: flex;
-        justify-content: space-between;
-        flex-direction: column;
-        padding-left: 8px;
         flex: 1;
+        flex-direction: column;
+        justify-content: space-between;
+        padding-left: 8px;
+        border-left: 2px solid #34b2ff;
+
         &:nth-child(1) {
           flex-basis: 20%;
         }
+
         p {
           margin-bottom: 20px;
+
           &:last-child {
             margin-bottom: 0;
           }
