@@ -1,8 +1,8 @@
 <template>
   <div class="equipment-management">
-    <camera/>
-    <Infrare-camera/>
-    <event-remind/>
+    <camera />
+    <Infrare-camera />
+    <event-remind />
   </div>
 </template>
 
@@ -17,13 +17,14 @@ export default {
 
 <style lang="less" scoped>
 .equipment-management {
-  .title-right{
+  .title-right {
+    color: #00eaff;
     font-size: 30px;
-    color: #00EAFF;
-    &__unit{
-      color: #FFFFFF;
-      font-size: 14px;
+
+    &__unit {
       margin-left: 10px;
+      color: #fff;
+      font-size: 14px;
     }
   }
 }

@@ -7,7 +7,8 @@ import {
   DatePicker,
   Image,
   Table,
-  TableColumn
+  TableColumn,
+  Icon
 } from "element-ui"
 import InfoBlock from "@/components/pageInfo/infoBlock.vue"
 Vue.component("InfoBlock", InfoBlock)
@@ -20,3 +21,4 @@ Vue.use(Image)
 Vue.use(DatePicker)
 Vue.use(Scrollbar)
 Vue.use(dataV)
+Vue.use(Icon)

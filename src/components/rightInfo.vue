@@ -6,6 +6,7 @@
     <basic-port v-else-if="currentTab === 4" />
     <equipment-management v-else-if="currentTab === 5" />
     <patrol-mgr v-else-if="currentTab === 6" />
+    <electron v-else-if="currentTab === 7" />
   </div>
 </template>
 
@@ -16,6 +17,7 @@ import resource from "./pageInfo/resource"
 import basicPort from "./pageInfo/basicPort/index"
 import equipmentManagement from "./pageInfo/equipmentManagement.vue"
 import patrolMgr from "./pageInfo/patrolMgr/index"
+import electron from "./pageInfo/electron.vue"
 export default {
   components: {
     homeInfo,
@@ -23,7 +25,8 @@ export default {
     resource,
     basicPort,
     patrolMgr,
-    equipmentManagement
+    equipmentManagement,
+    electron
   },
   props: {
     currentTab: {

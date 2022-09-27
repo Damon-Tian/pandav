@@ -29,11 +29,20 @@
         <span slot="title">{{ item.name }}</span>
       </el-menu-item>
     </el-menu>
+    <selectedInfo :is-collapse="isCollapse" :current-tab="currentTab" />
+    <alarmInfo
+      v-if="currentTab === 1"
+      :is-collapse="isCollapse"
+      :current-tab="currentTab"
+    />
   </div>
 </template>
 
 <script>
+import selectedInfo from "./leftInfo/selectedInfo.vue"
+import alarmInfo from "./leftInfo/alarmInfo.vue"
 export default {
+  components: { selectedInfo, alarmInfo },
   data() {
     return {
       isCollapse: false,

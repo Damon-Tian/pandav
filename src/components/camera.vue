@@ -1,5 +1,12 @@
 <template>
   <div class="p-camer-wrap" :class="isCollapse ? 'camera-collapse' : ''">
+    <div class="weather-time">
+      <div class="weather-time__timeinfo">2022 年 8 月 6 日 16 : 40 星期六</div>
+      <div class="weather-time__weatherinfo">
+        <img src="../assets/img/weather-cloudy.png" alt="" />
+        <span class="weather-time__weatherinfo__text">多云 32℃</span>
+      </div>
+    </div>
     <span class="narrow-icon" @click="narrowClick">
       <img src="@/assets/img/p-leftbar-expand.png" alt="" />
       <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
@@ -39,6 +46,35 @@ export default {
   width: 620px;
   height: 932px;
   transition: all 0.5s;
+
+  .weather-time {
+    position: absolute;
+    top: -46px;
+    right: 0;
+    display: flex;
+    height: 35px;
+    align-items: center;
+    padding: 0 21px;
+    background: rgba(0, 0, 0, 60%);
+    border-radius: 4px;
+    color: #fff;
+    font-size: 16px;
+
+    &__timeinfo {
+      margin-right: 64px;
+      white-space: nowrap;
+    }
+
+    &__weatherinfo {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+
+      &__text {
+        margin-left: 11px;
+      }
+    }
+  }
 
   &.camera-collapse {
     width: 200px;
