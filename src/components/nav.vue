@@ -5,9 +5,13 @@
       <span
         v-for="item in hrefs"
         :key="item.id"
-        :class="item.active ? 'active' : ''"
+        :class="currentTab === item.id ? 'active' : ''"
+        @click="currentTab = item.id"
       >
         {{ item.name }}
+        <span v-if="currentTab === item.id" class="back-text">{{
+          item.name
+        }}</span>
       </span>
     </div>
   </div>
@@ -17,11 +21,11 @@
 export default {
   data() {
     return {
+      currentTab: "home",
       hrefs: [
         {
           name: "综合概况",
-          id: "home",
-          active: true
+          id: "home"
         },
         { name: "崇州站", id: "chongzhou" },
         { name: "大邑站", id: "dayi" },
@@ -63,8 +67,9 @@ export default {
       display: inline-block;
       padding: 48px;
       color: #00b4ff;
+      cursor: pointer;
       font-size: 22px;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
 
       &::before {
         position: absolute;
@@ -82,9 +87,18 @@ export default {
       }
 
       &.active {
+        position: relative;
         font-weight: 700;
         // text-shadow: 0px 1px 10px #231815;
-        text-shadow: 0 1px 10px;
+        text-shadow: 0 1px 8px;
+
+        .back-text {
+          position: absolute;
+          top: 0;
+          left: 0%;
+          text-shadow: 1px 1px 1px #231815;
+          white-space: nowrap;
+        }
 
         &::after {
           position: absolute;

@@ -1,13 +1,10 @@
 /* 巡护管理页面 */
 <template>
   <div>
-    <info-block>
-      <div class="title">
-        <div>巡护终端</div>
-        <div>
-          <span class="count">132</span>
-          <span class="unit">个</span>
-        </div>
+    <info-block title="巡护终端" line>
+      <div slot="titleRight" class="title">
+        <span class="count">132</span>
+        <span class="unit">个</span>
       </div>
       <div class="info-content patrol-mgr">
         <el-date-picker
@@ -50,11 +47,11 @@ export default {
 </script>
 <style scoped lang="less">
 .title {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  color: white;
-  font-size: 18px;
+  // display: flex;
+  // justify-content: space-between;
+  // margin-bottom: 10px;
+  // color: white;
+  // font-size: 18px;
 
   .count {
     color: #00eaff;

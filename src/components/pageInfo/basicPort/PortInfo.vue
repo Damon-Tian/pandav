@@ -74,14 +74,14 @@ export default {
       box-sizing: border-box;
       border: 1px solid #1286b1;
       margin-top: 11px;
-      background: rgb(0 29 155 / 40%);
-      box-shadow: 0 0 12px 0 rgb(0 175 255 / 40%) inset;
+      background: rgba(0, 29, 155, 40%);
+      box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
 
       &::after {
         position: absolute;
         top: 50%;
         left: 50%;
-        width: 0.1px;
+        width: 1px;
         height: 26px;
         background-color: #0c1e6e;
         content: "";
@@ -102,6 +102,12 @@ export default {
             margin-top: 9px;
             color: #00eaff;
             font-size: 24px;
+          }
+        }
+
+        &.port-content__num {
+          span:last-child {
+            color: #19e194;
           }
         }
       }

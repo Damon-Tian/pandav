@@ -1,5 +1,5 @@
 <template>
-  <div class="p-camer-wrap" :class="isCollapse ? 'camera-collapse' : ''">
+  <div class="p-camera-wrap" :class="isCollapse ? 'camera-collapse' : ''">
     <div class="weather-time">
       <div class="weather-time__timeinfo">2022 年 8 月 6 日 16 : 40 星期六</div>
       <div class="weather-time__weatherinfo">
@@ -20,6 +20,18 @@
             alt=""
             class="p-camera__expand"
           />
+          <span
+            style="
+              position: absolute;
+              top: 60%;
+              left: 50%;
+              color: #c0c4cc;
+              font-size: 28px;
+              text-shadow: 1px 1px 1px;
+              transform: translate(-50%, -50%);
+            "
+            >暂无</span
+          >
         </div>
       </div>
     </el-scrollbar>
@@ -41,7 +53,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.p-camer-wrap {
+.p-camera-wrap {
   position: relative;
   width: 620px;
   height: 932px;
@@ -97,7 +109,7 @@ export default {
         border-width: 5px;
         border-style: solid;
         border-color: transparent transparent transparent white;
-        background-color: rgb(0 174 255);
+        background-color: rgb(0, 174, 255);
         content: "";
         transform: translate(8px, -50%);
       }
@@ -107,7 +119,8 @@ export default {
 
 .right-block-scroll {
   border: 1px solid #00aeff;
-  box-shadow: 0 0 25px 0 rgb(0 175 255 / 40%) inset;
+  border-radius: 2px;
+  box-shadow: 0 0 25px 0 rgba(0, 175, 255, 40%) inset;
 
   :deep(.el-scrollbar__wrap) {
     overflow-x: hidden;
@@ -130,6 +143,7 @@ export default {
       width: 295px;
       box-sizing: border-box;
       border: 1px solid goldenrod;
+      background-color: #cfd3da;
 
       .p-camera__name {
         position: absolute;
@@ -139,7 +153,7 @@ export default {
         height: 32px;
         align-items: center;
         padding-left: 10px;
-        background-color: rgb(0 0 0 / 20%);
+        background-color: rgba(0, 0, 0, 20%);
         color: white;
         font-weight: 500;
       }

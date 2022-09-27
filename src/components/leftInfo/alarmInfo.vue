@@ -3,7 +3,7 @@
     v-if="isShow"
     class="alarm-info"
     :style="{
-      left: isCollapse ? '134px' : '264px'
+      left: isCollapse ? '264px' : '264px'
     }"
   >
     <div class="alarm-info__left">

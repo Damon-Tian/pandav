@@ -48,7 +48,7 @@
                 XXXXX摄像头A2抓拍到XXX事件到XXX事件
               </div>
               <div class="column1">2022/8/16 15:30</div>
-              <div class="event-remind__item__rihgt column2">normal</div>
+              <div class="event-remind__item__rihgt column2">完成</div>
             </div>
           </div>
         </div>
@@ -128,6 +128,9 @@ export default {
       box-sizing: content-box;
       border-right: 1px solid #006cff;
       background: rgba(0, 108, 255, 20%);
+      color: #7ecef4;
+      font-size: 14px;
+      letter-spacing: 1px;
       line-height: 32px;
 
       &:last-child {
