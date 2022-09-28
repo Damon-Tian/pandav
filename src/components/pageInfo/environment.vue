@@ -10,11 +10,11 @@
           <div class="top-data">
             <p>
               <span>在线设备</span>
-              <span>4台</span>
+              <span>4 台</span>
             </p>
             <p>
-              <span>在线设备</span>
-              <span>4台</span>
+              <span>离线设备</span>
+              <span>4 台</span>
             </p>
           </div>
         </div>
@@ -53,7 +53,7 @@
             </span>
             <span>
               <span class="label-color">运行状态：</span>
-              {{ labelInfo.status }}
+              <span style="color: #3ac268">{{ labelInfo.status }}</span>
             </span>
           </div>
 
@@ -78,7 +78,7 @@
             {{ labelInfo.jwd }}
           </div>
 
-          <div class="get-more">更多信息></div>
+          <div style="margin-top: 12px" class="get-more">更多信息></div>
         </div>
         <div class="env-second__form">
           <div v-for="item in formInfo" :key="item.name" class="form-block">
@@ -111,7 +111,7 @@ export default {
   components: { infoBlock },
   data() {
     return {
-      currentPosition: "",
+      currentPosition: "鸡冠山巴栗坪保护站",
       positionList: [
         { name: "鸡冠山巴栗坪保护站" },
         { name: "公园外喂猴处" },
@@ -160,7 +160,7 @@ export default {
             stroke: "rgba(178, 231, 255, 1)"
           }
         },
-        data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+        data: ["11:30:00", "12:30:00", "13:30:00", "14:30:00", "15:30:00"]
       },
       yAxis: {
         data: "value",
@@ -197,7 +197,7 @@ export default {
       series: [
         {
           name: "PM10",
-          data: [100, 2230, 1900, 2100, 3500, 4200, 3985],
+          data: [2, 5, 4, 7, 9],
           type: "line",
           smooth: true,
           lineStyle: {
@@ -212,7 +212,7 @@ export default {
         },
         {
           name: "PM25",
-          data: [2000, 900, 1230, 2500, 1100, 2985, 3200],
+          data: [5, 4, 7, 3, 5],
           type: "line",
           smooth: true,
           lineStyle: {
@@ -242,6 +242,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-around;
+  color: white;
 
   .top-circle {
     display: flex;
@@ -251,10 +252,22 @@ export default {
     align-items: center;
     justify-content: center;
     background: url("../../assets/img/info-icon__circle.png");
+
+    span {
+      position: relative;
+      top: -2px;
+      font-size: 14px;
+
+      &:first-child {
+        color: #00eaff;
+        font-size: 36px;
+      }
+    }
   }
 
   .top-data {
-    width: 140px;
+    width: 150px;
+    letter-spacing: 1px;
 
     p {
       position: relative;
@@ -263,6 +276,7 @@ export default {
         margin-bottom: 20px;
       }
 
+      /* stylelint-disable-next-line no-descending-specificity */
       span {
         &:last-child {
           display: inline-block;
@@ -298,6 +312,7 @@ export default {
 .env-first__bottom {
   display: grid;
   padding: 10px;
+  color: white;
   grid-gap: 10px;
   grid-template-columns: auto auto;
 
@@ -309,7 +324,7 @@ export default {
     align-items: center;
     padding: 10px;
     border: 1px solid #006cff;
-    background: rgb(0 108 255 / 20%);
+    background: rgba(0, 108, 255, 20%);
     border-radius: 4px;
     cursor: pointer;
     font-size: 14px;
@@ -324,11 +339,11 @@ export default {
     }
 
     &.active {
-      background: rgb(35 217 251 / 25%);
+      background: rgba(36, 218, 250, 25%);
+      color: #01d4f9;
       /* stylelint-disable-next-line no-descending-specificity */
       span {
         background: url("../../assets/img/icon-info__position-active.png");
-        color: #01d4f9;
       }
     }
   }
@@ -359,14 +374,13 @@ export default {
   &__form {
     display: flex;
     flex-wrap: wrap;
-    margin-top: 20px;
     font-size: 14px;
     letter-spacing: 1px;
 
     .form-block {
       .form-label {
         width: 78px;
-        background-color: rgb(0 108 255 / 20%);
+        background-color: rgba(0, 108, 255, 20%);
         color: #7ecef4;
       }
       /* stylelint-disable-next-line no-descending-specificity */
@@ -377,7 +391,7 @@ export default {
         box-sizing: border-box;
         padding-left: 9px;
         border: 1px solid #006cff;
-        background: rgb(1 212 249 / 20%);
+        background: rgba(1, 212, 249, 20%);
         line-height: 32px;
       }
     }
@@ -429,7 +443,7 @@ export default {
     &-content {
       width: 110%;
       height: 250px;
-      margin: -30px 0 -25px;
+      margin: -30px 0 -45px;
     }
   }
 }

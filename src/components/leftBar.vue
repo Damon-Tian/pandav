@@ -1,35 +1,38 @@
 <template>
   <div class="p-leftbar" :class="isCollapse ? 'collapse-menu' : ''">
-    <span
-      class="narrow-icon"
-      :style="{
-        right: isCollapse ? '104px' : '-27px'
-      }"
-      :class="isCollapse ? 'narrow-icon-collapse' : ''"
-      @click="narrowClick"
-    >
-      <img src="@/assets/img/p-leftbar-narrow.png" alt="" />
-      <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
-    </span>
-
-    <el-menu
-      :default-active="activeNav"
-      :collapse="isCollapse"
-      @select="selectMenu"
-    >
-      <el-menu-item
-        v-for="item in navs"
-        :key="item.name"
-        class="nav-item"
-        :index="item.name"
+    <div class="p-leftbar-wrap">
+      <el-menu
+        :default-active="activeNav"
+        :collapse="isCollapse"
+        class="leftbar-menu"
+        @select="selectMenu"
       >
-        <div class="img-wrap">
-          <img :src="activeNav === item.name ? item.iconActive : item.icon" />
-        </div>
-        <span slot="title">{{ item.name }}</span>
-      </el-menu-item>
-    </el-menu>
-    <selectedInfo :is-collapse="isCollapse" :current-tab="currentTab" />
+        <el-menu-item
+          v-for="item in navs"
+          :key="item.name"
+          class="nav-item"
+          :index="item.name"
+        >
+          <div class="img-wrap">
+            <img :src="activeNav === item.name ? item.iconActive : item.icon" />
+          </div>
+          <span slot="title">{{ item.name }}</span>
+        </el-menu-item>
+      </el-menu>
+      <!-- :style="{
+          right: isCollapse ? '104px' : '-27px'
+        }" -->
+      <span
+        class="narrow-icon"
+        :class="isCollapse ? 'narrow-icon-collapse' : ''"
+        @click="narrowClick"
+      >
+        <img src="@/assets/img/p-leftbar-narrow.png" alt="" />
+        <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
+      </span>
+
+      <selectedInfo :is-collapse="isCollapse" :current-tab="currentTab" />
+    </div>
     <alarmInfo
       v-if="currentTab === 1"
       :is-collapse="isCollapse"
@@ -94,14 +97,14 @@ export default {
         {
           name: "社区管理",
           id: 8,
-          icon: require("@/assets/img/p-leftbar-house.png")
-          // iconActive: require("@/assets/img/p-leftbar-house-active.png")
+          icon: require("@/assets/img/p-leftbar-house.png"),
+          iconActive: require("@/assets/img/p-leftbar-house.png")
         },
         {
           name: "基础设施",
           id: 9,
-          icon: require("@/assets/img/p-leftbar-basic-equip.png")
-          // iconActive: require("@/assets/img/p-leftbar-basic-equip-active.png")
+          icon: require("@/assets/img/p-leftbar-basic-equip.png"),
+          iconActive: require("@/assets/img/p-leftbar-basic-equip.png")
         }
       ]
     }
@@ -128,12 +131,18 @@ export default {
   // margin-top: 34px;
   // background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
   position: relative;
-  width: 230px;
-  height: 945px;
   z-index: 2;
+  height: 945px;
+
+  .p-leftbar-wrap {
+    display: flex;
+  }
+
   .narrow-icon {
-    position: absolute;
-    top: 45%;
+    position: relative;
+    left: 15px;
+    display: flex;
+    align-items: center;
     cursor: pointer;
     transition: all 0.5s ease;
 
@@ -147,7 +156,7 @@ export default {
         border-width: 5px;
         border-style: solid;
         border-color: transparent transparent transparent white;
-        background-color: rgb(0 174 255);
+        background-color: rgb(0, 174, 255);
         content: "";
         transform: translate(8px, -50%);
       }
@@ -166,7 +175,7 @@ export default {
 
   .el-menu-item {
     position: relative;
-    left: 7px;
+    left: 6px;
     display: flex;
     width: 218px;
     height: 80px;

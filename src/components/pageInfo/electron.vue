@@ -28,7 +28,7 @@
             style="
               border: 1px solid #1286b1;
               background: rgba(0, 29, 155, 40%);
-              box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%);
+              box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
             "
           >
             <div class="electron-area">
@@ -78,7 +78,7 @@ export default {
       border: 1px solid #ff5b5a;
       margin-bottom: 20px;
       background: rgba(255, 91, 90, 22%);
-      box-shadow: 0 0 12px 0 rgba(255, 91, 90, 40%);
+      box-shadow: 0 0 12px 0 rgba(255, 91, 90, 40%) inset;
 
       .area-title {
         margin-bottom: 6px;

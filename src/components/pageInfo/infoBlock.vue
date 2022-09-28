@@ -1,9 +1,10 @@
 <template>
   <div class="p-info-block">
-    <div class="info-block__title">
-      <div v-if="title" class="info-block__title__left">{{ title }}</div>
+    <div v-if="title" class="info-block__title" :class="line ? 'hasLine' : ''">
+      <div class="info-block__title__left">{{ title }}</div>
       <slot class="info-block__title__right" name="titleRight"></slot>
     </div>
+    <div v-if="line" class="info-block__line"></div>
     <slot />
   </div>
 </template>
@@ -14,6 +15,10 @@ export default {
     title: {
       type: String,
       default: ""
+    },
+    line: {
+      type: Boolean,
+      default: false
     }
   }
 }
@@ -21,11 +26,14 @@ export default {
 
 <style lang="less" scoped>
 .p-info-block {
+  position: relative;
+  top: -2px;
   width: 470px;
   box-sizing: border-box;
   padding: 10px 0 0;
   border: 20px solid;
-  border-image: url("../../assets/img/p-info-back.png") 22 fill;
+  margin-bottom: 8px;
+  border-image: url("../../assets/img/p-info-back.png") 20 fill;
 
   .info-block__title {
     display: flex;
@@ -33,6 +41,19 @@ export default {
     margin-bottom: 10px;
     color: white;
     font-size: 18px;
+
+    &.hasLine {
+      position: relative;
+      top: -8px;
+    }
+  }
+
+  .info-block__line {
+    position: relative;
+    width: 100%;
+    height: 11px;
+    margin: -20px 0 10px;
+    background: url("../../assets/img/p-info-block-header-line.png") no-repeat;
   }
 }
 

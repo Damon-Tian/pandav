@@ -110,7 +110,7 @@ export default {
   components: { infoBlock },
   data() {
     return {
-      currentDetailTab: "",
+      currentDetailTab: "动物多样性",
       detailTabs: ["动物多样性", "植物多样性"],
       plantConfig: {
         radius: "40",
@@ -131,7 +131,8 @@ export default {
           }
         ],
         digitalFlopStyle: {
-          fontSize: 26
+          fontSize: 20,
+          fill: "#00EAFF"
         },
         showOriginValue: true,
         lineWidth: 15
@@ -158,8 +159,8 @@ export default {
     box-sizing: border-box;
     padding: 8px 0 0 10px;
     border: 1px solid #1286b1;
-    background: rgb(0 29 155 / 40%);
-    box-shadow: 0 0 12px 0 rgb(0 175 255 / 40%) inset;
+    background: rgba(0, 29, 155, 40%);
+    box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
 
     &:nth-child(2) {
       margin: 0 10px;
@@ -259,9 +260,10 @@ export default {
     height: 32px;
     align-items: center;
     justify-content: space-around;
-    background: rgb(0 0 0 / 36%);
-    color: rgb(151 151 151 / 100%);
+    background: rgba(0, 0, 0, 36%);
+    color: rgba(151, 151, 151, 100%);
 
+    /* stylelint-disable-next-line no-descending-specificity */
     span {
       display: inline-block;
       width: 210px;
@@ -285,12 +287,14 @@ export default {
 
   .detail-content {
     padding: 20px;
+    padding-bottom: 10px;
     margin-top: 14px;
 
     .content-display {
       position: relative;
       display: flex;
       justify-content: space-between;
+      margin-bottom: 20px;
       color: #d8d8d8;
 
       & > div {

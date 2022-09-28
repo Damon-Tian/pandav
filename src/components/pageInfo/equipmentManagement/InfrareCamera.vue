@@ -1,5 +1,5 @@
 <template>
-  <info-block title="红外相机" class="Infrare-camera">
+  <info-block title="红外相机" class="Infrare-camera" line>
     <div slot="titleRight" class="title-right">
       376<span class="title-right__unit">台</span>
     </div>

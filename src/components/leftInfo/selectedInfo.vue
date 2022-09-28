@@ -1,10 +1,8 @@
 <template>
-  <div
-    class="selected-info"
-    :style="{
+  <!-- :style="{
       left: isCollapse ? '134px' : '264px'
-    }"
-  >
+    }" -->
+  <div class="selected-info">
     <div class="selected-info-list">
       <div
         v-for="(item, index) in selectedInfoList"
@@ -130,24 +128,33 @@ export default {
 
 <style lang="less" scoped>
 .selected-info {
-  position: absolute;
-  bottom: -26px;
+  display: flex;
   width: 180px;
-  // height: 432px;
   box-sizing: border-box;
-  padding: 40px 10px 8px;
-  background: rgba(0, 0, 0, 60%);
+  flex-direction: column;
+  justify-content: flex-end;
+  margin-left: 30px;
   border-radius: 2px;
   transition: all 0.5s;
 
   &-list {
+    position: relative;
+    bottom: -26px;
+    padding: 40px 10px 8px;
+    background: rgba(0, 0, 0, 60%);
+
     &__item {
       display: flex;
       justify-content: space-between;
       margin-bottom: 32px;
 
       &__text {
+        width: 86px;
         color: #fff;
+      }
+
+      &__icon {
+        width: 20px;
       }
 
       &__checkbox {
