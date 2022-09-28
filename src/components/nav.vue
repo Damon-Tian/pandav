@@ -35,6 +35,8 @@ export default {
 
 <style lang="less" scoped>
 .p-nav {
+  position: relative;
+  z-index: 2;
   display: flex;
   justify-content: space-between;
   background-image: url("../assets/img/p-header-back.png");

@@ -31,6 +31,7 @@ export default {
       position: absolute;
       right: 20px;
       top: 127px;
+      z-index: 2;
       display: flex;
     }
   }

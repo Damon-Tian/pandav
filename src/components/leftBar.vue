@@ -130,7 +130,7 @@ export default {
   position: relative;
   width: 230px;
   height: 945px;
-
+  z-index: 2;
   .narrow-icon {
     position: absolute;
     top: 45%;

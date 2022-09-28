@@ -1,11 +1,17 @@
 <template>
   <div class="main-container">
     <top-nav />
-    <left-bar @select-menu="selectMenu"/>
+    <left-bar @select-menu="selectMenu" />
     <div class="right-block">
-      <right-info :currentTab="currentTab"/>
+      <right-info :current-tab="currentTab" />
       <camera />
     </div>
+    <iframe
+      frameborder="0"
+      scrolling="auto"
+      class="main-container__map"
+      src="http://10.31.228.198:3001/read-vue.html?id=layer-tile/type/xyz-rectangle"
+    ></iframe>
     <router-view />
   </div>
 </template>
@@ -25,28 +31,35 @@ export default {
   },
   data() {
     return {
-      currentTab: 1,
+      currentTab: 1
     }
   },
   methods: {
     selectMenu(i) {
-      this.currentTab = i;
-    },
+      this.currentTab = i
+    }
   }
 }
 </script>
 
 <style lang="less">
 .main-container {
+  position: relative;
   //   background-color: #081940;
   width: 2560px;
   height: 1080px;
-  position: relative;
-
+  &__map {
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: absolute;
+    height: 100%;
+    z-index: 1;
+  }
   .right-block {
     position: absolute;
-    right: 20px;
     top: 127px;
+    right: 20px;
     display: flex;
   }
 }
