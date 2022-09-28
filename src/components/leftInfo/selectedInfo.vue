@@ -132,7 +132,7 @@ export default {
   width: 180px;
   box-sizing: border-box;
   flex-direction: column;
-  justify-content: end;
+  justify-content: flex-end;
   margin-left: 30px;
   border-radius: 2px;
   transition: all 0.5s;
