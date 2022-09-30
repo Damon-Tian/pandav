@@ -42,7 +42,7 @@
 export default {
   data() {
     return {
-      isCollapse: false
+      isCollapse: true
     }
   },
   methods: {
@@ -89,7 +89,7 @@ export default {
   }
 
   &.camera-collapse {
-    width: 200px;
+    width: 0;
   }
 
   .narrow-icon {
@@ -133,7 +133,7 @@ export default {
     padding: 10px;
     background-color: #001d9b;
     border-radius: 2px;
-    grid-auto-rows: 143px;
+    grid-auto-rows: 203px;
     grid-gap: 10px;
     grid-template-columns: 295px 295px;
 

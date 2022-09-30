@@ -130,7 +130,7 @@ export default {
 .p-leftbar {
   // margin-top: 34px;
   // background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
-  position: relative;
+  position: absolute;
   z-index: 2;
   height: 945px;
 

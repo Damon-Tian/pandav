@@ -10,7 +10,7 @@
       frameborder="0"
       scrolling="auto"
       class="main-container__map"
-      src="http://10.31.228.198:3001/read-vue.html?id=layer-tile/type/xyz-rectangle"
+      src="http://172.20.10.13:3001/read-vue.html?id=layer-tile/type/xyz-rectangle"
     ></iframe>
     <router-view />
   </div>
@@ -46,16 +46,19 @@ export default {
 .main-container {
   position: relative;
   //   background-color: #081940;
-  width: 2560px;
+  // width: 2560px;
+  // width: 1920px;
   height: 1080px;
+
   &__map {
-    width: 100%;
+    position: absolute;
+    z-index: 1;
     top: 0;
     left: 0;
-    position: absolute;
+    width: 100%;
     height: 100%;
-    z-index: 1;
   }
+
   .right-block {
     position: absolute;
     top: 127px;

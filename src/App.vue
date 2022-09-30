@@ -14,24 +14,25 @@ export default {
 
 <style lang="less">
 #app {
-  background-color: #081940;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
-  width: 2560px;
-  max-width: 2560px;
+  // width: 2560px;
+  // max-width: 2560px;
   overflow: hidden;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  background-color: #081940;
+
   .main-container {
-    //   background-color: #081940;
-    width: 2560px;
-    height: 1080px;
     position: relative;
+    //   background-color: #081940;
+    width: 1920px;
+    height: 1080px;
 
     .right-block {
       position: absolute;
-      right: 20px;
-      top: 127px;
       z-index: 2;
+      top: 127px;
+      right: 20px;
       display: flex;
     }
   }
