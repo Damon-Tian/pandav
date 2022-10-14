@@ -132,7 +132,7 @@ export default {
   // background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
   position: absolute;
   z-index: 2;
-  height: 945px;
+  height: 930px;
 
   .p-leftbar-wrap {
     display: flex;
@@ -169,7 +169,7 @@ export default {
   top: 30px;
   left: 20px;
   width: 230px;
-  height: 945px;
+  height: 940px;
   border-right: none;
   background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
 

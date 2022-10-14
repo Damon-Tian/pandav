@@ -123,9 +123,6 @@ export default {
   }
 
   .info-content {
-    padding-top: 14px;
-    padding-right: 21px;
-
     :deep(.el-table th) {
       padding-bottom: 10px !important;
       border: none;

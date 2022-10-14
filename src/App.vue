@@ -14,9 +14,9 @@ export default {
 
 <style lang="less">
 #app {
-  // width: 2560px;
   // max-width: 2560px;
   overflow: hidden;
+  width: 100%;
   min-height: 100vh;
   padding: 0;
   margin: 0;
@@ -25,16 +25,8 @@ export default {
   .main-container {
     position: relative;
     //   background-color: #081940;
-    width: 1920px;
-    height: 1080px;
-
-    .right-block {
-      position: absolute;
-      z-index: 2;
-      top: 127px;
-      right: 20px;
-      display: flex;
-    }
+    width: 100%;
+    height: 100vh;
   }
 }
 </style>

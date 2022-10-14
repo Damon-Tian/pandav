@@ -54,9 +54,9 @@ export default {
     height: 86px;
     align-items: center;
     color: white;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: 6px;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 2px;
   }
 
   &__hrefs {
@@ -67,15 +67,14 @@ export default {
     span {
       position: relative;
       display: inline-block;
-      padding: 48px;
+      padding: 70px 18px 48px;
       color: #00b4ff;
       cursor: pointer;
-      font-size: 22px;
-      letter-spacing: 3px;
+      font-size: 24px;
 
       &::before {
         position: absolute;
-        top: 50%;
+        bottom: 28%;
         left: 0;
         width: 1px;
         height: 18px;
@@ -104,7 +103,7 @@ export default {
 
         &::after {
           position: absolute;
-          bottom: 23px;
+          bottom: 30px;
           left: 50%;
           width: 100%;
           height: 6px;

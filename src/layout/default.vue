@@ -1,18 +1,21 @@
 <template>
   <div class="main-container">
-    <top-nav />
-    <left-bar @select-menu="selectMenu" />
-    <div class="right-block">
-      <right-info :current-tab="currentTab" />
-      <camera />
+    <div class="main-left">
+      <top-nav />
+      <left-bar @select-menu="selectMenu" />
+      <div class="right-block">
+        <right-info :current-tab="currentTab" />
+      </div>
+      <wether />
+      <iframe
+        frameborder="0"
+        scrolling="auto"
+        class="main-container__map"
+        src="http://localhost:3001/read-vue.html?id=layer-tile/type/xyz-rectangle"
+      ></iframe>
+      <!-- <router-view /> -->
     </div>
-    <iframe
-      frameborder="0"
-      scrolling="auto"
-      class="main-container__map"
-      src="http://172.20.10.13:3001/read-vue.html?id=layer-tile/type/xyz-rectangle"
-    ></iframe>
-    <router-view />
+    <camera class="main-right" />
   </div>
 </template>
 
@@ -21,13 +24,14 @@ import topNav from "@/components/nav"
 import leftBar from "@/components/leftBar"
 import camera from "@/components/camera.vue"
 import rightInfo from "@/components/rightInfo"
-
+import wether from "@/components/wether"
 export default {
   components: {
     topNav,
     leftBar,
     camera,
-    rightInfo
+    rightInfo,
+    wether
   },
   data() {
     return {
@@ -44,15 +48,14 @@ export default {
 
 <style lang="less">
 .main-container {
-  position: relative;
   //   background-color: #081940;
   // width: 2560px;
   // width: 1920px;
-  height: 1080px;
+  display: flex;
 
   &__map {
     position: absolute;
-    z-index: 1;
+    z-index: 0;
     top: 0;
     left: 0;
     width: 100%;
@@ -61,9 +64,20 @@ export default {
 
   .right-block {
     position: absolute;
+    z-index: 2;
     top: 127px;
-    right: 20px;
+    right: 0;
     display: flex;
+  }
+
+  .main-right {
+    width: 25%;
+  }
+
+  .main-left {
+    position: relative;
+    z-index: 2;
+    flex: 1;
   }
 }
 </style>

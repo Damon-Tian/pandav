@@ -1,19 +1,12 @@
 <template>
   <div class="p-camera-wrap" :class="isCollapse ? 'camera-collapse' : ''">
-    <div class="weather-time">
-      <div class="weather-time__timeinfo">2022 年 8 月 6 日 16 : 40 星期六</div>
-      <div class="weather-time__weatherinfo">
-        <img src="../assets/img/weather-cloudy.png" alt="" />
-        <span class="weather-time__weatherinfo__text">多云 32℃</span>
-      </div>
-    </div>
     <span class="narrow-icon" @click="narrowClick">
       <img src="@/assets/img/p-leftbar-expand.png" alt="" />
       <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
     </span>
-    <el-scrollbar style="height: 932px" class="right-block-scroll">
+    <el-scrollbar style="height: 100vh" class="right-block-scroll">
       <div class="p-camera">
-        <div v-for="i in 20" :key="i" class="p-camera-block">
+        <div v-for="i in 3" :key="i" class="p-camera-block">
           <span class="p-camera__name"> {{ i }} 这里是摄像头名称 </span>
           <img
             src="@/assets/img/icon-expand.png"
@@ -42,7 +35,7 @@
 export default {
   data() {
     return {
-      isCollapse: true
+      isCollapse: false
     }
   },
   methods: {
@@ -55,38 +48,8 @@ export default {
 <style lang="less" scoped>
 .p-camera-wrap {
   position: relative;
-  width: 620px;
   height: 932px;
   transition: all 0.5s;
-
-  .weather-time {
-    position: absolute;
-    top: -46px;
-    right: 0;
-    display: flex;
-    height: 35px;
-    align-items: center;
-    padding: 0 21px;
-    background: rgba(0, 0, 0, 60%);
-    border-radius: 4px;
-    color: #fff;
-    font-size: 16px;
-
-    &__timeinfo {
-      margin-right: 64px;
-      white-space: nowrap;
-    }
-
-    &__weatherinfo {
-      display: flex;
-      align-items: center;
-      white-space: nowrap;
-
-      &__text {
-        margin-left: 11px;
-      }
-    }
-  }
 
   &.camera-collapse {
     width: 0;
@@ -94,7 +57,8 @@ export default {
 
   .narrow-icon {
     position: absolute;
-    top: 45%;
+    z-index: 2;
+    top: 50%;
     left: -12px;
     cursor: pointer;
     transition: all 0.5s ease;
@@ -118,7 +82,6 @@ export default {
 }
 
 .right-block-scroll {
-  border: 1px solid #00aeff;
   border-radius: 2px;
   box-shadow: 0 0 25px 0 rgba(0, 175, 255, 40%) inset;
 
@@ -127,22 +90,17 @@ export default {
   }
 
   .p-camera {
-    display: grid;
+    display: flex;
     width: 100%;
-    box-sizing: border-box;
-    padding: 10px;
-    background-color: #001d9b;
-    border-radius: 2px;
-    grid-auto-rows: 203px;
-    grid-gap: 10px;
-    grid-template-columns: 295px 295px;
+    height: 100vh;
+    flex-direction: column;
 
     .p-camera-block {
       position: relative;
       display: block;
-      width: 295px;
+      width: 100%;
       box-sizing: border-box;
-      border: 1px solid goldenrod;
+      flex: 1;
       background-color: #cfd3da;
 
       .p-camera__name {
