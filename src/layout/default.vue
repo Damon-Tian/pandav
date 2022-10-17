@@ -11,7 +11,7 @@
         frameborder="0"
         scrolling="auto"
         class="main-container__map"
-        src="http://localhost:3001/read-vue.html?id=layer-tile/type/xyz-rectangle"
+        src="https://pano.cd720.com/panda/Apps/"
       ></iframe>
       <!-- <router-view /> -->
     </div>

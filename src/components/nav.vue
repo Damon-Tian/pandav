@@ -1,6 +1,8 @@
 <template>
   <div class="p-nav">
-    <div class="p-nav__icon">大熊猫国家公园成都片区自然资源监测平台</div>
+    <div class="p-nav__icon" @click="requestFullScreen">
+      大熊猫国家公园成都片区自然资源监测平台
+    </div>
     <div class="p-nav__hrefs">
       <span
         v-for="item in hrefs"
@@ -32,6 +34,17 @@ export default {
         { name: "彭州站", id: "pengzhou" },
         { name: "都江堰站", id: "dujiangyan" }
       ]
+    }
+  },
+  methods: {
+    requestFullScreen() {
+      const el = document.documentElement
+      const fullScreen =
+        el.requestFullscreen ||
+        el.mozRequestFullScreen ||
+        el.webkitRequestFullscreen ||
+        el.msRequestFullScreen
+      fullScreen()
     }
   }
 }
