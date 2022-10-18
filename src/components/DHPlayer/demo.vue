@@ -6,11 +6,7 @@
       video-id="testPlayer"
       :num="divisionNum"
       :show-bar="false"
-      style="width: 100%; height: 100%"
-      @getCurrentWindow="getCurrentWindow"
-      @changeDivision="getDivisionNum"
-      @picCap="picCap"
-      @getError="getError"
+      style="width: 100%; height: 100vh"
     />
   </div>
 </template>
@@ -32,18 +28,20 @@ export default {
   },
   mounted() {
     window.onresize = () => {}
-    this.setRealTime(
-      1,
-      "rtsp://10.35.239.81:9090/dss/monitor/param?cameraid=1000018%240&substream=1&trackID=701"
-    )
-    this.setRealTime(
-      4,
-      "rtsp://10.35.239.81:9090/dss/monitor/param?cameraid=1000018%240&substream=1&trackID=701"
-    )
-    this.setRealTime(
-      7,
-      "rtsp://10.35.239.81:9090/dss/monitor/param?cameraid=1000018%240&substream=1&trackID=701"
-    )
+    setTimeout(() => {
+      this.setRealTime(
+        0,
+        "rtsp://10.35.239.81:9090/dss/monitor/param?cameraid=1000018%240&substream=1&trackID=701"
+      )
+      this.setRealTime(
+        3,
+        "rtsp://10.35.239.81:9090/dss/monitor/param?cameraid=1000018%240&substream=1&trackID=701"
+      )
+      this.setRealTime(
+        6,
+        "rtsp://10.35.239.81:9090/dss/monitor/param?cameraid=1000018%240&substream=1&trackID=701"
+      )
+    }, 5000)
   },
   methods: {
     replay(snum) {

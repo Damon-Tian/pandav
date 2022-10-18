@@ -1,11 +1,10 @@
 <template>
-  <div>
-    <div :id="videoId"></div>
-  </div>
+  <div :id="videoId"></div>
 </template>
 
 <script>
 import "./videoPlayer"
+import { MessageBox } from "element-ui"
 export default {
   name: "DHPlayer",
   props: {
@@ -153,7 +152,15 @@ export default {
         },
         // 连接错误，插件未安装回调
         connectError: (err) => {
-          console.log(err)
+          if (err.message === "插件未安装") {
+            MessageBox.confirm("下载DHPlayer播放器", "提示", {
+              confirmButtonText: "下载",
+              cancelButtonText: "取消",
+              type: "warning"
+            }).then(() => {
+              //下载大华PLyaer
+            })
+          }
         },
         //抓图成功
         snapshotSuccess: ({ base64Url, path }) => {
