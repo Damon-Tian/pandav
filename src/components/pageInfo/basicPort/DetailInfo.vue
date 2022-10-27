@@ -1,33 +1,33 @@
 <template>
   <info-block key="asd" title="详细信息">
     <div class="info-content port-detail">
-      <p class="p-label-info">
-        <span>站点名称：</span>
-        <span>123</span>
-      </p>
       <div class="p-label-inline">
         <div class="p-label-info">
-          <span>总人数：</span>
-          <span>8人</span>
+          <span>站点名称：</span>
+          <span>xxx保护站</span>
         </div>
         <div class="p-label-info">
-          <span>原住民：</span>
-          <span>40</span>
+          <span>建设时间：</span>
+          <span>2019年</span>
         </div>
       </div>
       <div class="p-label-inline">
         <div class="p-label-info">
-          <span>建设情况：</span>
-          <span>已完成</span>
+          <span>占地面积：</span>
+          <span>6577㎡</span>
         </div>
         <div class="p-label-info">
-          <span>面积：</span>
-          <span>6544m</span>
+          <span>建筑面积：</span>
+          <span>3577㎡</span>
         </div>
       </div>
       <div class="p-label-info">
-        <span>经纬度： </span>
-        <span>135.123.123.113</span>
+        <span>人员：</span>
+        <span> 在编(8) 编外(2) 总计(10) </span>
+      </div>
+      <div class="p-label-info">
+        <span>站点位置是否在大熊猫公园内： </span>
+        <span>是</span>
       </div>
 
       <div class="detail-info__table">

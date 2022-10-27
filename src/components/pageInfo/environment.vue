@@ -48,7 +48,7 @@
 
           <div class="label-inline">
             <span>
-              <span class="label-color">管护站：</span>
+              <span class="label-color">保护站：</span>
               {{ labelInfo.maintainPosition }}
             </span>
             <span>
@@ -78,7 +78,7 @@
             {{ labelInfo.jwd }}
           </div>
 
-          <div style="margin-top: 12px" class="get-more">更多信息></div>
+          <!-- <div style="margin-top: 12px" class="get-more">更多信息></div> -->
         </div>
         <div class="env-second__form">
           <div v-for="item in formInfo" :key="item.name" class="form-block">

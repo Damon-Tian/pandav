@@ -1,26 +1,24 @@
 <template>
   <div class="info-resource">
     <info-block title="动物多样性">
+      <div slot="titleRight" class="attr">
+        <span class="attr">科：6</span>
+        <span class="attr">属：6</span>
+        <span class="attr">种：6</span>
+      </div>
       <div class="info-content">
         <div class="animal-top">
           <div class="ring-chart-block">
             <div class="active-ring-chart">
-              <dv-active-ring-chart :config="plantConfig" class="plantClass" />
+              <dv-active-ring-chart :config="animalConfig" class="plantClass" />
               <div class="active-ring-label">
-                <li>
-                  <span class="label-dot blue-dot"></span>
-                  <span>一级</span>
-                  <span>16种</span>
-                </li>
-                <li>
-                  <span class="label-dot yellow-dot"></span>
-                  <span>一级</span>
-                  <span>16种</span>
-                </li>
-                <li>
-                  <span class="label-dot green-dot"></span>
-                  <span>一级</span>
-                  <span>16种</span>
+                <li v-for="(item, index) in animalConfig.data" :key="item.name">
+                  <span
+                    class="label-dot"
+                    :style="'background:' + animalConfig.color[index]"
+                  ></span>
+                  <span>{{ item.name }}</span>
+                  <span>{{ item.value }}种</span>
                 </li>
               </div>
             </div>
@@ -45,29 +43,27 @@
     </info-block>
 
     <info-block title="植物多样性">
+      <div slot="titleRight" class="attr">
+        <span class="attr">科：6</span>
+        <span class="attr">属：6</span>
+        <span class="attr">种：6</span>
+      </div>
       <div class="info-content">
         <div class="ring-chart-block">
           <div class="active-ring-chart">
             <dv-active-ring-chart :config="plantConfig" class="plantClass" />
             <div class="active-ring-label">
-              <li>
-                <span class="label-dot blue-dot"></span>
-                <span>一级</span>
-                <span>16种</span>
-              </li>
-              <li>
-                <span class="label-dot yellow-dot"></span>
-                <span>一级</span>
-                <span>16种</span>
-              </li>
-              <li>
-                <span class="label-dot green-dot"></span>
-                <span>一级</span>
-                <span>16种</span>
+              <li v-for="(item, index) in plantConfig.data" :key="item.name">
+                <span
+                  class="label-dot"
+                  :style="'background:' + plantConfig.color[index]"
+                ></span>
+                <span>{{ item.name }}</span>
+                <span>{{ item.value }}种</span>
               </li>
             </div>
           </div>
-          <div class="ring-chart-title">国家保护动物</div>
+          <div class="ring-chart-title">国家保护植物</div>
         </div>
       </div>
     </info-block>
@@ -85,19 +81,14 @@
           </span>
         </div>
         <div class="info-content detail-content">
-          <div class="content-display">
-            <div>
-              <p>名称：国家保护动物</p>
-              <p>野生种类：240种</p>
-              <p>区域：成都站</p>
-            </div>
-            <div>
-              <p>1级：16种</p>
-              <p>2级：72种</p>
-              <p>3级：23种</p>
-            </div>
-          </div>
-          <div class="get-more">更多信息></div>
+          <span
+            v-for="(item, index) in animalList"
+            :key="item"
+            class="item"
+            :class="{ 'active-item': currentSelect == index }"
+            @click="currentSelect = index"
+            >{{ item }}<span class="split">|</span>
+          </span>
         </div>
       </div>
     </info-block>
@@ -106,16 +97,26 @@
 
 <script>
 import infoBlock from "./infoBlock"
+const baseConfig = {
+  radius: "40",
+  activeRadius: "45%",
+  color: ["#2DA1FE", "#FFBC1C", "#19E194", "#FF4444"],
+
+  digitalFlopStyle: {
+    fontSize: 20,
+    fill: "#00EAFF"
+  },
+  showOriginValue: true,
+  lineWidth: 15
+}
 export default {
   components: { infoBlock },
   data() {
     return {
       currentDetailTab: "动物多样性",
       detailTabs: ["动物多样性", "植物多样性"],
-      plantConfig: {
-        radius: "40",
-        activeRadius: "45%",
-        color: ["#2DA1FE", "#FFBC1C", "#19E194"],
+      animalConfig: {
+        ...baseConfig,
         data: [
           {
             name: "一级",
@@ -126,17 +127,63 @@ export default {
             value: 72
           },
           {
-            name: "省级",
+            name: "三有",
+            value: 23
+          },
+          {
+            name: "其他",
             value: 23
           }
-        ],
-        digitalFlopStyle: {
-          fontSize: 20,
-          fill: "#00EAFF"
-        },
-        showOriginValue: true,
-        lineWidth: 15
-      }
+        ]
+      },
+      plantConfig: {
+        ...baseConfig,
+        data: [
+          {
+            name: "一级",
+            value: 20
+          },
+          {
+            name: "二级",
+            value: 80
+          },
+          {
+            name: "三有",
+            value: 26
+          },
+          {
+            name: "其他",
+            value: 24
+          }
+        ]
+      },
+      animalList: [
+        "大熊猫",
+        "牦牛",
+        "羚羊",
+        "梅花鹿",
+        "娃娃鱼",
+        "娃娃鱼",
+        "金丝猴",
+        "牦牛",
+        "羚羊",
+        "梅花鹿",
+        "娃娃鱼",
+        "娃娃鱼",
+        "金丝猴",
+        "牦牛",
+        "羚羊",
+        "梅花鹿",
+        "娃娃鱼",
+        "娃娃鱼",
+        "金丝猴",
+        "牦牛",
+        "羚羊",
+        "梅花鹿",
+        "大熊猫",
+        "娃娃鱼"
+      ],
+      currentSelect: 0
     }
   },
   methods: {
@@ -148,6 +195,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.attr {
+  margin-right: 10px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
 .animal-bottom {
   display: flex;
   padding: 0 20px 20px;
@@ -206,13 +259,14 @@ export default {
     justify-content: space-between;
 
     .active-ring-label {
+      display: flex;
+      height: 100%;
+      flex-direction: column;
+      justify-content: space-between;
+
       li {
         display: flex;
         align-items: center;
-
-        &:nth-child(2) {
-          margin: 20px 0;
-        }
 
         span {
           display: inline-block;
@@ -228,18 +282,6 @@ export default {
           height: 8px;
           margin-right: 20px;
           border-radius: 50%;
-        }
-
-        .blue-dot {
-          background-color: #2da1fe;
-        }
-
-        .yellow-dot {
-          background-color: #ffbc1c;
-        }
-
-        .green-dot {
-          background-color: #19e194;
         }
       }
     }
@@ -286,38 +328,32 @@ export default {
   }
 
   .detail-content {
-    padding: 20px;
-    padding-bottom: 10px;
-    margin-top: 14px;
+    overflow: auto;
+    height: 150px;
+    padding-top: 10px;
+    padding-left: 10px;
+    color: #fff;
+    font-size: 16px;
 
-    .content-display {
-      position: relative;
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      color: #d8d8d8;
+    .item {
+      display: inline-block;
+      margin: 5px 0;
 
-      & > div {
-        position: relative;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
-        justify-content: space-between;
-        padding-left: 8px;
-        border-left: 2px solid #34b2ff;
-
-        &:nth-child(1) {
-          flex-basis: 20%;
-        }
-
-        p {
-          margin-bottom: 20px;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
+      & > span {
+        color: #fff;
       }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .active-item {
+      color: #0b90c2;
+    }
+
+    .split {
+      margin: 0 5px;
     }
   }
 }

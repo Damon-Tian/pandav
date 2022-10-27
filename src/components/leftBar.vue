@@ -59,12 +59,6 @@ export default {
           iconActive: require("@/assets/img/p-leftbar-home-active.png")
         },
         {
-          name: "生态环境",
-          id: 2,
-          icon: require("@/assets/img/p-leftbar-env.png"),
-          iconActive: require("@/assets/img/p-leftbar-env-active.png")
-        },
-        {
           name: "自然资源",
           id: 3,
           icon: require("@/assets/img/p-leftbar-resource.png"),

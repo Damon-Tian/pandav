@@ -8,7 +8,7 @@
           </p>
           <div class="port-content">
             <p class="port-content__position">
-              <span>管护站</span>
+              <span>保护站</span>
               <span>{{ item.numPosition }}</span>
             </p>
             <p class="port-content__num">

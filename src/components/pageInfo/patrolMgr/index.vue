@@ -21,7 +21,7 @@
       </div>
     </info-block>
     <patrol-type />
-    <patrol-find />
+    <patrol-list />
   </div>
 </template>
 
@@ -29,13 +29,13 @@
 import infoBlock from "../infoBlock"
 import stations from "./stations"
 import patrolType from "./patrolType"
-import patrolFind from "./patrolFind"
+import patrolList from "./patrolList"
 export default {
   components: {
     infoBlock,
     stations,
     patrolType,
-    patrolFind
+    patrolList
   },
   data() {
     return {

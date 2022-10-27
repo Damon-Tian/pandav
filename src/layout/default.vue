@@ -7,12 +7,12 @@
         <right-info :current-tab="currentTab" />
       </div>
       <wether />
-      <iframe
+      <!-- <iframe
         frameborder="0"
         scrolling="auto"
         class="main-container__map"
         src="https://pano.cd720.com/panda/Apps/"
-      ></iframe>
+      ></iframe> -->
       <!-- <router-view /> -->
     </div>
     <camera class="main-right" />

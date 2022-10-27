@@ -65,7 +65,7 @@ export default {
 .event-remind {
   .info-content {
     overflow: scroll;
-    height: 366px;
+    height: 320px;
     padding: 20px;
     overflow-x: hidden;
   }
