@@ -1,0 +1,76 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <title>
+    EasyPlayer
+  </title>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="renderer" content="webkit" />
+  <meta name="force-rendering" content="webkit" />
+  <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" name="viewport">
+</head>
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .vjs-control.vjs-button.vjs-bitrate-control {
+    width: 4em !important;
+  }
+
+  .video-tools>div:nth-child(2) {
+    display: none !important;
+  }
+
+  .easy-player-loading>img {
+    height: 0px !important;
+  }
+</style>
+
+<body>
+  <div style="width: 100%;height: 100vh;overflow: hidden;">
+    <easy-player id="player" muted="true" autoplay="true" video-title="" debug="false" live="true" progress="false"
+      has-audio="true" is-trans-coding="false" decode-type="auto" reconnection="true" />
+  </div>
+  <script>
+    let vuePlayer
+    const playerEle = document.getElementById('player')
+    window.onload = () => {
+      var url = location.search; //这一条语句获取了包括问号开始到参数的最后，不包括前面的路径
+      var params = url.substr(1); //去掉问号
+      var pa = params.split("&");
+      var s = new Object();
+      for (var i = 0; i < pa.length; i++) {
+        s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
+      }
+      const src = s.videoUrl
+
+      playerEle.setAttribute('video-url', src);
+      playerEle.setAttribute('video-title', s.title);
+
+      if (!vuePlayer) vuePlayer = playerEle.getVueInstance(); //实例化vue 对象
+
+      vuePlayer.seek(30); // 快进30秒
+
+      playerEle.addEventListener("error", (message) => {
+        reloadStream('error', message)
+      })
+
+      playerEle.addEventListener("message", () => {
+      })
+
+      playerEle.addEventListener("ended", () => {
+        reloadStream('ended')
+      })
+
+
+    }
+
+  </script>
+  <script type="text/javascript" src="./EasyPlayer-element.min.js"></script>
+</body>
+
+</html>

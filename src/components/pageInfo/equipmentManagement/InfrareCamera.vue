@@ -111,6 +111,8 @@ export default {
 
 <style lang="less" scoped>
 .Infrare-camera {
+  padding: 10px;
+
   .title-right {
     color: #00eaff;
     font-size: 30px;
@@ -128,6 +130,8 @@ export default {
       border: none;
       background-color: transparent;
     }
+
+    padding: 10px 20px 0 0;
 
     :deep(.el-table tr) {
       background-color: transparent;

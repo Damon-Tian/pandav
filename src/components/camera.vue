@@ -5,19 +5,27 @@
       <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
     </span>
 
-    <div style="overflow: hidden; height: 100vh">
-      <div style="width: 75vw; height: 100vh">
-        <demo ref="demo" />
-      </div>
+    <div
+      style="
+        display: flex;
+        overflow: hidden;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: space-between;
+      "
+    >
+      <video-player style="width: 100%; flex: 1" />
+      <video-player style="width: 100%; flex: 1; margin: 2px 0" />
+      <video-player style="width: 100%; flex: 1" />
     </div>
   </div>
 </template>
 
 <script>
-import demo from "@/components/DHPlayer/demo"
+import videoPlayer from "@/components/videoPlayer/videoPlayer"
 export default {
   components: {
-    demo
+    videoPlayer
   },
   data() {
     return {

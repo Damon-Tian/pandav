@@ -68,7 +68,7 @@
       </div>
     </info-block>
 
-    <info-block title="详细信息">
+    <info-block title="代表物种">
       <div class="detail-block">
         <div class="detail-tab">
           <span
@@ -83,7 +83,7 @@
         <div class="info-content detail-content">
           <span
             v-for="(item, index) in animalList"
-            :key="item"
+            :key="index"
             class="item"
             :class="{ 'active-item': currentSelect == index }"
             @click="currentSelect = index"

@@ -1,6 +1,6 @@
 <template>
   <div class="equipment-management">
-    <div class="tabs">
+    <!-- <div class="tabs">
       <div
         v-for="tab in tabs"
         :key="tab"
@@ -12,12 +12,13 @@
       </div>
     </div>
     <div v-if="activeName == '设备管理'">
-      <camera />
-      <Infrare-camera />
-      <event-remind />
+      
     </div>
 
-    <environment v-else />
+    <environment v-else /> -->
+    <camera />
+    <Infrare-camera />
+    <event-remind />
   </div>
 </template>
 
@@ -26,10 +27,10 @@ import camera from "./equipmentManagement/camera.vue"
 import InfrareCamera from "./equipmentManagement/InfrareCamera.vue"
 import eventRemind from "./equipmentManagement/eventRemind.vue"
 
-import environment from "./environment.vue"
+// import environment from "./environment.vue"
 const tabs = ["设备管理", "生态设备"]
 export default {
-  components: { camera, InfrareCamera, eventRemind, environment },
+  components: { camera, InfrareCamera, eventRemind },
   data() {
     return {
       tabs,

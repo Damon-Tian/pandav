@@ -3,38 +3,46 @@
       left: isCollapse ? '134px' : '264px'
     }" -->
   <div class="selected-info">
-    <div class="selected-info-list">
-      <div
-        v-for="(item, index) in selectedInfoList"
-        :key="index"
-        class="selected-info-list__item"
-      >
-        <div class="selected-info-list__item__icon">
-          <img :src="item.img" alt="" />
-        </div>
-        <div class="selected-info-list__item__text">{{ item.title }}</div>
+    <div>
+      <div class="selected-info-list">
         <div
-          class="selected-info-list__item__checkbox"
-          @click="item.checked = !item.checked"
+          v-for="(item, index) in selectedInfoList"
+          :key="index"
+          class="selected-info-list__item"
         >
-          <img
-            v-if="item.checked"
-            src="../../assets/img/selectedInfo/checked.png"
-            alt=""
-          />
-          <img
-            v-if="!item.checked"
-            src="../../assets/img/selectedInfo/check.png"
-            alt=""
-          />
+          <div v-if="item.img" class="selected-info-list__item__icon">
+            <img :src="item.img" alt="" />
+          </div>
+          <div class="selected-info-list__item__text">{{ item.title }}</div>
+          <div
+            class="selected-info-list__item__checkbox"
+            @click="item.checked = !item.checked"
+          >
+            <img
+              v-if="item.checked"
+              src="../../assets/img/selectedInfo/checked.png"
+              alt=""
+            />
+            <img
+              v-if="!item.checked"
+              src="../../assets/img/selectedInfo/check.png"
+              alt=""
+            />
+          </div>
         </div>
       </div>
     </div>
+    <selected-info
+      v-if="showSubSelectList"
+      :select-list="subselectedInfo"
+      class="sub-selected"
+    />
   </div>
 </template>
 
 <script>
 export default {
+  name: "SelectedInfo",
   components: {},
   props: {
     //左边tabs是否展开
@@ -46,6 +54,10 @@ export default {
     currentTab: {
       type: [Number, String],
       default: null
+    },
+    selectList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -62,12 +74,6 @@ export default {
           title: "一般保护区",
           checked: true,
           id: "2"
-        },
-        {
-          img: require("../../assets/img/selectedInfo/ecological.png"),
-          title: "生态环境",
-          checked: false,
-          id: "3"
         },
         {
           img: require("../../assets/img/selectedInfo/natural.png"),
@@ -113,14 +119,41 @@ export default {
           checked: true,
           id: "2"
         }
+      ],
+      subselectedInfo: [
+        {
+          title: "红外相机",
+          checked: true,
+          id: "10"
+        },
+        {
+          title: "摄像机",
+          checked: false,
+          id: "11"
+        },
+        {
+          title: "生态设备",
+          checked: true,
+          id: "12"
+        }
       ]
     }
   },
   computed: {
     selectedInfoList() {
+      if (this.selectList && this.selectList.length) {
+        return this.selectList
+      }
       return this.currentTab === 1
         ? this.selectedInfoList1
         : this.selectedInfoList2
+    },
+    showSubSelectList() {
+      return (
+        this.selectedInfoList.findIndex(
+          (item) => item.id == 6 && item.checked
+        ) > -1
+      )
     }
   }
 }
@@ -162,5 +195,10 @@ export default {
       }
     }
   }
+}
+
+.sub-selected {
+  position: absolute;
+  margin-left: 200px;
 }
 </style>
