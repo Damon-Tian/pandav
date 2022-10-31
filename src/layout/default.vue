@@ -7,12 +7,7 @@
         <right-info :current-tab="currentTab" />
       </div>
       <wether />
-      <!-- <iframe
-        frameborder="0"
-        scrolling="auto"
-        class="main-container__map"
-        src="https://pano.cd720.com/panda/Apps/"
-      ></iframe> -->
+      <map-box />
       <!-- <router-view /> -->
     </div>
     <camera class="main-right" />
@@ -25,13 +20,15 @@ import leftBar from "@/components/leftBar"
 import camera from "@/components/camera.vue"
 import rightInfo from "@/components/rightInfo"
 import wether from "@/components/wether"
+import mapBox from "@/components/map/index"
 export default {
   components: {
     topNav,
     leftBar,
     camera,
     rightInfo,
-    wether
+    wether,
+    mapBox
   },
   data() {
     return {
