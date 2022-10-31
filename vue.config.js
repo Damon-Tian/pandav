@@ -8,6 +8,13 @@ module.exports = {
         pathRewrite: {
           "^/mapapi": ""
         }
+      },
+      "/profile": {
+        target: "http://10.51.100.105/profile",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/profile": ""
+        }
       }
     }
   }
