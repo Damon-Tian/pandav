@@ -16,7 +16,7 @@
           <div class="selected-info-list__item__text">{{ item.title }}</div>
           <div
             class="selected-info-list__item__checkbox"
-            @click="item.checked = !item.checked"
+            @click="handleClick(item)"
           >
             <img
               v-if="item.checked"
@@ -41,6 +41,7 @@
 </template>
 
 <script>
+import img from "../../assets/img/selectedInfo/checked.png"
 export default {
   name: "SelectedInfo",
   components: {},
@@ -67,42 +68,49 @@ export default {
           img: require("../../assets/img/selectedInfo/core.png"),
           title: "核心保护区",
           checked: true,
+          type: 3,
           id: "1"
         },
         {
           img: require("../../assets/img/selectedInfo/general.png"),
           title: "一般保护区",
           checked: true,
+          type: 3,
           id: "2"
         },
         {
           img: require("../../assets/img/selectedInfo/natural.png"),
           title: "自然资源",
           checked: false,
+          type: 1,
           id: "4"
         },
         {
           img: require("../../assets/img/selectedInfo/site.png"),
           title: "基层站点",
           checked: false,
+          type: 3,
           id: "5"
         },
         {
           img: require("../../assets/img/selectedInfo/equipment.png"),
           title: "设备管理",
           checked: false,
+          type: 1,
           id: "6"
         },
         {
           img: require("../../assets/img/selectedInfo/patrol.png"),
           title: "巡护管理",
           checked: true,
+          type: 2,
           id: "7"
         },
         {
           img: require("../../assets/img/selectedInfo/fence.png"),
           title: "电子围栏",
           checked: true,
+          type: 3,
           id: "8"
         }
       ],
@@ -111,12 +119,14 @@ export default {
           img: require("../../assets/img/selectedInfo/core.png"),
           title: "核心保护区",
           checked: true,
+          type: 3,
           id: "1"
         },
         {
           img: require("../../assets/img/selectedInfo/general.png"),
           title: "一般保护区",
           checked: true,
+          type: 3,
           id: "2"
         }
       ],
@@ -124,15 +134,18 @@ export default {
         {
           title: "红外相机",
           checked: true,
+          type: 1,
           id: "10"
         },
         {
           title: "摄像机",
           checked: false,
+          type: 1,
           id: "11"
         },
         {
           title: "生态设备",
+          type: 1,
           checked: true,
           id: "12"
         }
@@ -154,6 +167,67 @@ export default {
           (item) => item.id == 6 && item.checked
         ) > -1
       )
+    }
+  },
+  methods: {
+    handleClick(item) {
+      item.checked = !item.checked
+      if (item.checked) {
+        this.setLayer(item.type, item.title)
+      } else {
+        this.$store.state.app.map.mapBox.removelayer(item.title)
+      }
+    },
+    async setLayer(type, id) {
+      const geoData = await this.getData(type, id)
+      console.log(geoData)
+      // type 1:点 2:线 3:面
+      if (type == 1) {
+        this.$store.state.app.map.mapBox.point(geoData)
+      }
+      if (type == 2) {
+        this.$store.state.app.map.mapBox.line()
+      }
+      if (type == 3) {
+        this.$store.state.app.map.mapBox.Polygon()
+      }
+    },
+    async getData(type, id) {
+      switch (type) {
+        case 1:
+          return Promise.resolve({
+            imgUrl: img,
+            id,
+            textName: "text",
+            pointArray: {
+              type: "FeatureCollection",
+              features: [
+                {
+                  id: "1",
+                  type: "Feature",
+                  properties: {
+                    text: "动物点1"
+                  }, //其中必须包含id字段，用于高亮点钟图标
+                  geometry: {
+                    type: "Point",
+                    coordinates: [103.681065, 30.644377]
+                  }
+                },
+                {
+                  id: "2",
+                  type: "Feature",
+                  properties: {
+                    text: "动物点2"
+                  },
+                  geometry: {
+                    type: "Point",
+                    coordinates: [103.681165, 30.645377]
+                  }
+                }
+              ]
+            }
+          })
+      }
     }
   }
 }
