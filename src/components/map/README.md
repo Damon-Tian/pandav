@@ -129,3 +129,33 @@ removelayer(id)
   rmline(id) {
   removeline(this.map, id)
   }
+  /\*\*
+
+* @Descripttion: 添加弹框
+* @Author:
+* @Date: 2022-11-03 09:55:15
+* @LastEditors:
+* @return {_}
+  _/
+  poup(
+  data = {
+  center: [104,30],
+  centent: "<div style='width:300px'>helloword</div>"
+  }
+  )
+  或者 poup(
+  data = {
+  center: [104,30],
+  centent:centent: this.$refs.textbutton
+  }
+  )
+    <!-- 移除弹框 -->
+  removePoup()
+  /\*\*
+* @Descripttion: 定位范围
+* @Author:
+* @Date: 2022-11-03 09:57:54
+* @LastEditors: polygon:geojson
+* @return {_}
+  _/
+  flybound(polygon)

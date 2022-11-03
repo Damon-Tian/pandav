@@ -231,7 +231,7 @@ export default {
     // 弹框
     poup(
       data = {
-        center: { lon: 104, lat: 30 },
+        center: [104, 30],
         centent: "<div style='width:300px'>helloword</div>"
       }
     ) {
