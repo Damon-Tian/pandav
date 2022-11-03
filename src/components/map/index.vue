@@ -61,6 +61,18 @@
       <button type="button" @click="Polygon()">添加面</button>
       <button type="button" @click="point()">添加点位</button>
       <button type="button" @click="line()">添加线</button>
+      <button type="button" @click="view">获取视角</button>
+      <button type="button" @click="background('rgba(200,62,17,0.5)')">背景颜色</button>
+      <button
+        type="button"
+        @click="
+          () => {
+            fly(currentView)
+          }
+        "
+      >
+        定位视角
+      </button>
       <button type="button" @click="removelayer('chengdu')">删除</button>
     </div>
   </div>
@@ -72,7 +84,7 @@ import "./src/index.less"
 import CreatMap from "./src/ylkj/addlayer.js"
 import { addHeatMap } from "./src/ylkj/heatmap.js"
 import { addPolygon, removePlygon } from "./src/ylkj/poygon.js"
-import { flyBounds } from "./src/ylkj/fly.js"
+import { flyBounds, getView, flyTo } from "./src/ylkj/fly.js"
 import CHOUZHOUJSON from "./src/ylkj/lib/chongzhou.json"
 import LINE_GEOJSON from "./src/ylkj/lib/line.json"
 import { addImgIcon } from "./src/ylkj/point.js"
@@ -86,7 +98,8 @@ export default {
       Map2d: null,
       layers: [], //图层
       terrians: [], //地形
-      poupobj: null //弹框对象
+      poupobj: null, //弹框对象
+      currentView: null
     }
   },
   mounted() {
@@ -95,17 +108,18 @@ export default {
       // "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
     )
     this.map = this.Map2d.getMap()
-    const settimoutobj = setTimeout(() => {
-      // this.Map2d.addlayer(
-      //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
-      // )
-      // this.Map2d.addterrian(
-      //   // "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png"
-      //   "/profile/xiongmao_dem/chongzhou_dem/{z}/{x}/{y}.png"
-      // )
-      // clearTimeout(settimoutobj)
-    }, 1000)
+    // const settimoutobj = setTimeout(() => {
+    //   // this.Map2d.addlayer(
+    //   //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
+    //   // )
+    //   // this.Map2d.addterrian(
+    //   //   // "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png"
+    //   //   "/profile/xiongmao_dem/chongzhou_dem/{z}/{x}/{y}.png"
+    //   // )
+    //   // clearTimeout(settimoutobj)
+    // }, 1000)
     this.map.on("load", () => {
+      this.background("rgba(30,62,17,0.5)")
       this.addterrian(
         "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png",
         "terrian"
@@ -113,19 +127,39 @@ export default {
       this.$emit("onload")
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
-        console.log("点击事件", features)
         if (features.length) {
           this.$emit("mapclick", features[0].properties, features)
         }
-        // this.poup({
-        //   // center: { lon: Number(e.lngLat.lng), lat: Number(e.lngLat.lat) },
-        //   center: [Number(e.lngLat.lng), Number(e.lngLat.lat)],
-        //   centent: this.$refs.textbutton
-        // })
       })
     })
   },
   methods: {
+    // 背景色
+    background(color="rgba(30,62,17,0.5)"){
+      if(this.map.getLayer("beijing")){
+        // this.map.removeLayer("beijing")
+        this.map.setPaintProperty('beijing', 'background-color', color)
+      }else{
+        try {
+          this.map.addLayer({
+            id: "beijing",
+            type: "background",
+            paint: {
+              "background-color": color
+            },
+            layout: {
+              visibility: "visible"
+            },
+            metadata: {
+              "mapbox:group": "92ca48f13df25"
+            }
+          })
+          
+        } catch (error) {
+            console.log('背景',error)
+        }
+      }
+    },
     // 添加地图
     /**
      * @Descripttion:
@@ -255,6 +289,28 @@ export default {
     // 移除线
     rmline(id) {
       removeline(this.map, id)
+    },
+    // 坐标定位
+    fly(
+      view = {
+        bearing: 9.600000000000023,
+        center: [103.58806946916616, 30.630077549993786],
+        duration: 12000,
+        essential: true,
+        pitch: 73.99999999999997,
+        zoom: 16.001771985334283
+      }
+    ) {
+      flyTo(this.map, view)
+    },
+    // 获取视角
+    view() {
+      this.currentView = getView(this.map)
+      return getView(this.map)
+    },
+    // 地图重置
+    resize() {
+      this.map.resize()
     }
   }
 }

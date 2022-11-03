@@ -54,7 +54,7 @@ class CreatMap {
         sources: {
           maplasource: {
             type: "raster",
-            tiles: [url],
+            tiles: Array.isArray(url) ? url : [url],
             tileSize: 256
           }
           // 'satellite': {
