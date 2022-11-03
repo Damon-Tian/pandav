@@ -19,3 +19,12 @@ export function isString(value) {
 export function isArray(value) {
     return Object.prototype.toString.call(value) === '[object Array]';
 }
+// 字体大小
+export function fontSize(res) {
+    let clientWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    if (!clientWidth) {
+        return res
+    }
+
+    return res * (clientWidth / 1920);
+}

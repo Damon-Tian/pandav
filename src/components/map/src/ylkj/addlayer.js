@@ -44,10 +44,13 @@ class CreatMap {
       center: [103.46345144619704, 30.466287355910467],
       // crs:'EGSP:3857',
       pitch: 65.5,
+      // ./lib/fonts/{fontstack}/{range}.pbf
+
       zoom: 11.99715452226343,
       bearing: 0,
       touchZoomRotate: true,
       style: url ? {
+        glyphs: "./lib/fonts/{fontstack}/{range}.pbf",
         sources: {
           maplasource: {
             type: "raster",
@@ -71,7 +74,9 @@ class CreatMap {
           // 	'source': 'satellite'
           // },
         ]
-      } : null
+      } : {
+        glyphs: "./lib/fonts/{fontstack}/{range}.pbf",
+      }
     })
     // this.addterrian()
     // onComponentMount (()=>{

@@ -1,3 +1,11 @@
+/*
+ * @Author: night-white-up 1030884759@qq.com
+ * @Date: 2022-11-01 18:19:53
+ * @LastEditors: night-white-up 1030884759@qq.com
+ * @LastEditTime: 2022-11-02 10:35:48
+ * @FilePath: \pandav\src\components\map\src\ylkj\poygon.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 let {
     addSource,
     addLayer,
@@ -16,7 +24,7 @@ import {
 } from "./lib/truf.js"
 
 export function addPolygon(map, data) {
-    let poygon = data.poygon;
+    let poygon = data.polygon;
     // console.log('边界', bbox(poygon), bboxPolygon)
     const layerId = data.id ? data.id : uuid();
     if (map.getLayer(layerId)) {
@@ -51,7 +59,7 @@ export function addPolygon(map, data) {
         }
     });
 }
-export function removePlygon(map,layerId){
+export function removePlygon(map, layerId) {
     if (map.getLayer(layerId)) {
         // map.getLayer((layerId +'outline'))? map.removeLayer((layerId +'outline')):null;
         map.removeLayer(layerId);
