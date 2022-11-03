@@ -62,6 +62,7 @@
       <button type="button" @click="point()">添加点位</button>
       <button type="button" @click="line()">添加线</button>
       <button type="button" @click="view">获取视角</button>
+      <button type="button" @click="resize">重置</button>
       <button type="button" @click="background('rgba(200,62,17,0.5)')">背景颜色</button>
       <button
         type="button"
@@ -90,6 +91,7 @@ import LINE_GEOJSON from "./src/ylkj/lib/line.json"
 import { addImgIcon } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
 import ELEC_ICON from "./src/ylkj/lib/elec.png"
+import TEST_ICON from "./src/ylkj/lib/test.png"
 const { createPopup } = window.egis
 // import { setMap } from "@egis/map"
 export default {
@@ -119,18 +121,22 @@ export default {
     //   // clearTimeout(settimoutobj)
     // }, 1000)
     this.map.on("load", () => {
-      this.background("rgba(30,62,17,0.5)")
+      this.background("rgba(8,25,64,0.5)")
       this.addterrian(
         "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png",
         "terrian"
       )
       this.$emit("onload")
+      // 初始加载成都地图
+      // this.addlayer('http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png', 'chengdu')
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
         if (features.length) {
           this.$emit("mapclick", features[0].properties, features)
         }
       })
+      // http://3888z2k945.wicp.vip:6150/file/arcgis/tuceng/_alllayers/10/417/806.png
+     
     })
   },
   methods: {
@@ -186,7 +192,7 @@ export default {
         return
       }
       this.Map2d.removelayer(id)
-      this.rmline("lines")
+      // this.rmline("lines")
       // this.removePolygon()
       // this.poupobj?.isOpen() ? this.poupobj.remove() : null
     },
@@ -226,7 +232,7 @@ export default {
       }
     ) {
       addPolygon(this.map, data)
-      this.flybound(data.polygon)
+      // this.flybound(data.polygon)
     },
     removePolygon(layerId = "mapPlygon") {
       removePlygon(this.map, layerId)
@@ -260,7 +266,7 @@ export default {
       }
     ) {
       addImgIcon(this.map, data)
-      this.flybound(data.pointArray)
+      // this.flybound(data.pointArray)
     },
     // 弹框
     poup(
