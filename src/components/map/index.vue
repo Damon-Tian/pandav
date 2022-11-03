@@ -6,7 +6,7 @@
         @click="
           addlayer(
             'http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'chengdu'
+            'chongzhou'
           )
         "
       >
@@ -17,7 +17,7 @@
         @click="
           addlayer(
             'http://3888z2k945.wicp.vip:6150/file/xiongmao/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'chengdu'
+            'dayi'
           )
         "
       >
@@ -28,7 +28,7 @@
         @click="
           addlayer(
             'http://3888z2k945.wicp.vip:6150/file/xiongmao/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'chengdu'
+            'dujiangyan'
           )
         "
       >
@@ -39,7 +39,7 @@
         @click="
           addlayer(
             'http://3888z2k945.wicp.vip:6150/file/xiongmao/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'chengdu'
+            'pengzhou'
           )
         "
       >
@@ -110,6 +110,7 @@ export default {
         "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png",
         "terrian"
       )
+      this.$emit("onload")
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
         console.log("点击事件", features)
@@ -126,6 +127,15 @@ export default {
   },
   methods: {
     // 添加地图
+    /**
+     * @Descripttion:
+     * @Author:
+     * @Date: 2022-11-03 09:41:28
+     * @LastEditors:
+     * @param {*} url：string, id:string
+     * @param {*}
+     * @return {*}
+     */
     addlayer(url, id) {
       if (this.layers.length) {
         this.layers.forEach((item) => {
@@ -166,7 +176,7 @@ export default {
     removeterrian(id) {
       this.Map2d.removterrian(id)
     },
-    // 添加地形
+    // 添加热力图
     addHeatmap(obj) {
       obj.id ? this.removelayer(obj.id) : null
       addHeatMap(this.map, obj)
