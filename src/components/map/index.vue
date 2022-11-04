@@ -63,7 +63,9 @@
       <button type="button" @click="line()">添加线</button>
       <button type="button" @click="view">获取视角</button>
       <button type="button" @click="resize">重置</button>
-      <button type="button" @click="background('rgba(200,62,17,0.5)')">背景颜色</button>
+      <button type="button" @click="background('rgba(200,62,17,0.5)')">
+        背景颜色
+      </button>
       <button
         type="button"
         @click="
@@ -127,8 +129,16 @@ export default {
         "terrian"
       )
       this.$emit("onload")
-      // 初始加载成都地图
-      // this.addlayer('http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png', 'chengdu')
+      // 初始加载成都地图、
+
+      // this.addlayer(
+      //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+      //   "chengdu"
+      // )
+      // this.addlayer2(
+      //   "http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=915de993ea6873664830bf5d8217723c",
+      //   "biaozhu"
+      // )
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
         if (features.length) {
@@ -136,16 +146,18 @@ export default {
         }
       })
       // http://3888z2k945.wicp.vip:6150/file/arcgis/tuceng/_alllayers/10/417/806.png
-     
     })
   },
+  // http://t3.tianditu.com/DataServer?T=${
+  // 					src.value.BASE_MAP_URL ? src.value.BASE_MAP_URL : 'img_w'
+  // 				}&x={x}&y={y}&l={z}&tk=915de993ea6873664830bf5d8217723c
   methods: {
     // 背景色
-    background(color="rgba(30,62,17,0.5)"){
-      if(this.map.getLayer("beijing")){
+    background(color = "rgba(30,62,17,0.5)") {
+      if (this.map.getLayer("beijing")) {
         // this.map.removeLayer("beijing")
-        this.map.setPaintProperty('beijing', 'background-color', color)
-      }else{
+        this.map.setPaintProperty("beijing", "background-color", color)
+      } else {
         try {
           this.map.addLayer({
             id: "beijing",
@@ -160,9 +172,8 @@ export default {
               "mapbox:group": "92ca48f13df25"
             }
           })
-          
         } catch (error) {
-            console.log('背景',error)
+          console.log("背景", error)
         }
       }
     },
@@ -184,6 +195,9 @@ export default {
         this.layers = []
       }
       this.layers.push(this.Map2d.addlayer(url, id))
+    },
+    addlayer2(url, id) {
+      this.Map2d.addlayer(url, id)
     },
     // 删除地图
     removelayer(id) {
@@ -295,6 +309,7 @@ export default {
     // 移除线
     rmline(id) {
       removeline(this.map, id)
+      removeline("lines")
     },
     // 坐标定位
     fly(
