@@ -49,6 +49,7 @@ export default {
     },
     handleClick(currentFeature) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
+      console.log(currentFeature)
     },
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")

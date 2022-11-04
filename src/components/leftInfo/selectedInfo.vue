@@ -102,14 +102,14 @@ export default {
         {
           img: require("../../assets/img/selectedInfo/patrol.png"),
           title: "巡护管理",
-          checked: true,
+          checked: false,
           type: 2,
           id: "7"
         },
         {
           img: require("../../assets/img/selectedInfo/fence.png"),
           title: "电子围栏",
-          checked: true,
+          checked: false,
           type: 3,
           id: "8"
         }
@@ -172,61 +172,184 @@ export default {
   methods: {
     handleClick(item) {
       item.checked = !item.checked
+      const { type, title } = item
       if (item.checked) {
-        this.setLayer(item.type, item.title)
+        this.setLayer(type, title)
       } else {
-        this.$store.state.app.map.mapBox.removelayer(item.title)
+        this.removelayer(type, title)
       }
     },
     async setLayer(type, id) {
       const geoData = await this.getData(type, id)
-      console.log(geoData)
       // type 1:点 2:线 3:面
       if (type == 1) {
-        this.$store.state.app.map.mapBox.point(geoData)
+        const data = {
+          imgUrl: img,
+          id,
+          textName: "text",
+          pointArray: {
+            type: "FeatureCollection",
+            features: geoData
+          }
+        }
+        this.$store.state.app.map.mapBox.point(data)
       }
       if (type == 2) {
-        this.$store.state.app.map.mapBox.line()
+        const data = {
+          id,
+          geojson: {
+            features: geoData,
+            type: "FeatureCollection"
+          }
+        }
+        this.$store.state.app.map.mapBox.line(data)
       }
       if (type == 3) {
-        this.$store.state.app.map.mapBox.Polygon()
+        const data = {
+          id,
+          fillColor: " rgba(11,159,251,0.4)",
+          opacity: 0.4,
+          width: 2,
+          polygon: {
+            type: "FeatureCollection",
+            features: geoData
+          }
+        }
+        this.$store.state.app.map.mapBox.Polygon(data)
       }
     },
     async getData(type, id) {
       switch (type) {
         case 1:
-          return Promise.resolve({
-            imgUrl: img,
-            id,
-            textName: "text",
-            pointArray: {
-              type: "FeatureCollection",
-              features: [
-                {
-                  id: "1",
-                  type: "Feature",
-                  properties: {
-                    text: "动物点1"
-                  }, //其中必须包含id字段，用于高亮点钟图标
-                  geometry: {
-                    type: "Point",
-                    coordinates: [103.681065, 30.644377]
-                  }
-                },
-                {
-                  id: "2",
-                  type: "Feature",
-                  properties: {
-                    text: "动物点2"
-                  },
-                  geometry: {
-                    type: "Point",
-                    coordinates: [103.681165, 30.645377]
-                  }
-                }
-              ]
+          return Promise.resolve([
+            {
+              id: "1",
+              type: "Feature",
+              properties: {
+                text: "动物点1"
+              }, //其中必须包含id字段，用于高亮点钟图标
+              geometry: {
+                type: "Point",
+                coordinates: [103.681065, 30.644377]
+              }
+            },
+            {
+              id: "2",
+              type: "Feature",
+              properties: {
+                text: "动物点2"
+              },
+              geometry: {
+                type: "Point",
+                coordinates: [103.681165, 30.645377]
+              }
             }
-          })
+          ])
+        case 2:
+          return Promise.resolve([
+            {
+              type: "Feature",
+              properties: {
+                name: "线条1"
+              },
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [103.432937, 30.878296],
+                  [103.431534, 30.878371],
+                  [103.430488, 30.878591],
+                  [103.427857, 30.879531],
+                  [103.426433, 30.879565],
+                  [103.425718, 30.879164],
+                  [103.409448, 30.864955],
+                  [103.403892, 30.863962]
+                ]
+              }
+            },
+            {
+              type: "Feature",
+              properties: {
+                name: "线条2"
+              },
+              geometry: {
+                type: "LineString",
+                coordinates: [
+                  [103.543722, 30.828089],
+                  [103.544396, 30.830691],
+                  [103.544171, 30.832102],
+                  [103.543757, 30.833789],
+                  [103.543084, 30.835082],
+                  [103.541632, 30.83608],
+                  [103.54032, 30.836406],
+                  [103.538881, 30.836501],
+                  [103.536328, 30.837267],
+                  [103.534237, 30.837529],
+                  [103.532546, 30.837566],
+                  [103.528372, 30.837354],
+                  [103.525973, 30.836937],
+                  [103.524085, 30.836918],
+                  [103.522437, 30.837802],
+                  [103.521188, 30.83875],
+                  [103.519799, 30.839527]
+                ]
+              }
+            }
+          ])
+        case 3:
+          return Promise.resolve([
+            {
+              type: "Feature",
+              properties: {
+                name: "电子围栏1"
+              },
+              geometry: {
+                type: "MultiPolygon",
+                coordinates: [
+                  [
+                    [
+                      [103.432937, 30.878296],
+                      [103.532937, 30.978296],
+                      [103.632937, 30.778296],
+
+                      [103.432937, 30.878296]
+                    ]
+                  ]
+                ]
+              }
+            },
+            {
+              type: "Feature",
+              properties: {
+                name: "电子围栏2"
+              },
+              geometry: {
+                type: "MultiPolygon",
+                coordinates: [
+                  [
+                    [
+                      [103.513296, 30.589647],
+                      [103.522574, 30.599069],
+                      [103.531795, 30.608084],
+                      [103.561156, 30.616818],
+                      [103.588869, 30.629464],
+                      [103.513296, 30.589647]
+                    ]
+                  ]
+                ]
+              }
+            }
+          ])
+      }
+    },
+    removelayer(type, id) {
+      if (type === 1) {
+        this.$store.state.app.map.mapBox.removelayer(id)
+      }
+      if (type === 2) {
+        this.$store.state.app.map.mapBox.rmline(id)
+      }
+      if (type === 3) {
+        this.$store.state.app.map.mapBox.removePolygon(id)
       }
     }
   }
