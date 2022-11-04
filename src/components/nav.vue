@@ -7,11 +7,11 @@
       <span
         v-for="item in hrefs"
         :key="item.id"
-        :class="currentTab === item.id ? 'active' : ''"
-        @click="currentTab = item.id"
+        :class="currentArea === item.id ? 'active' : ''"
+        @click="handleClick(item)"
       >
         {{ item.name }}
-        <span v-if="currentTab === item.id" class="back-text">{{
+        <span v-if="currentArea === item.id" class="back-text">{{
           item.name
         }}</span>
       </span>
@@ -23,17 +23,78 @@
 export default {
   data() {
     return {
-      currentTab: "home",
       hrefs: [
         {
           name: "综合概况",
-          id: "home"
+          id: "chengdu",
+          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          view: {
+            bearing: 13.517716661366421,
+            center: [103.31194986717048, 30.472073615727084],
+            duration: 12000,
+            essential: true,
+            pitch: 57.01769083909942,
+            zoom: 10
+          }
         },
-        { name: "崇州站", id: "chongzhou" },
-        { name: "大邑站", id: "dayi" },
-        { name: "彭州站", id: "pengzhou" },
-        { name: "都江堰站", id: "dujiangyan" }
+        {
+          name: "崇州站",
+          id: "chongzhou",
+          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          view: {
+            bearing: 0,
+            center: [103.45711202800089, 30.522769602585484],
+            duration: 12000,
+            essential: true,
+            pitch: 53.51769981743894,
+            zoom: 10.310552966704606
+          }
+        },
+        {
+          name: "大邑站",
+          id: "dayi",
+          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          view: {
+            bearing: 0,
+            center: [103.42625254689449, 30.492047976346925],
+            duration: 12000,
+            essential: true,
+            pitch: 53.51769095010108,
+            zoom: 10.531624037345626
+          }
+        },
+        {
+          name: "彭州站",
+          id: "pengzhou",
+          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          view: {
+            bearing: 0,
+            center: [103.8764645196427, 31.03717774580734],
+            duration: 12000,
+            essential: true,
+            pitch: 53.93684150325133,
+            zoom: 10.39665090798298
+          }
+        },
+        {
+          name: "都江堰站",
+          id: "dujiangyan",
+          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          view: {
+            bearing: 0,
+            center: [103.60124114271571, 30.925828475655365],
+            duration: 12000,
+            essential: true,
+            pitch: 55.289572892161736,
+            zoom: 10.784372529307735
+          }
+        }
       ]
+    }
+  },
+  computed: {
+    currentArea() {
+      return this.$store.state.app.currentArea
     }
   },
   methods: {
@@ -45,6 +106,11 @@ export default {
         el.webkitRequestFullscreen ||
         el.msRequestFullScreen
       fullScreen()
+    },
+    handleClick(item) {
+      this.$store.commit("app/SET_CURRENTAREA", item.id)
+      this.$store.state.app.map.mapBox.fly(item.view)
+      this.$store.state.app.map.mapBox.addlayer(item.url, item.id)
     }
   }
 }

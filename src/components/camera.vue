@@ -32,14 +32,14 @@ export default {
       isCollapse: false
     }
   },
-  watch: {
-    isCollapse: function (val) {
-      val ? this.$refs.demo.hideWindow() : this.$refs.demo.showWindow()
-    }
-  },
   methods: {
     narrowClick() {
       this.isCollapse = !this.isCollapse
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.$store.state.app.map.mapBox.resize()
+        }, 500)
+      })
     }
   }
 }

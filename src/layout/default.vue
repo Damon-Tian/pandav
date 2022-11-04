@@ -7,7 +7,12 @@
         <right-info :current-tab="currentTab" />
       </div>
       <wether />
-      <map-box />
+      <map-box
+        ref="mapBox"
+        style="width: 100%"
+        @mapclick="handleClick"
+        @onload="handleOnLoad"
+      />
       <!-- <router-view /> -->
     </div>
     <camera class="main-right" />
@@ -35,9 +40,31 @@ export default {
       currentTab: 1
     }
   },
+  mounted() {
+    this.$store.commit("app/SET_MAPBOX", this.$refs.mapBox)
+  },
   methods: {
     selectMenu(i) {
       this.currentTab = i
+    },
+    handleClick(currentFeature) {
+      this.$store.commit("app/SET_MAPFEATURE", currentFeature)
+      console.log(currentFeature)
+    },
+    handleOnLoad() {
+      this.$refs.mapBox.background("#081940")
+      this.$refs.mapBox.fly({
+        bearing: 13.517716661366421,
+        center: [103.31194986717048, 30.472073615727084],
+        duration: 12000,
+        essential: true,
+        pitch: 57.01769083909942,
+        zoom: 10
+      })
+      this.$refs.mapBox.addlayer(
+        "http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+        "chengdu"
+      )
     }
   }
 }

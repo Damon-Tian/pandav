@@ -10,8 +10,8 @@ module.exports = {
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
   devServer: {
     proxy: {
-      "/mapapi": {
-        target: "http://data.mars3d.cn",
+      "/file": {
+        target: "http://3888z2k945.wicp.vip:6150/file",
         changeOrigin: true,
         pathRewrite: {
           "^/mapapi": ""
