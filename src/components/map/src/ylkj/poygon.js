@@ -2,7 +2,7 @@
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-01 18:19:53
  * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-02 10:35:48
+ * @LastEditTime: 2022-11-04 10:10:00
  * @FilePath: \pandav\src\components\map\src\ylkj\poygon.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -66,4 +66,5 @@ export function removePlygon(map, layerId) {
         map.removeLayer('outline');
         map.getSource(layerId) ? map.removeSource(layerId) : null
     }
+    // map.getLayer('outline') ? map.removeLayer('outline') : null
 }

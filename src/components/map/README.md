@@ -61,6 +61,7 @@ id: "mapPlygon",
 polygon: CHOUZHOUJSON,
 fillColor: "rgba(255,44,44,0.4)",
 opacity: 0.4,
+lineColor:'#FF2C2C',
 width: 2
 }
 )
@@ -159,22 +160,22 @@ removelayer(id)
 * @return {_}
   _/
   flybound(polygon)
-//背景颜色，在监听onload事件里修改
-background("rgba(30,62,17,0.5)")
-<!--地图重置  -->
- resize() 
-//获取当前视角，返回定位所需视角对象，然后可以用fly定位到调整的视野
+  //背景颜色，在监听 onload 事件里修改
+  background("rgba(30,62,17,0.5)")
+  <!--地图重置  -->
+
+  resize()
+  //获取当前视角，返回定位所需视角对象，然后可以用 fly 定位到调整的视野
 
   view()
   //定位
   fly(
-      view = {
-        bearing: 9.600000000000023,
-        center: [103.58806946916616, 30.630077549993786],
-        duration: 12000,
-        essential: true,
-        pitch: 73.99999999999997,
-        zoom: 16.001771985334283
-      }
-    ) {
-
+  view = {
+  bearing: 9.600000000000023,
+  center: [103.58806946916616, 30.630077549993786],
+  duration: 12000,
+  essential: true,
+  pitch: 73.99999999999997,
+  zoom: 16.001771985334283
+  }
+  ) {

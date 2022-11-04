@@ -76,6 +76,16 @@
       >
         定位视角
       </button>
+      <button
+        type="button"
+        @click="
+          () => {
+            regionBorder('regionborder', { lineColor: '#ffff00', lineWidth: 2 })
+          }
+        "
+      >
+        边界线
+      </button>
       <button type="button" @click="removelayer('chengdu')">删除</button>
     </div>
   </div>
@@ -90,10 +100,12 @@ import { addPolygon, removePlygon } from "./src/ylkj/poygon.js"
 import { flyBounds, getView, flyTo } from "./src/ylkj/fly.js"
 import CHOUZHOUJSON from "./src/ylkj/lib/chongzhou.json"
 import LINE_GEOJSON from "./src/ylkj/lib/line.json"
+import REGION_GEOJSON from "./src/ylkj/lib/region.json"
 import { addImgIcon } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
 import ELEC_ICON from "./src/ylkj/lib/elec.png"
 import TEST_ICON from "./src/ylkj/lib/test.png"
+
 const { createPopup } = window.egis
 // import { setMap } from "@egis/map"
 export default {
@@ -131,10 +143,18 @@ export default {
       this.$emit("onload")
       // 初始加载成都地图、
 
-      // this.addlayer(
-      //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
-      //   "chengdu"
-      // )
+      this.addlayer(
+        "http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+        "chengdu"
+      )
+      // this.Polygon({
+      //   id: "mapPlygon2",
+      //   polygon: CHOUZHOUJSON,
+      //   fillColor: "rgba(255,44,44,0.4)",
+      //   opacity: 0.4,
+      //   width: 2
+      // })
+
       // this.addlayer2(
       //   "http://t3.tianditu.com/DataServer?T=cva_w&x={x}&y={y}&l={z}&tk=915de993ea6873664830bf5d8217723c",
       //   "biaozhu"
@@ -177,6 +197,19 @@ export default {
         }
       }
     },
+    // 边界线
+    regionBorder(
+      id = "regionborder",
+      option = { lineColor: "#FFFF00", lineWidth: 2 }
+    ) {
+      this.line(
+        { id: id, geojson: REGION_GEOJSON },
+        Object.assign(
+          { lineColor: "#FFFF00", lineWidth: 2, arrow: false },
+          option
+        )
+      )
+    },
     // 添加地图
     /**
      * @Descripttion:
@@ -206,8 +239,10 @@ export default {
         return
       }
       this.Map2d.removelayer(id)
+      this.Map2d.removelayer("regionborder")
+
       // this.rmline("lines")
-      // this.removePolygon()
+      // this.removePolygon("mapPlygon2")
       // this.poupobj?.isOpen() ? this.poupobj.remove() : null
     },
     //添加地形
@@ -238,7 +273,7 @@ export default {
     // 添加面
     Polygon(
       data = {
-        id: "mapPlygon",
+        id: "mapPlygon2",
         polygon: CHOUZHOUJSON,
         fillColor: "rgba(255,44,44,0.4)",
         opacity: 0.4,
@@ -309,7 +344,6 @@ export default {
     // 移除线
     rmline(id) {
       removeline(this.map, id)
-      removeline("lines")
     },
     // 坐标定位
     fly(
