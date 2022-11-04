@@ -42,6 +42,7 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
+import RESOURCE_ICON from "../../assets/img/selectedInfo/equipment.png"
 export default {
   name: "SelectedInfo",
   components: {},
@@ -79,7 +80,7 @@ export default {
           id: "2"
         },
         {
-          img: require("../../assets/img/selectedInfo/natural.png"),
+          img: require("../../assets/img/selectedInfo/equipment.png"),
           title: "自然资源",
           checked: false,
           type: 1,
@@ -183,16 +184,20 @@ export default {
       const geoData = await this.getData(type, id)
       // type 1:点 2:线 3:面
       if (type == 1) {
-        const data = {
-          imgUrl: img,
-          id,
-          textName: "text",
-          pointArray: {
-            type: "FeatureCollection",
-            features: geoData
+        try {
+          const data = {
+            imgUrl: img,
+            id: "pointss",
+            textName: "text",
+            pointArray: {
+              type: "FeatureCollection",
+              features: geoData
+            }
           }
+          this.$store.state.app.map.mapBox.point(data)
+        } catch (error) {
+          console.error("点位", error)
         }
-        this.$store.state.app.map.mapBox.point(data)
       }
       if (type == 2) {
         const data = {
@@ -221,30 +226,30 @@ export default {
     async getData(type, id) {
       switch (type) {
         case 1:
-          return Promise.resolve([
+          return [
             {
-              id: "1",
+              id: 1,
               type: "Feature",
               properties: {
-                text: "动物点1"
+                text: "测试点位"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681065, 30.644377]
+                coordinates: [109.679943564, 35.559617265]
               }
             },
             {
-              id: "2",
+              id: 2,
               type: "Feature",
               properties: {
-                text: "动物点2"
-              },
+                text: "测试点位"
+              }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681165, 30.645377]
+                coordinates: [109.678943564, 35.559617265]
               }
             }
-          ])
+          ]
         case 2:
           return Promise.resolve([
             {

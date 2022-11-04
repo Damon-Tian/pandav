@@ -63,7 +63,9 @@
       <button type="button" @click="line()">添加线</button>
       <button type="button" @click="view">获取视角</button>
       <button type="button" @click="resize">重置</button>
-      <button type="button" @click="background('rgba(200,62,17,0.5)')">背景颜色</button>
+      <button type="button" @click="background('rgba(200,62,17,0.5)')">
+        背景颜色
+      </button>
       <button
         type="button"
         @click="
@@ -73,6 +75,15 @@
         "
       >
         定位视角
+      </button>
+      <!-- regionBorder -->
+      <button
+        type="button"
+        @click="
+          regionBorder('regionborder', { lineColor: '#FFFF00', lineWidth: 2 })
+        "
+      >
+        边界
       </button>
       <button type="button" @click="removelayer('chengdu')">删除</button>
     </div>
@@ -88,6 +99,7 @@ import { addPolygon, removePlygon } from "./src/ylkj/poygon.js"
 import { flyBounds, getView, flyTo } from "./src/ylkj/fly.js"
 import CHOUZHOUJSON from "./src/ylkj/lib/chongzhou.json"
 import LINE_GEOJSON from "./src/ylkj/lib/line.json"
+import REGION_GEOJSON from "./src/ylkj/lib/rg.json"
 import { addImgIcon } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
 import ELEC_ICON from "./src/ylkj/lib/elec.png"
@@ -136,16 +148,15 @@ export default {
         }
       })
       // http://3888z2k945.wicp.vip:6150/file/arcgis/tuceng/_alllayers/10/417/806.png
-     
     })
   },
   methods: {
     // 背景色
-    background(color="rgba(30,62,17,0.5)"){
-      if(this.map.getLayer("beijing")){
+    background(color = "rgba(30,62,17,0.5)") {
+      if (this.map.getLayer("beijing")) {
         // this.map.removeLayer("beijing")
-        this.map.setPaintProperty('beijing', 'background-color', color)
-      }else{
+        this.map.setPaintProperty("beijing", "background-color", color)
+      } else {
         try {
           this.map.addLayer({
             id: "beijing",
@@ -160,11 +171,23 @@ export default {
               "mapbox:group": "92ca48f13df25"
             }
           })
-          
         } catch (error) {
-            console.log('背景',error)
+          console.log("背景", error)
         }
       }
+    },
+    // 边界线
+    regionBorder(
+      id = "regionborder",
+      option = { lineColor: "#FFFF00", lineWidth: 2 }
+    ) {
+      this.line(
+        { id: id, geojson: REGION_GEOJSON },
+        Object.assign(
+          { lineColor: "#FFFF00", lineWidth: 2, arrow: false },
+          option
+        )
+      )
     },
     // 添加地图
     /**
@@ -259,6 +282,17 @@ export default {
               geometry: {
                 type: "Point",
                 coordinates: [109.679943564, 35.559617265]
+              }
+            },
+            {
+              id: 2,
+              type: "Feature",
+              properties: {
+                text: "测试点位"
+              }, //其中必须包含id字段，用于高亮点钟图标
+              geometry: {
+                type: "Point",
+                coordinates: [109.678943564, 35.559617265]
               }
             }
           ]
