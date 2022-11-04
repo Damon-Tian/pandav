@@ -42,6 +42,7 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
+import equipment_icon from "@/assets/img/selectedInfo/equipment.png"
 export default {
   name: "SelectedInfo",
   components: {},
@@ -79,7 +80,7 @@ export default {
           id: "2"
         },
         {
-          img: require("../../assets/img/selectedInfo/natural.png"),
+          img: "../../assets/img/selectedInfo/equipment.png",
           title: "自然资源",
           checked: false,
           type: 1,
@@ -223,25 +224,25 @@ export default {
         case 1:
           return Promise.resolve([
             {
-              id: "1",
+              id: 1,
               type: "Feature",
               properties: {
-                text: "动物点1"
+                text: "测试点位"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681065, 30.644377]
+                coordinates: [109.679943564, 35.559617265]
               }
             },
             {
-              id: "2",
+              id: 2,
               type: "Feature",
               properties: {
-                text: "动物点2"
-              },
+                text: "测试点位"
+              }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681165, 30.645377]
+                coordinates: [109.678943564, 35.549617265]
               }
             }
           ])

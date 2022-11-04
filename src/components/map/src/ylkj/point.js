@@ -2,7 +2,7 @@
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-01 18:19:37
  * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-03 17:52:38
+ * @LastEditTime: 2022-11-04 16:02:16
  * @FilePath: \pandav\src\components\map\src\ylkj\point.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -66,7 +66,7 @@ export function addImgIcon(map, option = {
             'icon-size': 1,
             "text-size": 14
         }, option.textName ? {
-            "text-field": ['get', 'text'],
+            "text-field": ['get', option.textName],
             "text-padding": 10,
             "text-offset": [0, -4],
             "text-anchor": 'bottom',

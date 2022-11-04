@@ -86,6 +86,7 @@
       >
         边界线
       </button>
+      <button type="button" @click="MVT">矢量图层</button>
       <button type="button" @click="removelayer('chengdu')">删除</button>
     </div>
   </div>
@@ -244,6 +245,13 @@ export default {
       // this.rmline("lines")
       // this.removePolygon("mapPlygon2")
       // this.poupobj?.isOpen() ? this.poupobj.remove() : null
+    },
+    MVT() {
+      // http://3888z2k945.wicp.vip:6150/file/POI/chongzhou/esriinfo/thumbnail/thumbnail.png
+      this.Map2d.addMvt(
+        "http://3888z2k945.wicp.vip:6150/file/POI/chongzhou/p12/{z}/{x}/{y}.pbf",
+        "mvtcicle"
+      )
     },
     //添加地形
     addterrian(url, id) {

@@ -126,6 +126,20 @@ class CreatMap {
     }
 
   }
+  addMvt(url, id) {
+    const layerId = (id ? id : uuid())
+    addSource(layerId, {
+      type: 'vector',
+      scheme: 'tms',
+      url: [url]
+    });
+    addLayer({
+      id: layerId,
+      type: "circle",
+      source: layerId,
+
+    });
+  }
   /**
    * @Descripttion: 添加地形区域
    * @Author:
