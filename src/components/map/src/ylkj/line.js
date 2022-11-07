@@ -1,7 +1,41 @@
+/*
+ * @Author: night-white-up 1030884759@qq.com
+ * @Date: 2022-11-04 16:53:51
+ * @LastEditors: night-white-up 1030884759@qq.com
+ * @LastEditTime: 2022-11-07 15:01:54
+ * @FilePath: \pandav\src\components\map\src\ylkj\line.js
+ * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
+ */
 import {
     uuid,
 } from "./util.js";
-import ARRAOW_ICON from "./lib/returnbtn.png"
+import ARRAOW_ICON from "./lib/returnbtn.png";
+import DEFAULT_ICON from "./lib/RESOURCE.png";
+const {
+    createMarker
+} = window.egis;
+let markerObj = {}
+const setConfig = (data = {
+    icon: DEFAULT_ICON,
+    text: '巡护点B',
+    calback: function () {}
+}) => {
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.display = 'flex';
+    const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
+        <div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text?data.text:''}</div>
+        <image src="${data.icon?data.icon:DEFAULT_ICON}" style="width:20px;height:24px;"/>
+        </div>`
+    el.innerHTML = iconel;
+    el.addEventListener('click', () => {
+        data.calback ? data.calback(data.properties) : null;
+    })
+
+    return el
+
+
+};
 export function addLine(map, data, option) {
     const layerId = data.id ? data.id : uuid();
     if (map.getLayer(layerId)) {
@@ -30,6 +64,32 @@ export function addLine(map, data, option) {
 
         }
     })
+    // [103.432937,30.878296]
+    console.log('结果', data.geojson)
+    if (data.textName) {
+        try {
+            let point = [];
+            if (data.geojson.features[0].geometry.type == "LineString") {
+                point = data.geojson.features[0].geometry.coordinates[0]
+            } else {
+                point = data.geojson.features[0].geometry.coordinates[0][0]
+            }
+            // let point=data.geojson.features[0].geometry.coordinates
+            markerObj[layerId] = createMarker([103.432937, 30.878296], {
+                element: setConfig({
+                    icon: data.icon ? data.icon : DEFAULT_ICON,
+                    text: data.geojson.features[0].properties ? data.geojson.features[0].properties[data.textName] : '',
+                    properties: data.geojson.features[0].properties,
+                    calback: data.calback
+                }),
+                anchor: 'center',
+                // offset: [0, -30],
+            })
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
 
     option.arrow ? map.loadImage(ARRAOW_ICON, (error, image) => {
         if (!map.hasImage(layerId)) {
@@ -53,10 +113,12 @@ export function addLine(map, data, option) {
 
 
 }
+
 export function removeline(map, layerId) {
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
         map.getLayer('arrowline') ? map.removeLayer('arrowline') : null;
         map.getSource(layerId) ? map.removeSource(layerId) : null
     }
+    markerObj[layerId] ? markerObj[layerId].remove() : null;
 }

@@ -140,12 +140,18 @@ export default {
       )
       this.$emit("onload")
       // 初始加载成都地图
-      // this.addlayer('http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png', 'chengdu')
+
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
         if (features.length) {
+          console.log(features[0].properties)
           this.$emit("mapclick", features[0].properties, features)
         }
+
+        // this.poup({
+        //   center: [103.37310679593571, 30.53780732123583],
+        //   centent: "<div style='width:300px'>helloword</div>"
+        // })
       })
       // http://3888z2k945.wicp.vip:6150/file/arcgis/tuceng/_alllayers/10/417/806.png
     })
@@ -300,7 +306,7 @@ export default {
       }
     ) {
       addImgIcon(this.map, data)
-      this.flybound(data.pointArray)
+      // this.flybound(data.pointArray)
     },
     // 弹框
     poup(
@@ -321,7 +327,15 @@ export default {
     },
     //添加线
     line(
-      data = { id: "lines", geojson: LINE_GEOJSON },
+      data = {
+        id: "lines",
+        geojson: LINE_GEOJSON,
+        textName: "name",
+        icon: "",
+        calback: function (e) {
+          console.log("点击了", e)
+        }
+      },
       option = { lineColor: "#0080FF", lineWidth: 10, arrow: true }
     ) {
       addLine(this.map, data, option)
