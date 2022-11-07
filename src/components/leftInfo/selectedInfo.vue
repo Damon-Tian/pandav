@@ -42,6 +42,22 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
+const commonSelectInfoList = [
+  {
+    img: require("../../assets/img/selectedInfo/core.png"),
+    title: "核心保护区",
+    checked: true,
+    type: 3,
+    id: "1"
+  },
+  {
+    img: require("../../assets/img/selectedInfo/general.png"),
+    title: "一般保护区",
+    checked: true,
+    type: 3,
+    id: "2"
+  }
+]
 export default {
   name: "SelectedInfo",
   components: {},
@@ -64,20 +80,7 @@ export default {
   data() {
     return {
       selectedInfoList1: [
-        {
-          img: require("../../assets/img/selectedInfo/core.png"),
-          title: "核心保护区",
-          checked: true,
-          type: 3,
-          id: "1"
-        },
-        {
-          img: require("../../assets/img/selectedInfo/general.png"),
-          title: "一般保护区",
-          checked: true,
-          type: 3,
-          id: "2"
-        },
+        ...commonSelectInfoList,
         {
           img: require("../../assets/img/selectedInfo/natural.png"),
           title: "自然资源",
@@ -93,14 +96,14 @@ export default {
           id: "5"
         },
         {
-          img: require("../../assets/img/selectedInfo/equipment.png"),
+          img: require("../../assets/img/selectedInfo/patrol.png"),
           title: "设备管理",
           checked: false,
           type: 1,
           id: "6"
         },
         {
-          img: require("../../assets/img/selectedInfo/patrol.png"),
+          img: require("../../assets/img/selectedInfo/patrol1.png"),
           title: "巡护管理",
           checked: false,
           type: 2,
@@ -114,26 +117,11 @@ export default {
           id: "8"
         }
       ],
-      selectedInfoList2: [
-        {
-          img: require("../../assets/img/selectedInfo/core.png"),
-          title: "核心保护区",
-          checked: true,
-          type: 3,
-          id: "1"
-        },
-        {
-          img: require("../../assets/img/selectedInfo/general.png"),
-          title: "一般保护区",
-          checked: true,
-          type: 3,
-          id: "2"
-        }
-      ],
+      selectedInfoList2: commonSelectInfoList,
       subselectedInfo: [
         {
           title: "红外相机",
-          checked: true,
+          checked: false,
           type: 1,
           id: "10"
         },
@@ -146,10 +134,11 @@ export default {
         {
           title: "生态设备",
           type: 1,
-          checked: true,
+          checked: false,
           id: "12"
         }
-      ]
+      ],
+      needRemoveChecked: []
     }
   },
   computed: {
@@ -167,9 +156,39 @@ export default {
           (item) => item.id == 6 && item.checked
         ) > -1
       )
+    },
+    currentArea() {
+      return this.$store.state.app.currentArea
     }
   },
+  watch: {
+    currentTab() {
+      this.handleLeave()
+    },
+    currentArea() {
+      this.needRemoveChecked.concat(commonSelectInfoList).forEach((item) => {
+        this.removelayer(item.type, item.title)
+      })
+      //切换图层再重新请求数据再添加图层
+      this.initLayer()
+    }
+  },
+  mounted() {
+    this.initLayer()
+  },
   methods: {
+    getRemovedList() {
+      const checked = this.showSubSelectList
+        ? this.selectedInfoList.concat(this.showSubSelectList)
+        : this.selectedInfoList
+      //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区
+      const needRemoveChecked = checked.filter(
+        (item) =>
+          item.checked &&
+          !commonSelectInfoList.filter((e) => e.title === item.title).length
+      )
+      this.needRemoveChecked = needRemoveChecked
+    },
     handleClick(item) {
       item.checked = !item.checked
       const { type, title } = item
@@ -178,6 +197,20 @@ export default {
       } else {
         this.removelayer(type, title)
       }
+      this.getRemovedList()
+    },
+    handleLeave() {
+      this.needRemoveChecked.forEach((item) => {
+        if (this.currentTab == 1) {
+          this.setLayer(item.type, item.title)
+        } else {
+          this.removelayer(item.type, item.title)
+        }
+      })
+    },
+    //初始化图层 核心保护区和一般保护区
+    async initLayer() {
+      this.needRemoveChecked.concat(commonSelectInfoList).forEach((item) => {})
     },
     async setLayer(type, id) {
       const geoData = await this.getData(type, id)
@@ -202,7 +235,12 @@ export default {
             type: "FeatureCollection"
           }
         }
-        this.$store.state.app.map.mapBox.line(data)
+        const option = {
+          lineColor: "#f90909",
+          lineWidth: 4,
+          arrow: false
+        }
+        this.$store.state.app.map.mapBox.line(data, option)
       }
       if (type == 3) {
         const data = {
@@ -210,6 +248,7 @@ export default {
           fillColor: " rgba(11,159,251,0.4)",
           opacity: 0.4,
           width: 2,
+          lineColor: "#0B9FFB",
           polygon: {
             type: "FeatureCollection",
             features: geoData

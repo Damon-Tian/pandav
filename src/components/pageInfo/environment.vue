@@ -22,7 +22,7 @@
           <li
             v-for="item in positionList"
             :key="item.name"
-            :class="currentPosition === item.name ? 'active' : ''"
+            :class="currentPosition === item.orgId ? 'active' : ''"
             @click="positionClick(item)"
           >
             <span></span>
@@ -107,16 +107,18 @@
 import Charts from "@jiaminghi/charts"
 import infoBlock from "./infoBlock"
 
+const mapId = "生态环境"
+const mapIcon = require("@/assets/img/p-leftbar-env-active.png")
 export default {
   components: { infoBlock },
   data() {
     return {
-      currentPosition: "鸡冠山巴栗坪保护站",
+      currentPosition: "",
       positionList: [
-        { name: "鸡冠山巴栗坪保护站" },
-        { name: "公园外喂猴处" },
-        { name: "公园内猴子坡" },
-        { name: "宝山村回龙沟猴区" }
+        { name: "鸡冠山巴栗坪保护站", orgId: "dayi" },
+        { name: "公园外喂猴处", orgId: "chongzhou" },
+        { name: "公园内猴子坡", orgId: "dujiangyan" },
+        { name: "宝山村回龙沟猴区", orgId: "pengzhou" }
       ],
       labelInfo: {
         name: "动环设备",
@@ -140,98 +142,160 @@ export default {
       ]
     }
   },
-  mounted() {
-    console.log(1)
-
-    let chart = document.querySelector(".env-second__chart-content")
-    const envChart = new Charts(chart)
-
-    const option1 = {
-      title: {},
-      xAxis: {
-        boundaryGap: false,
-        axisLabel: {
-          style: {
-            fill: "white"
-          }
-        },
-        axisLine: {
-          style: {
-            stroke: "rgba(178, 231, 255, 1)"
-          }
-        },
-        data: ["11:30:00", "12:30:00", "13:30:00", "14:30:00", "15:30:00"]
-      },
-      yAxis: {
-        data: "value",
-        axisLabel: {
-          style: {
-            fill: "white"
-          }
-        },
-        axisLine: {
-          style: {
-            stroke: "rgba(178, 231, 255, 1)"
-          }
-        },
-        splitLine: {
-          style: {
-            stroke: "rgba(178, 231, 255, 0.2)"
-          }
-        }
-      },
-      color: ["#22FFCC", "#0066D2"],
-      // legend: {
-      //   top: "20%",
-      //   right: 0,
-      //   data: ["PM10", "PM25"],
-      //   textStyle: {
-      //     fill: "white"
-      //   },
-      //   icon: "rect",
-      //   iconWidth: 10,
-      //   iconStyle: {
-      //     borderRadius: 0
-      //   }
-      // },
-      series: [
-        {
-          name: "PM10",
-          data: [2, 5, 4, 7, 9],
-          type: "line",
-          smooth: true,
-          lineStyle: {
-            lineWidth: 2
-          },
-          linePoint: {
-            show: false
-          },
-          lineArea: {
-            show: true
-          }
-        },
-        {
-          name: "PM25",
-          data: [5, 4, 7, 3, 5],
-          type: "line",
-          smooth: true,
-          lineStyle: {
-            lineWidth: 2
-          },
-          linePoint: {
-            show: false
-          },
-          lineArea: {
-            show: true
-          }
-        }
-      ]
+  computed: {
+    currentArea() {
+      return this.$store.state.app.currentArea
     }
-    envChart.setOption(option1)
+  },
+  watch: {
+    currentArea() {
+      this.currentPosition = this.currentArea
+    },
+    currentPosition() {
+      this.removeMap()
+      this.initMap()
+    }
+  },
+  mounted() {
+    this.initChart()
+  },
+  destroyed() {
+    this.removeMap()
   },
   methods: {
     positionClick(item) {
-      this.currentPosition = item.name
+      this.currentPosition = item.orgId
+    },
+    initChart() {
+      const chart = document.querySelector(".env-second__chart-content")
+      const envChart = new Charts(chart)
+
+      const option1 = {
+        title: {},
+        xAxis: {
+          boundaryGap: false,
+          axisLabel: {
+            style: {
+              fill: "white"
+            }
+          },
+          axisLine: {
+            style: {
+              stroke: "rgba(178, 231, 255, 1)"
+            }
+          },
+          data: ["11:30:00", "12:30:00", "13:30:00", "14:30:00", "15:30:00"]
+        },
+        yAxis: {
+          data: "value",
+          axisLabel: {
+            style: {
+              fill: "white"
+            }
+          },
+          axisLine: {
+            style: {
+              stroke: "rgba(178, 231, 255, 1)"
+            }
+          },
+          splitLine: {
+            style: {
+              stroke: "rgba(178, 231, 255, 0.2)"
+            }
+          }
+        },
+        color: ["#22FFCC", "#0066D2"],
+        // legend: {
+        //   top: "20%",
+        //   right: 0,
+        //   data: ["PM10", "PM25"],
+        //   textStyle: {
+        //     fill: "white"
+        //   },
+        //   icon: "rect",
+        //   iconWidth: 10,
+        //   iconStyle: {
+        //     borderRadius: 0
+        //   }
+        // },
+        series: [
+          {
+            name: "PM10",
+            data: [2, 5, 4, 7, 9],
+            type: "line",
+            smooth: true,
+            lineStyle: {
+              lineWidth: 2
+            },
+            linePoint: {
+              show: false
+            },
+            lineArea: {
+              show: true
+            }
+          },
+          {
+            name: "PM25",
+            data: [5, 4, 7, 3, 5],
+            type: "line",
+            smooth: true,
+            lineStyle: {
+              lineWidth: 2
+            },
+            linePoint: {
+              show: false
+            },
+            lineArea: {
+              show: true
+            }
+          }
+        ]
+      }
+      envChart.setOption(option1)
+    },
+    async initMap() {
+      const geoData = this.getData()
+      const data = {
+        imgUrl: mapIcon,
+        id: mapId,
+        textName: mapId,
+        pointArray: {
+          type: "FeatureCollection",
+          features: geoData
+        }
+      }
+      this.$store.state.app.map.mapBox.point(data)
+    },
+    removeMap() {
+      this.$store.state.app.map.mapBox.removelayer(mapId)
+    },
+    getData() {
+      const params = {}
+      //接口请求
+      return Promise.resolve([
+        {
+          id: "1",
+          type: "Feature",
+          properties: {
+            text: "动物点1"
+          }, //其中必须包含id字段，用于高亮点钟图标
+          geometry: {
+            type: "Point",
+            coordinates: [103.681065, 30.644377]
+          }
+        },
+        {
+          id: "2",
+          type: "Feature",
+          properties: {
+            text: "动物点2"
+          },
+          geometry: {
+            type: "Point",
+            coordinates: [103.681165, 30.645377]
+          }
+        }
+      ])
     }
   }
 }
