@@ -42,6 +42,7 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
+import NATRUE_ICON from "@/assets/img/selectedInfo/natural.png"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
@@ -217,8 +218,8 @@ export default {
       // type 1:点 2:线 3:面
       if (type == 1) {
         const data = {
-          imgUrl: img,
-          id,
+          imgUrl: NATRUE_ICON,
+          id: "ziyuan",
           textName: "text",
           pointArray: {
             type: "FeatureCollection",
@@ -260,30 +261,30 @@ export default {
     async getData(type, id) {
       switch (type) {
         case 1:
-          return Promise.resolve([
+          return [
             {
-              id: "1",
+              id: 1,
               type: "Feature",
               properties: {
-                text: "动物点1"
+                text: "测试点位"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681065, 30.644377]
+                coordinates: [109.679943564, 35.559617265]
               }
             },
             {
-              id: "2",
+              id: 2,
               type: "Feature",
               properties: {
-                text: "动物点2"
-              },
+                text: "测试点位"
+              }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681165, 30.645377]
+                coordinates: [109.678943564, 35.559617265]
               }
             }
-          ])
+          ]
         case 2:
           return Promise.resolve([
             {

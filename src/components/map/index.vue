@@ -300,7 +300,7 @@ export default {
       }
     ) {
       addImgIcon(this.map, data)
-      // this.flybound(data.pointArray)
+      this.flybound(data.pointArray)
     },
     // 弹框
     poup(
