@@ -111,8 +111,6 @@ export default {
 
 <style lang="less" scoped>
 .Infrare-camera {
-  padding: 10px;
-
   .title-right {
     color: #00eaff;
     font-size: 30px;

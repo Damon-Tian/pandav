@@ -31,7 +31,7 @@
         </div>
       </div>
     </infoBlock>
-
+    <button @click="initMap">测试</button>
     <infoBlock>
       <div class="env-second info-content">
         <div class="env-second__label-info">
@@ -145,6 +145,9 @@ export default {
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    detail() {
+      return this.$store.state.app.feature
     }
   },
   watch: {
@@ -254,7 +257,7 @@ export default {
       envChart.setOption(option1)
     },
     async initMap() {
-      const geoData = this.getData()
+      const geoData = await this.getData()
       const data = {
         imgUrl: mapIcon,
         id: mapId,
@@ -274,25 +277,25 @@ export default {
       //接口请求
       return Promise.resolve([
         {
-          id: "1",
+          id: 1,
           type: "Feature",
           properties: {
-            text: "动物点1"
+            name: "测试点位1"
           }, //其中必须包含id字段，用于高亮点钟图标
           geometry: {
             type: "Point",
-            coordinates: [103.681065, 30.644377]
+            coordinates: [103.513296, 30.589647]
           }
         },
         {
-          id: "2",
+          id: 2,
           type: "Feature",
           properties: {
-            text: "动物点2"
-          },
+            name: "测试点位1"
+          }, //其中必须包含id字段，用于高亮点钟图标
           geometry: {
             type: "Point",
-            coordinates: [103.681165, 30.645377]
+            coordinates: [103.523296, 30.599647]
           }
         }
       ])

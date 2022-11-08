@@ -1,9 +1,7 @@
 @import "nomarlize.css";
-
 body {
   -webkit-font-smoothing: antialiased;
 }
-
 .get-more {
   margin-bottom: 16px;
   color: #34fdff;
@@ -11,54 +9,45 @@ body {
   font-size: 16px;
   font-weight: 500;
 }
-
 .p-label-inline {
   display: flex;
   justify-content: space-between;
-
-  & > * {
-    width: 50%;
-  }
 }
-
+.p-label-inline > * {
+  width: 50%;
+}
 .p-label-info {
   letter-spacing: 2px;
   line-height: 32px;
-
-  & > *:first-child {
-    color: #7ecef4;
-    font-weight: 500;
-  }
 }
-
+.p-label-info > *:first-child {
+  color: #7ecef4;
+  font-weight: 500;
+}
 .mapboxgl-popup-tip {
   display: none;
 }
-
 .mapboxgl-popup-content {
   background-color: unset;
 }
-
 .message-box {
   width: 300px;
   padding: 10px;
   border: 1px solid #00aeff;
-  background: rgba(0, 29, 155, 60%);
+  background: rgba(0, 29, 155, 0.6);
   border-radius: 4px;
-  box-shadow: 0 0 25px 0 rgba(0, 175, 255, 40%);
+  box-shadow: 0 0 25px 0 rgba(0, 175, 255, 0.4);
   color: #fff;
-
-  & > div {
-    padding: 10px;
-    background: rgba(0, 0, 0, 60%);
-
-    .title {
-      padding-bottom: 10px;
-      border-bottom: 1px solid #00aeff;
-      margin-bottom: 10px;
-      color: #fff;
-      font-size: 18px;
-      font-weight: 500;
-    }
-  }
+}
+.message-box > div {
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.6);
+}
+.message-box > div .title {
+  padding-bottom: 10px;
+  border-bottom: 1px solid #00aeff;
+  margin-bottom: 10px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 500;
 }

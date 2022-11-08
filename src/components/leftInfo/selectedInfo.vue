@@ -262,25 +262,25 @@ export default {
         case 1:
           return Promise.resolve([
             {
-              id: "1",
+              id: 1,
               type: "Feature",
               properties: {
-                text: "动物点1"
+                name: "测试点位1"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681065, 30.644377]
+                coordinates: [103.513296, 30.589647]
               }
             },
             {
-              id: "2",
+              id: 2,
               type: "Feature",
               properties: {
-                text: "动物点2"
-              },
+                name: "测试点位1"
+              }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [103.681165, 30.645377]
+                coordinates: [103.523296, 30.599647]
               }
             }
           ])

@@ -8,23 +8,5 @@
  */
 module.exports = {
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
-  devServer: {
-    proxy: {
-      "/file": {
-        target: "http://3888z2k945.wicp.vip:6150/file",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/mapapi": ""
-        }
-      },
-      "/profile": {
-        target: "http://10.51.100.105/profile",
-        changeOrigin: true,
-        pathRewrite: {
-          "^/profile": ""
-        }
-      },
 
-    }
-  }
 }
