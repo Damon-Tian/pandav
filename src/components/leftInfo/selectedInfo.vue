@@ -42,6 +42,7 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
+import NATRUE_ICON from "@/assets/img/selectedInfo/natural.png"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
@@ -219,7 +220,6 @@ export default {
         const data = {
           imgUrl: img,
           id,
-          textName: "text",
           pointArray: {
             type: "FeatureCollection",
             features: geoData
@@ -260,7 +260,7 @@ export default {
     async getData(type, id) {
       switch (type) {
         case 1:
-          return Promise.resolve([
+          return [
             {
               id: 1,
               type: "Feature",
@@ -283,7 +283,7 @@ export default {
                 coordinates: [103.523296, 30.599647]
               }
             }
-          ])
+          ]
         case 2:
           return Promise.resolve([
             {
