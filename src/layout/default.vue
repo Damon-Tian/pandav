@@ -46,6 +46,7 @@ export default {
   methods: {
     selectMenu(i) {
       this.currentTab = i
+      this.$store.commit("app/SET_MAPFEATURE", null)
     },
     handleClick(currentFeature) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)

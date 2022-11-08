@@ -218,9 +218,8 @@ export default {
       // type 1:点 2:线 3:面
       if (type == 1) {
         const data = {
-          imgUrl: NATRUE_ICON,
-          id: "ziyuan",
-          textName: "text",
+          imgUrl: img,
+          id,
           pointArray: {
             type: "FeatureCollection",
             features: geoData
@@ -266,22 +265,22 @@ export default {
               id: 1,
               type: "Feature",
               properties: {
-                text: "测试点位"
+                name: "测试点位1"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [109.679943564, 35.559617265]
+                coordinates: [103.513296, 30.589647]
               }
             },
             {
               id: 2,
               type: "Feature",
               properties: {
-                text: "测试点位"
+                name: "测试点位1"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [109.678943564, 35.559617265]
+                coordinates: [103.523296, 30.599647]
               }
             }
           ]

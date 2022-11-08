@@ -8,6 +8,7 @@
  */
 module.exports = {
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
+<<<<<<< HEAD
   devServer: {
     proxy: {
       "/file": {
@@ -24,7 +25,7 @@ module.exports = {
           "^/profile": ""
         }
       },
+=======
+>>>>>>> 162f2b5417195ed53054cc948f84b8ae1f2c320f
 
-    }
-  }
 }

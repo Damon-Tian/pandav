@@ -292,7 +292,7 @@ export default {
     point(
       data = {
         imgUrl: ELEC_ICON,
-        id: "points",
+        id: "测试",
         textName: "text",
         pointArray: {
           type: "FeatureCollection",
@@ -305,14 +305,14 @@ export default {
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
-                coordinates: [109.679943564, 35.559617265]
+                coordinates: [103.513296, 30.589647]
               }
             },
             {
               id: 2,
               type: "Feature",
               properties: {
-                text: "测试点位"
+                text: "测试点位1"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
