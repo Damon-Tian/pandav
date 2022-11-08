@@ -53,7 +53,34 @@ class CreatMap {
       zoom: 11.99715452226343,
       bearing: 0,
       touchZoomRotate: true,
-      style: 'http://3888z2k945.wicp.vip:6150/file/POI/hbPOI/p12/resources/styles/root.json'
+      style: url ? {
+        glyphs: "./lib/fonts/{fontstack}/{range}.pbf",
+        sources: {
+          maplasource: {
+            type: "raster",
+            tiles: Array.isArray(url) ? url : [url],
+            tileSize: 256
+          }
+          // 'satellite': {
+          //     type: "raster",
+          //     tiles: ['https://t0.tianditu.gov.cn/DataServer?T=img_w&x={x}&y={y}&l={z}&tk=915de993ea6873664830bf5d8217723c'],
+          //     tileSize: 256,
+          // },
+        },
+        layers: [{
+            id: "TDT_TITLE_ID",
+            type: "raster",
+            source: "maplasource"
+          }
+          // {
+          // 	'id': 'satellite',
+          // 	'type': 'raster',
+          // 	'source': 'satellite'
+          // },
+        ]
+      } : {
+        glyphs: "./lib/fonts/{fontstack}/{range}.pbf",
+      }
     })
     // this.addterrian()
     // onComponentMount (()=>{
@@ -95,7 +122,6 @@ class CreatMap {
       type: "raster",
       source: layerId,
     });
-    console.log('返回1', this.map.getStyle())
     return id
   }
   addVector() {
@@ -131,7 +157,7 @@ class CreatMap {
         // data.source = data.sources.esri;
         // data['source-layer'] = "mypbf";
         // this.map.addLayer(data)
-        console.log('返回1', _this.map.getStyle())
+        console.log('返回1', _this.map.getStyle().layers)
         try {
           _this.map.setStyle(data);
         } catch (error) {

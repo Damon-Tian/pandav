@@ -5,6 +5,17 @@
         type="button"
         @click="
           addlayer(
+            '/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png',
+            'chongzhou'
+          )
+        "
+      >
+        全域
+      </button>
+      <button
+        type="button"
+        @click="
+          addlayer(
             'http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png',
             'chongzhou'
           )
@@ -12,6 +23,8 @@
       >
         崇州地图
       </button>
+
+      <!-- /profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png -->
       <button
         type="button"
         @click="
@@ -119,7 +132,7 @@ export default {
   mounted() {
     this.Map2d = new CreatMap(
       "map"
-      // "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
+      // "http://3888z2k945.wicp.vip:6309/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png"
     )
     this.map = this.Map2d.getMap()
     // const settimoutobj = setTimeout(() => {
@@ -132,6 +145,7 @@ export default {
     //   // )
     //   // clearTimeout(settimoutobj)
     // }, 1000)
+
     this.map.on("load", () => {
       this.background("rgba(8,25,64,0.5)")
       this.addterrian(
@@ -143,16 +157,20 @@ export default {
 
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
+        // this.Map2d.addVector()
         if (features.length) {
           console.log(features[0].properties)
           this.$emit("mapclick", features[0].properties, features)
         }
-
         // this.poup({
         //   center: [103.37310679593571, 30.53780732123583],
         //   centent: "<div style='width:300px'>helloword</div>"
         // })
       })
+      // this.Map2d.addlayer(
+      //   "http://3888z2k945.wicp.vip:6309/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+      //   "pbf"
+      // )
       // http://3888z2k945.wicp.vip:6150/file/arcgis/tuceng/_alllayers/10/417/806.png
     })
   },
@@ -161,7 +179,7 @@ export default {
     background(color = "rgba(30,62,17,0.5)") {
       if (this.map.getLayer("beijing")) {
         // this.map.removeLayer("beijing")
-        this.map.setPaintProperty("beijing", "background-color", color)
+        // this.map.setPaintProperty("beijing", "background-color", color)
       } else {
         try {
           this.map.addLayer({
@@ -306,7 +324,7 @@ export default {
       }
     ) {
       addImgIcon(this.map, data)
-      // this.flybound(data.pointArray)
+      this.flybound(data.pointArray)
     },
     // 弹框
     poup(
