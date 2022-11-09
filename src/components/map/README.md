@@ -205,3 +205,5 @@ removelayer(id)
      //绘面
      drawPolygon()
      draw监听绘面返回geojson
+     删除标绘
+     deleteDraw()
