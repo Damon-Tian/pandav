@@ -196,3 +196,14 @@ removelayer(id)
     )
     删除
     removelayer(id)
+    //绘点
+    drawPoint() 
+    draw监听绘点返回geojson
+    //绘线
+    drawLine()
+     draw监听绘线返回geojson
+     //绘面
+     drawPolygon()
+     draw监听绘面返回geojson
+     删除标绘
+     deleteDraw()

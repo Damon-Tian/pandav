@@ -27,7 +27,7 @@ export default {
         {
           name: "综合概况",
           id: "chengdu",
-          url: "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          url: "http://3888z2k945.wicp.vip:6150/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
           view: {
             bearing: 13.517716661366421,
             center: [103.31194986717048, 30.472073615727084],

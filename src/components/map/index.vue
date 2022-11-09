@@ -24,7 +24,6 @@
         崇州地图
       </button>
 
-      <!-- /profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png -->
       <button
         type="button"
         @click="
@@ -89,7 +88,7 @@
       >
         定位视角
       </button>
-      <!-- regionBorder -->
+
       <button
         type="button"
         @click="
@@ -99,6 +98,10 @@
         边界
       </button>
       <button type="button" @click="removelayer('chengdu')">删除</button>
+      <button type="button" @click="drawPoint">点</button>
+      <button type="button" @click="drawLine">线</button>
+      <button type="button" @click="drawPolygon">面</button>
+      <button type="button" @click="deleteDraw">删除</button>
     </div>
   </div>
 </template>
@@ -117,6 +120,7 @@ import { addImgIcon } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
 import ELEC_ICON from "./src/ylkj/lib/elec.png"
 import TEST_ICON from "./src/ylkj/lib/test.png"
+import Plotting from "./src/ylkj/lib/potting/plotting.js"
 const { createPopup } = window.egis
 // import { setMap } from "@egis/map"
 export default {
@@ -126,13 +130,15 @@ export default {
       layers: [], //图层
       terrians: [], //地形
       poupobj: null, //弹框对象
-      currentView: null
+      currentView: null,
+      PlottingObj: null, //测量对象
+      currentLayer: null //当前图层
     }
   },
   mounted() {
     this.Map2d = new CreatMap(
       "map"
-      // "http://3888z2k945.wicp.vip:6309/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png"
+      // "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png"
     )
     this.map = this.Map2d.getMap()
     // const settimoutobj = setTimeout(() => {
@@ -154,7 +160,12 @@ export default {
       )
       this.$emit("onload")
       // 初始加载成都地图
-
+      // this.layers.push(
+      //   this.Map2d.addlayer(
+      //     "http://3888z2k945.wicp.vip:6150/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+      //     "chengdu2"
+      //   )
+      // )
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
         // this.Map2d.addVector()
@@ -167,6 +178,11 @@ export default {
         //   centent: "<div style='width:300px'>helloword</div>"
         // })
       })
+      try {
+        this.PlottingObj = new Plotting(this.map) //测量图标
+      } catch (error) {
+        console.error(error)
+      }
       // this.Map2d.addlayer(
       //   "http://3888z2k945.wicp.vip:6309/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
       //   "pbf"
@@ -231,6 +247,9 @@ export default {
         this.layers = []
       }
       this.layers.push(this.Map2d.addlayer(url, id))
+
+      this.map.moveLayer(id, "beijing")
+     
     },
     // 删除地图
     removelayer(id) {
@@ -383,6 +402,52 @@ export default {
     // 地图重置
     resize() {
       this.map.resize()
+    },
+    /**
+     * @Descripttion:绘点
+     * @Author:
+     * @Date: 2022-11-09 13:54:04
+     * @LastEditors:
+     * @return {*}
+     */
+    drawPoint() {
+      const _this = this
+      this.PlottingObj.on("point", (e) => {
+        _this.$emit("draw", e)
+        console.log(e)
+      })
+    },
+    /**
+     * @Descripttion: 绘线
+     * @Author:
+     * @Date: 2022-11-09 13:53:33
+     * @LastEditors:
+     * @return {*}
+     */
+    drawLine() {
+      const _this = this
+      this.PlottingObj.on("line", (e) => {
+        _this.$emit("draw", e)
+        console.log(e)
+      })
+    },
+    /**
+     * @Descripttion: 绘面
+     * @Author:
+     * @Date: 2022-11-09 13:53:44
+     * @LastEditors:
+     * @return {*}
+     */
+    drawPolygon() {
+      const _this = this
+      this.PlottingObj.on("ploygn", (e) => {
+        _this.$emit("draw", e)
+        console.log(e)
+      })
+    },
+    // 删除绘制
+    deleteDraw() {
+      this.PlottingObj.clear()
     }
   }
 }
