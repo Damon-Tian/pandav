@@ -63,7 +63,7 @@ export default {
         zoom: 10
       })
       this.$refs.mapBox.addlayer(
-        "http://3888z2k945.wicp.vip:6150/file/xiongmao/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+        "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
         "chengdu"
       )
     }
