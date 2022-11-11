@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <div class="map-button">
+    <!-- <div class="map-button">
       <button
         type="button"
         @click="
@@ -102,7 +102,7 @@
       <button type="button" @click="drawLine">线</button>
       <button type="button" @click="drawPolygon">面</button>
       <button type="button" @click="deleteDraw">删除</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -195,13 +195,14 @@ export default {
     background(color = "rgba(30,62,17,0.5)") {
       if (this.map.getLayer("beijing")) {
         // this.map.removeLayer("beijing")
-        // this.map.setPaintProperty("beijing", "background-color", color)
+        this.map.setPaintProperty("beijing", "background-color", color)
       } else {
         try {
           this.map.addLayer({
             id: "beijing",
             type: "background",
             paint: {
+              // "background-opacity": 0.5,
               "background-color": color
             },
             layout: {
@@ -247,9 +248,9 @@ export default {
         this.layers = []
       }
       this.layers.push(this.Map2d.addlayer(url, id))
-
-      this.map.moveLayer(id, "beijing")
-     
+      console.log("结果", this.map.getStyle())
+      this.map.moveLayer(id, "iGisMapSky")
+      this.map.moveLayer("beijing", id)
     },
     // 删除地图
     removelayer(id) {
