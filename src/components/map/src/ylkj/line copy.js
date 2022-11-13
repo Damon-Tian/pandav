@@ -2,7 +2,7 @@
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-04 16:53:51
  * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-13 14:04:52
+ * @LastEditTime: 2022-11-07 15:01:54
  * @FilePath: \pandav\src\components\map\src\ylkj\line.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -75,27 +75,16 @@ export function addLine(map, data, option) {
                 point = data.geojson.features[0].geometry.coordinates[0][0]
             }
             // let point=data.geojson.features[0].geometry.coordinates
-            markerObj[layerId] = [];
-            data.geojson.features.forEach(item => {
-                    let center=[];
-                if(item.geometry.type=="MultiLineString"){
-                    center=item.geometry.coordinates[0][0]
-                }else{
-                    center=item.geometry.coordinates[0]
-                }
-                const idmarker = createMarker(center, {
-                    element: setConfig({
-                        icon: data.icon ? data.icon : DEFAULT_ICON,
-                        text: item.properties ? item.properties[data.textName] : '',
-                        properties: item.properties,
-                        calback: data.calback
-                    }),
-                    anchor: 'center',
-                    // offset: [0, -30],
-                })
-                markerObj[layerId].push(idmarker)
-
-            });
+            markerObj[layerId] = createMarker([103.432937, 30.878296], {
+                element: setConfig({
+                    icon: data.icon ? data.icon : DEFAULT_ICON,
+                    text: data.geojson.features[0].properties ? data.geojson.features[0].properties[data.textName] : '',
+                    properties: data.geojson.features[0].properties,
+                    calback: data.calback
+                }),
+                anchor: 'center',
+                // offset: [0, -30],
+            })
         } catch (error) {
             console.error(error)
         }
@@ -131,12 +120,5 @@ export function removeline(map, layerId) {
         map.getLayer('arrowline') ? map.removeLayer('arrowline') : null;
         map.getSource(layerId) ? map.removeSource(layerId) : null
     }
-    if(Array.isArray(markerObj[layerId])){
-        markerObj[layerId].forEach(item=>{
-            item.remove()
-        })
-    }else{
-        markerObj[layerId].remove()
-    }
-    // Array.isArray(markerObj[layerId])? markerObj[layerId].remove() : markerObj[layerId].remove();
+    markerObj[layerId] ? markerObj[layerId].remove() : null;
 }

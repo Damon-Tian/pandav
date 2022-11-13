@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <!-- <div class="map-button">
+    <div class="map-button">
       <button
         type="button"
         @click="
@@ -102,7 +102,7 @@
       <button type="button" @click="drawLine">线</button>
       <button type="button" @click="drawPolygon">面</button>
       <button type="button" @click="deleteDraw">删除</button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -114,7 +114,7 @@ import { addHeatMap } from "./src/ylkj/heatmap.js"
 import { addPolygon, removePlygon } from "./src/ylkj/poygon.js"
 import { flyBounds, getView, flyTo } from "./src/ylkj/fly.js"
 import CHOUZHOUJSON from "./src/ylkj/lib/chongzhou.json"
-import LINE_GEOJSON from "./src/ylkj/lib/line.json"
+import LINE_GEOJSON from "./src/ylkj/lib/testline.json"
 import REGION_GEOJSON from "./src/ylkj/lib/rg.json"
 import { addImgIcon } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
@@ -368,7 +368,7 @@ export default {
       data = {
         id: "lines",
         geojson: LINE_GEOJSON,
-        textName: "name",
+        textName: "样线编号",
         icon: "",
         calback: function (e) {
           console.log("点击了", e)
