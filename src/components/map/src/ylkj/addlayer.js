@@ -46,7 +46,7 @@ class CreatMap {
     this.map = setMap({
       container: id,
       center: [103.46345144619704, 30.466287355910467],
-      // crs:'EGSP:3857',
+      // crs: 'EGSP:3857',
       pitch: 65.5,
       // ./lib/fonts/{fontstack}/{range}.pbf
 

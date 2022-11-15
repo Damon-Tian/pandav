@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <div class="map-button">
+    <!-- <div class="map-button">
       <button
         type="button"
         @click="
@@ -102,7 +102,7 @@
       <button type="button" @click="drawLine">线</button>
       <button type="button" @click="drawPolygon">面</button>
       <button type="button" @click="deleteDraw">删除</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -140,17 +140,18 @@ export default {
       "map"
       // "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png"
     )
+
     this.map = this.Map2d.getMap()
-    // const settimoutobj = setTimeout(() => {
-    //   // this.Map2d.addlayer(
-    //   //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
-    //   // )
-    //   // this.Map2d.addterrian(
-    //   //   // "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png"
-    //   //   "/profile/xiongmao_dem/chongzhou_dem/{z}/{x}/{y}.png"
-    //   // )
-    //   // clearTimeout(settimoutobj)
-    // }, 1000)
+    const settimoutobj = setTimeout(() => {
+      // this.Map2d.addlayer(
+      //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
+      // )
+      // this.Map2d.addterrian(
+      //   // "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png"
+      //   "/profile/xiongmao_dem/chongzhou_dem/{z}/{x}/{y}.png"
+      // )
+      // clearTimeout(settimoutobj)
+    }, 1000)
 
     this.map.on("load", () => {
       this.background("rgba(8,25,64,0.5)")
@@ -248,7 +249,6 @@ export default {
         this.layers = []
       }
       this.layers.push(this.Map2d.addlayer(url, id))
-      console.log("结果", this.map.getStyle())
       this.map.moveLayer(id, "iGisMapSky")
       this.map.moveLayer("beijing", id)
     },
@@ -295,7 +295,8 @@ export default {
         polygon: CHOUZHOUJSON,
         fillColor: "rgba(255,44,44,0.4)",
         opacity: 0.4,
-        width: 2
+        width: 2,
+        textName: "name"
       }
     ) {
       addPolygon(this.map, data)

@@ -51,8 +51,8 @@
 - @Descripttion: 添加面
 - @Author:
 - @Date: 2022-11-03 09:46:45
-- @LastEditors: id:stirng，polygon：geojson,fillColor:string,opacity:number,with
-- @return {_}fillColor 填充颜色 opacity 填充透明度 width 面边框宽度
+- @LastEditors: id:stirng，polygon：geojson,fillColor:string,opacity:number,with,textName:string
+- @return {_}fillColor 填充颜色 opacity 填充透明度 width 面边框宽度 ,textName:若需要展示 label 标签，写 propterties 所取的字段名
   _/
 
 Polygon(
@@ -61,7 +61,8 @@ id: "mapPlygon",
 polygon: CHOUZHOUJSON,
 fillColor: "rgba(255,44,44,0.4)",
 opacity: 0.4,
-width: 2
+width: 2,
+textName:'name'
 }
 )
 
@@ -197,13 +198,13 @@ removelayer(id)
     删除
     removelayer(id)
     //绘点
-    drawPoint() 
-    draw监听绘点返回geojson
+    drawPoint()
+    draw 监听绘点返回 geojson
     //绘线
     drawLine()
-     draw监听绘线返回geojson
-     //绘面
-     drawPolygon()
-     draw监听绘面返回geojson
-     删除标绘
-     deleteDraw()
+    draw 监听绘线返回 geojson
+    //绘面
+    drawPolygon()
+    draw 监听绘面返回 geojson
+    删除标绘
+    deleteDraw()

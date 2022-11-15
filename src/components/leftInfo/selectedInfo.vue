@@ -249,6 +249,7 @@ export default {
           opacity: 0.4,
           width: 2,
           lineColor: "#0B9FFB",
+          textName: "name",
           polygon: {
             type: "FeatureCollection",
             features: geoData
