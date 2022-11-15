@@ -399,6 +399,7 @@ export default {
     // 获取视角
     view() {
       this.currentView = getView(this.map)
+      console.log(this.currentView)
       return getView(this.map)
     },
     // 地图重置

@@ -22,9 +22,9 @@
         justify-content: space-between;
       "
     >
-      <video-player style="width: 100%; flex: 1" />
-      <video-player style="width: 100%; flex: 1; margin: 2px 0" />
-      <video-player style="width: 100%; flex: 1" />
+      <video-player style="width: 100%; flex: 1" :channel="1" />
+      <video-player style="width: 100%; flex: 1; margin: 2px 0" :channel="2" />
+      <video-player style="width: 100%; flex: 1" :channel="3" />
     </div>
   </div>
 </template>

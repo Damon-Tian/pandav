@@ -29,12 +29,12 @@ export default {
           id: "chengdu",
           url: "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
           view: {
-            bearing: 13.517716661366421,
-            center: [103.31194986717048, 30.472073615727084],
+            center: [103.37200312027926, 30.671440838957167],
+            zoom: 9.838592817487967,
+            pitch: 58.69748625766818,
+            bearing: 0,
             duration: 12000,
-            essential: true,
-            pitch: 57.01769083909942,
-            zoom: 10
+            essential: true
           }
         },
         {
@@ -99,18 +99,29 @@ export default {
   },
   methods: {
     requestFullScreen() {
-      const el = document.documentElement
-      const fullScreen =
-        el.requestFullscreen ||
-        el.mozRequestFullScreen ||
-        el.webkitRequestFullscreen ||
-        el.msRequestFullScreen
-      fullScreen()
+      const docElm = document.documentElement
+      if (docElm.requestFullscreen) {
+        //W3C
+        docElm.requestFullscreen()
+      } else if (docElm.mozRequestFullScreen) {
+        //FireFox
+        docElm.mozRequestFullScreen()
+      } else if (docElm.webkitRequestFullScreen) {
+        //Chrome等
+        docElm.webkitRequestFullScreen()
+      } else if (docElm.msRequestFullscreen) {
+        //IE11
+        docElm.msRequestFullscreen()
+      }
     },
     handleClick(item) {
       this.$store.commit("app/SET_CURRENTAREA", item.id)
       this.$store.state.app.map.mapBox.fly(item.view)
       this.$store.state.app.map.mapBox.addlayer(item.url, item.id)
+    },
+    reset() {
+      const currentItem = this.hrefs.find((item) => item.id == this.currentArea)
+      this.$store.state.app.map.mapBox.fly(currentItem.view)
     }
   }
 }
@@ -133,6 +144,7 @@ export default {
     height: 86px;
     align-items: center;
     color: white;
+    cursor: pointer;
     font-size: 36px;
     font-weight: 800;
     letter-spacing: 2px;

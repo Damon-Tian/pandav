@@ -13,18 +13,22 @@
 </template>
 
 <script>
+const videoList = [
+  "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN1009F_0_0/hls.m3u8",
+  "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN47B6F_0_0/hls.m3u8",
+  "http://110.185.102.112:8888/live/liveStream_7L01618PAJBE31A_0_0/hls.m3u8"
+]
 export default {
   props: {
     channel: {
-      type: Object,
-      default: () => {}
+      type: Number,
+      default: 1
     }
   },
   data() {
     return {
-      videoUrl:
-        "http://110.185.102.112:8888/live/liveStream_7L01618PAJF96DB_0_0/hls.m3u8",
-      title: ""
+      title: "",
+      videoUrl: ""
     }
   },
   // components: { EasyPlayer },
@@ -32,7 +36,10 @@ export default {
     this.getVideoList()
   },
   methods: {
-    async getVideoList() {}
+    async getVideoList() {
+      this.videoUrl = videoList[this.channel - 1]
+      console.log(this.videoUrl)
+    }
   }
 }
 </script>
