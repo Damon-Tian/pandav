@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="main-left">
-      <top-nav />
+      <top-nav ref="topNav" />
       <left-bar @select-menu="selectMenu" />
       <div class="right-block">
         <right-info :current-tab="currentTab" />
@@ -13,6 +13,7 @@
         @mapclick="handleClick"
         @onload="handleOnLoad"
       />
+      <span class="btn" @click="$refs.topNav.reset()">复位</span>
       <!-- <router-view /> -->
     </div>
     <camera class="main-right" />
@@ -55,12 +56,12 @@ export default {
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")
       this.$refs.mapBox.fly({
-        bearing: 13.517716661366421,
-        center: [103.31194986717048, 30.472073615727084],
+        center: [103.37200312027926, 30.671440838957167],
+        zoom: 9.838592817487967,
+        pitch: 58.69748625766818,
+        bearing: 0,
         duration: 12000,
-        essential: true,
-        pitch: 57.01769083909942,
-        zoom: 10
+        essential: true
       })
       this.$refs.mapBox.addlayer(
         "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
@@ -103,6 +104,17 @@ export default {
     position: relative;
     z-index: 2;
     flex: 1;
+
+    .btn {
+      position: absolute;
+      right: 20px;
+      bottom: 10px;
+      padding: 5px 10px;
+      background: rgba(0, 0, 0, 60%);
+      border-radius: 5px;
+      color: #fff;
+      cursor: pointer;
+    }
   }
 }
 </style>
