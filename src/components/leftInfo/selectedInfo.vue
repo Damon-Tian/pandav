@@ -221,6 +221,7 @@ export default {
           imgUrl: img,
           id,
           textName: "name",
+          color: "#fff",
           pointArray: {
             type: "FeatureCollection",
             features: geoData

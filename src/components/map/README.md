@@ -88,6 +88,7 @@ data = {
 imgUrl: ELEC_ICON,
 id: "points",
 textName: "text",
+color:"#fff",
 pointArray: {
 type: "FeatureCollection",
 features: [

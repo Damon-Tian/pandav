@@ -2,7 +2,7 @@
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-01 18:19:37
  * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-07 09:25:28
+ * @LastEditTime: 2022-11-16 11:23:29
  * @FilePath: \pandav\src\components\map\src\ylkj\point.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -79,7 +79,7 @@ export function addImgIcon(map, option = {
             'source': layerId, // reference the data source
             'layout': style,
             "paint": {
-                "text-color": "#000",
+                "text-color": option.color ? option.color : "#000",
                 // "text-halo-color": "rgba(0,0,0,0.5)",
                 // "text-halo-width": 2,
                 // "text-opacity": 0.8
