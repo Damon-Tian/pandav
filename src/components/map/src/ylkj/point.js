@@ -68,9 +68,9 @@ export function addImgIcon(map, option = {
         }, option.textName ? {
             "text-field": ['get', option.textName],
             "text-padding": 10,
-            "text-offset": [0, -4],
+            "text-offset": [0, -2],
             "text-anchor": 'bottom',
-            "text-font": ["Arial Regular"],
+            "text-font": ["Microsoft YaHei UI Semibold Regular"],
             'text-allow-overlap': true
         } : {})
         map.addLayer({

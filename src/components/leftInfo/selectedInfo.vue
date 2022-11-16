@@ -220,6 +220,7 @@ export default {
         const data = {
           imgUrl: img,
           id,
+          textName: "name",
           pointArray: {
             type: "FeatureCollection",
             features: geoData
