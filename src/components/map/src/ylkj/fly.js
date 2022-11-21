@@ -39,12 +39,14 @@ export function flyBounds(map, geojson) {
                 }
  * @return {*}
  */
-export function flyTo(map, option={bearing: 9.600000000000023,
+export function flyTo(map, option = {
+    bearing: 9.600000000000023,
     center: [103.58806946916616, 30.630077549993786],
     duration: 12000,
     essential: true,
     pitch: 73.99999999999997,
-    zoom: 16.001771985334283}) {
+    zoom: 16.001771985334283
+}) {
     let target = Object.assign({
         center: [104.5, 30],
         zoom: 8,
@@ -59,7 +61,7 @@ export function getView(map) {
     const pitch = map.getPitch();
     const bearing = map.getBearing();
     return {
-        center:[center.lng,center.lat],
+        center: [center.lng, center.lat],
         zoom,
         pitch,
         bearing,

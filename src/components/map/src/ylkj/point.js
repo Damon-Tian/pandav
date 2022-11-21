@@ -73,6 +73,7 @@ export function addImgIcon(map, option = {
             "text-font": ["Microsoft YaHei UI Semibold Regular"],
             'text-allow-overlap': true
         } : {})
+        console.log(style);
         map.addLayer({
             'id': layerId,
             'type': 'symbol',

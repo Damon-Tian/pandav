@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <!-- <div class="map-button">
+    <div class="map-button">
       <button
         type="button"
         @click="
@@ -102,7 +102,7 @@
       <button type="button" @click="drawLine">线</button>
       <button type="button" @click="drawPolygon">面</button>
       <button type="button" @click="deleteDraw">删除</button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -119,7 +119,7 @@ import REGION_GEOJSON from "./src/ylkj/lib/rg.json"
 import { addImgIcon } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
 import ELEC_ICON from "./src/ylkj/lib/elec.png"
-import TEST_ICON from "./src/ylkj/lib/test.png"
+import C1 from "./src/ylkj/lib/C1toline.json"
 import Plotting from "./src/ylkj/lib/potting/plotting.js"
 const { createPopup } = window.egis
 // import { setMap } from "@egis/map"
@@ -292,7 +292,7 @@ export default {
     Polygon(
       data = {
         id: "mapPlygon",
-        polygon: CHOUZHOUJSON,
+        polygon: C1,
         fillColor: "rgba(255,44,44,0.4)",
         opacity: 0.4,
         width: 2,

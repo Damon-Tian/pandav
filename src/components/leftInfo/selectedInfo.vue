@@ -279,7 +279,7 @@ export default {
               id: 2,
               type: "Feature",
               properties: {
-                name: "测试点位1"
+                name: "测试点位2"
               }, //其中必须包含id字段，用于高亮点钟图标
               geometry: {
                 type: "Point",
