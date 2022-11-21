@@ -286,7 +286,119 @@ export default {
     // 添加热力图
     addHeatmap(obj) {
       obj.id ? this.removelayer(obj.id) : null
-      addHeatMap(this.map, obj)
+      const heatData = {
+        type: "FeatureCollection",
+        crs: {
+          type: "name",
+          properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+        },
+        features: [
+          {
+            type: "Feature",
+            properties: {
+              id: "ak16994521",
+              mag: 2.3,
+              time: 1507425650893,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.432937, 30.56] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "ak16994519",
+              mag: 1.7,
+              time: 1507425289659,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.431534, 30.57] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "ak16994517",
+              mag: 1.6,
+              time: 1507424832518,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.430488, 30.58] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "ci38021336",
+              mag: 1.42,
+              time: 1507423898710,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.427857, 30.59] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "us2000b2nn",
+              mag: 4.2,
+              time: 1507422626990,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.426433, 30.6] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "ak16994510",
+              mag: 1.6,
+              time: 1507422449194,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.425718, 30.61] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "us2000b2nb",
+              mag: 4.6,
+              time: 1507420784440,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.409448, 30.62] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "ak16994298",
+              mag: 2.4,
+              time: 1507419370097,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.403892, 30.63] }
+          },
+          {
+            type: "Feature",
+            properties: {
+              id: "nc72905861",
+              mag: 1.39,
+              time: 1507418785100,
+              felt: null,
+              tsunami: 0
+            },
+            geometry: { type: "Point", coordinates: [103.398553, 30.64] }
+          }
+        ]
+      }
+      addHeatMap(this.map, {
+        id: "heatmap",
+        magName: "mag",
+        data: heatData
+      })
     },
     // 添加面
     Polygon(
