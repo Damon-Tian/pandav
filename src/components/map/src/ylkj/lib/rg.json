@@ -3,7 +3,7 @@
     "features": [{
             "type": "Feature",
             "geometry": {
-                "type": "LineString",
+                "type": "Polygon",
                 "coordinates": [
                     [103.11980786500004, 30.794013515000074],
                     [103.11985420500008, 30.793978090000053],
