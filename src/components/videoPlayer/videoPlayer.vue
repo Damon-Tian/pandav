@@ -2,6 +2,7 @@
   <div style="width: 330px; height: 200px">
     <!-- <easy-player :video-url="videoUrl" :live="true" style="height:100px"></easy-player> -->
     <iframe
+      ref="player"
       :src="`/static/test.html?videoUrl=${videoUrl}&title=${title}`"
       scrolling="”no”"
       frameborder="0"
@@ -13,33 +14,40 @@
 </template>
 
 <script>
-const videoList = [
-  "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN1009F_0_0/hls.m3u8",
-  "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN47B6F_0_0/hls.m3u8",
-  "http://110.185.102.112:8888/live/liveStream_7L01618PAJBE31A_0_0/hls.m3u8"
-]
 export default {
   props: {
     channel: {
       type: Number,
       default: 1
+    },
+    videoUrl: {
+      type: String,
+      default: ""
     }
   },
   data() {
     return {
-      title: "",
-      videoUrl: ""
+      title: ""
     }
   },
   // components: { EasyPlayer },
   mounted() {
     this.getVideoList()
+    const player =
+      this.$refs.player.contentWindow || this.$refs.player.contentDocument
+    this.$nextTick(() => {
+      setTimeout(() => {
+        console.log(player.document)
+        const playerEle = player.document.getElementById("player")
+        playerEle.oncontextmenu = () => {
+          playerEle.querySelector(".easy-player-right-menu").style.display =
+            "none"
+        }
+      }, 2000)
+    })
   },
   methods: {
-    async getVideoList() {
-      this.videoUrl = videoList[this.channel - 1]
-      console.log(this.videoUrl)
-    }
+    async getVideoList() {}
   }
 }
 </script>

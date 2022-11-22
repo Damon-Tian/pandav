@@ -18,14 +18,14 @@ let markerObj = {}
 const setConfig = (data = {
     icon: DEFAULT_ICON,
     text: '巡护点B',
-    calback: function () {}
+    calback: function () { }
 }) => {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.display = 'flex';
     const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
-        <div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text?data.text:''}</div>
-        <image src="${data.icon?data.icon:DEFAULT_ICON}" style="width:20px;height:24px;"/>
+        <div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ''}</div>
+        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width:20px;height:24px;"/>
         </div>`
     el.innerHTML = iconel;
     el.addEventListener('click', () => {
@@ -77,11 +77,11 @@ export function addLine(map, data, option) {
             // let point=data.geojson.features[0].geometry.coordinates
             markerObj[layerId] = [];
             data.geojson.features.forEach(item => {
-                    let center=[];
-                if(item.geometry.type=="MultiLineString"){
-                    center=item.geometry.coordinates[0][0]
-                }else{
-                    center=item.geometry.coordinates[0]
+                let center = [];
+                if (item.geometry.type == "MultiLineString") {
+                    center = item.geometry.coordinates[0][0]
+                } else {
+                    center = item.geometry.coordinates[0]
                 }
                 const idmarker = createMarker(center, {
                     element: setConfig({
@@ -131,11 +131,11 @@ export function removeline(map, layerId) {
         map.getLayer('arrowline') ? map.removeLayer('arrowline') : null;
         map.getSource(layerId) ? map.removeSource(layerId) : null
     }
-    if(Array.isArray(markerObj[layerId])){
-        markerObj[layerId].forEach(item=>{
+    else if (Array.isArray(markerObj[layerId])) {
+        markerObj[layerId].forEach(item => {
             item.remove()
         })
-    }else{
+    } else {
         markerObj[layerId].remove()
     }
     // Array.isArray(markerObj[layerId])? markerObj[layerId].remove() : markerObj[layerId].remove();

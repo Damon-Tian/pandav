@@ -10,13 +10,21 @@ module.exports = {
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
   devServer: {
     proxy: {
+      "/front": {
+        // target: "http://172.16.23.108:9011/",
+        target: "http://182.151.56.201:9011/",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/front": ""
+        }
+      },
       "/profile": {
         target: "http://3888z2k945.wicp.vip:6309/profile",
         changeOrigin: true,
         pathRewrite: {
           "^/profile": ""
         }
-      },
+      }
     }
   }
 

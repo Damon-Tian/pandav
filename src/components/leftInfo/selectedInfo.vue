@@ -42,21 +42,44 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
-import NATRUE_ICON from "@/assets/img/selectedInfo/natural.png"
+import { get_elec } from "@/api/elec"
+import { get_line } from "@/api/line"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
     title: "核心保护区",
-    checked: true,
+    checked: false,
     type: 3,
-    id: "1"
+    id: "1",
+    getData: async (orgId) => {
+      const params = {
+        isCore: 0,
+        pageNumber: 1,
+        pageSize: 999
+      }
+      if (orgId) {
+        params.orgIds = [orgId]
+      }
+      return get_elec(params)
+    }
   },
   {
     img: require("../../assets/img/selectedInfo/general.png"),
     title: "一般保护区",
-    checked: true,
+    checked: false,
     type: 3,
-    id: "2"
+    id: "2",
+    getData: async (orgId) => {
+      const params = {
+        isCore: 1,
+        pageNumber: 1,
+        pageSize: 999
+      }
+      if (orgId) {
+        params.orgIds = [orgId]
+      }
+      return get_elec(params)
+    }
   }
 ]
 export default {
@@ -108,7 +131,14 @@ export default {
           title: "巡护管理",
           checked: false,
           type: 2,
-          id: "7"
+          id: "7",
+          getData: async (orgId) => {
+            const params = {}
+            if (orgId) {
+              params.orgIds = [orgId]
+            }
+            return await get_line(params, { pageNumber: 1, pageSize: 999 })
+          }
         },
         {
           img: require("../../assets/img/selectedInfo/fence.png"),
@@ -118,7 +148,7 @@ export default {
           id: "8"
         }
       ],
-      selectedInfoList2: commonSelectInfoList,
+      selectedInfoList2: [...commonSelectInfoList],
       subselectedInfo: [
         {
           title: "红外相机",
@@ -160,6 +190,9 @@ export default {
     },
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    orgId() {
+      return this.$store.getters["app/GET_AREA_ID"]
     }
   },
   watch: {
@@ -174,9 +207,6 @@ export default {
       this.initLayer()
     }
   },
-  mounted() {
-    this.initLayer()
-  },
   methods: {
     getRemovedList() {
       const checked = this.showSubSelectList
@@ -190,11 +220,16 @@ export default {
       )
       this.needRemoveChecked = needRemoveChecked
     },
-    handleClick(item) {
+    async handleClick(item) {
       item.checked = !item.checked
       const { type, title } = item
       if (item.checked) {
-        this.setLayer(type, title)
+        if (item.getData) {
+          const { records, rows } = await item.getData(this.orgId)
+          const data = records ? records : rows
+          const geoData = data.map((item) => JSON.parse(item.geoJson))
+          this.setLayer(type, title, geoData)
+        }
       } else {
         this.removelayer(type, title)
       }
@@ -211,10 +246,14 @@ export default {
     },
     //初始化图层 核心保护区和一般保护区
     async initLayer() {
-      this.needRemoveChecked.concat(commonSelectInfoList).forEach((item) => {})
+      // commonSelectInfoList.forEach((item) => {
+      //   this.removelayer(item.type, item.title)
+      // })
+      commonSelectInfoList.forEach((item) => {
+        this.handleClick(item)
+      })
     },
-    async setLayer(type, id) {
-      const geoData = await this.getData(type, id)
+    async setLayer(type, id, geoData) {
       // type 1:点 2:线 3:面
       if (type == 1) {
         const data = {
@@ -238,7 +277,7 @@ export default {
           }
         }
         const option = {
-          lineColor: "#f90909",
+          lineColor: "#F4BD1A",
           lineWidth: 4,
           arrow: false
         }
@@ -247,140 +286,17 @@ export default {
       if (type == 3) {
         const data = {
           id,
-          fillColor: " rgba(11,159,251,0.4)",
+          fillColor:
+            id !== "核心保护区" ? "rgba(11,159,251,0.4)" : "rgba(249,9,9,0.4)",
           opacity: 0.4,
           width: 2,
-          lineColor: "#0B9FFB",
-          textName: "name",
+          lineColor: id !== "核心保护区" ? "#0B9FFB" : "#f90909",
           polygon: {
             type: "FeatureCollection",
             features: geoData
           }
         }
         this.$store.state.app.map.mapBox.Polygon(data)
-      }
-    },
-    async getData(type, id) {
-      switch (type) {
-        case 1:
-          return [
-            {
-              id: 1,
-              type: "Feature",
-              properties: {
-                name: "测试点位1"
-              }, //其中必须包含id字段，用于高亮点钟图标
-              geometry: {
-                type: "Point",
-                coordinates: [103.513296, 30.589647]
-              }
-            },
-            {
-              id: 2,
-              type: "Feature",
-              properties: {
-                name: "测试点位2"
-              }, //其中必须包含id字段，用于高亮点钟图标
-              geometry: {
-                type: "Point",
-                coordinates: [103.523296, 30.599647]
-              }
-            }
-          ]
-        case 2:
-          return Promise.resolve([
-            {
-              type: "Feature",
-              properties: {
-                name: "线条1"
-              },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [103.432937, 30.878296],
-                  [103.431534, 30.878371],
-                  [103.430488, 30.878591],
-                  [103.427857, 30.879531],
-                  [103.426433, 30.879565],
-                  [103.425718, 30.879164],
-                  [103.409448, 30.864955],
-                  [103.403892, 30.863962]
-                ]
-              }
-            },
-            {
-              type: "Feature",
-              properties: {
-                name: "线条2"
-              },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [103.543722, 30.828089],
-                  [103.544396, 30.830691],
-                  [103.544171, 30.832102],
-                  [103.543757, 30.833789],
-                  [103.543084, 30.835082],
-                  [103.541632, 30.83608],
-                  [103.54032, 30.836406],
-                  [103.538881, 30.836501],
-                  [103.536328, 30.837267],
-                  [103.534237, 30.837529],
-                  [103.532546, 30.837566],
-                  [103.528372, 30.837354],
-                  [103.525973, 30.836937],
-                  [103.524085, 30.836918],
-                  [103.522437, 30.837802],
-                  [103.521188, 30.83875],
-                  [103.519799, 30.839527]
-                ]
-              }
-            }
-          ])
-        case 3:
-          return Promise.resolve([
-            {
-              type: "Feature",
-              properties: {
-                name: "电子围栏1"
-              },
-              geometry: {
-                type: "MultiPolygon",
-                coordinates: [
-                  [
-                    [
-                      [103.432937, 30.878296],
-                      [103.532937, 30.978296],
-                      [103.632937, 30.778296],
-
-                      [103.432937, 30.878296]
-                    ]
-                  ]
-                ]
-              }
-            },
-            {
-              type: "Feature",
-              properties: {
-                name: "电子围栏2"
-              },
-              geometry: {
-                type: "MultiPolygon",
-                coordinates: [
-                  [
-                    [
-                      [103.513296, 30.589647],
-                      [103.522574, 30.599069],
-                      [103.531795, 30.608084],
-                      [103.561156, 30.616818],
-                      [103.588869, 30.629464],
-                      [103.513296, 30.589647]
-                    ]
-                  ]
-                ]
-              }
-            }
-          ])
       }
     },
     removelayer(type, id) {

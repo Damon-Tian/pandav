@@ -31,7 +31,11 @@
         <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
       </span>
 
-      <selectedInfo :is-collapse="isCollapse" :current-tab="currentTab" />
+      <selectedInfo
+        ref="selectedInfo"
+        :is-collapse="isCollapse"
+        :current-tab="currentTab"
+      />
     </div>
     <alarmInfo
       v-if="currentTab === 1"
@@ -121,6 +125,9 @@ export default {
     },
     narrowClick() {
       this.isCollapse = !this.isCollapse
+    },
+    init() {
+      this.$refs.selectedInfo.initLayer()
     }
   }
 }
