@@ -47,8 +47,8 @@ export function addHeatMap(map, data) {
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                0, 1,
-                9, 3
+                8, 1,
+                18, 9
             ],
             // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
             // Begin color ramp at 0-stop with a 0-transparancy color
@@ -74,8 +74,9 @@ export function addHeatMap(map, data) {
                 "interpolate",
                 ["linear"],
                 ["zoom"],
-                0, 2,
-                19, 20],
+                8, 11,
+                18, 111
+            ],
             // Adjust the heatmap radius by zoom level
 
             // Transition from heatmap to circle layer by zoom level
@@ -83,10 +84,8 @@ export function addHeatMap(map, data) {
                 'interpolate',
                 ['linear'],
                 ['zoom'],
-                7,
-                1,
-                19,
-                0
+                8, 1,
+                18, 1
             ]
         }
     },
