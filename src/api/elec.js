@@ -15,3 +15,16 @@ export function get_elec(data) {
         data
     })
 }
+/**
+ * 获取电子围栏 热力图数据
+ * @param {*} data
+ * @returns
+ */
+
+export function get_elec_hotmap(data) {
+    return request({
+        url: '/front/edmp/elecRail/heatMap',
+        method: 'post',
+        data
+    })
+}

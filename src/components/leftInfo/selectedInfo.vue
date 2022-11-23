@@ -11,7 +11,7 @@
           class="selected-info-list__item"
         >
           <div v-if="item.img" class="selected-info-list__item__icon">
-            <img :src="item.img" alt="" />
+            <img :src="item.img" alt="" style="max-width: 18px" />
           </div>
           <div class="selected-info-list__item__text">{{ item.title }}</div>
           <div
@@ -42,7 +42,7 @@
 
 <script>
 import img from "../../assets/img/selectedInfo/checked.png"
-import { get_elec } from "@/api/elec"
+import { get_elec, get_elec_hotmap } from "@/api/elec"
 import { get_line } from "@/api/line"
 const commonSelectInfoList = [
   {
@@ -106,6 +106,22 @@ export default {
       selectedInfoList1: [
         ...commonSelectInfoList,
         {
+          img: require("../../assets/img/selectedInfo/heatmap.jpg"),
+          title: "人员热力图",
+          checked: false,
+          type: 3,
+          id: "8",
+          getHotmap: async (orgId) => {
+            const params = {
+              areaCodes: []
+            }
+            if (orgId) {
+              params.areaCodes = [orgId]
+            }
+            return get_elec_hotmap(params)
+          }
+        },
+        {
           img: require("../../assets/img/selectedInfo/natural.png"),
           title: "自然资源",
           checked: false,
@@ -139,13 +155,6 @@ export default {
             }
             return await get_line(params, { pageNumber: 1, pageSize: 999 })
           }
-        },
-        {
-          img: require("../../assets/img/selectedInfo/fence.png"),
-          title: "电子围栏",
-          checked: false,
-          type: 3,
-          id: "8"
         }
       ],
       selectedInfoList2: [...commonSelectInfoList],
@@ -225,10 +234,29 @@ export default {
       const { type, title } = item
       if (item.checked) {
         if (item.getData) {
+          //点线面操作
           const { records, rows } = await item.getData(this.orgId)
           const data = records ? records : rows
           const geoData = data.map((item) => JSON.parse(item.geoJson))
           this.setLayer(type, title, geoData)
+        }
+        if (item.getHotmap) {
+          //点线面操作
+          const data = await item.getHotmap(this.orgId)
+          const hotmapData = {
+            id: title,
+            magName: "mag",
+            data: {
+              type: "FeatureCollection",
+              crs: {
+                type: "name",
+                properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+              },
+              features: data
+            }
+          }
+          console.log(data.filter((item) => item.properties.mag > 1))
+          this.$store.state.app.map.mapBox.addHeatmap(hotmapData)
         }
       } else {
         this.removelayer(type, title)

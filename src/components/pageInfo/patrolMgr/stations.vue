@@ -1,14 +1,14 @@
 /* 站点饼图，占比 */
 <template>
   <div>
-    <div class="btns">
+    <div class="stations-btns">
       <div>
         人次
-        <div class="btn">{{ getPersons }}人次</div>
+        <div class="stations-btn">{{ getPersons }}人次</div>
       </div>
       <div>
         里程
-        <div class="btn">{{ getKm }}km</div>
+        <div class="stations-btn">{{ getKm }}km</div>
       </div>
     </div>
     <div class="stations">
@@ -117,7 +117,7 @@ export default {
 }
 </script>
 <style scoped lang="less">
-.btns {
+.stations-btns {
   display: flex;
   justify-content: space-between;
   margin: 10px 0;
@@ -125,7 +125,7 @@ export default {
   font-size: 14px;
   font-weight: 500;
 
-  .btn {
+  .stations-btn {
     width: 198px;
     height: 36px;
     border: 1px solid #1aa1fd;

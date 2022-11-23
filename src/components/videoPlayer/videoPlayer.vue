@@ -30,24 +30,32 @@ export default {
       title: ""
     }
   },
+  watch: {
+    videoUrl() {
+      this.cancelContentMenu()
+    }
+  },
   // components: { EasyPlayer },
   mounted() {
     this.getVideoList()
-    const player =
-      this.$refs.player.contentWindow || this.$refs.player.contentDocument
-    this.$nextTick(() => {
-      setTimeout(() => {
-        console.log(player.document)
-        const playerEle = player.document.getElementById("player")
-        playerEle.oncontextmenu = () => {
-          playerEle.querySelector(".easy-player-right-menu").style.display =
-            "none"
-        }
-      }, 2000)
-    })
+    this.cancelContentMenu()
   },
   methods: {
-    async getVideoList() {}
+    async getVideoList() {},
+    cancelContentMenu() {
+      const player =
+        this.$refs.player.contentWindow || this.$refs.player.contentDocument
+      this.$nextTick(() => {
+        setTimeout(() => {
+          console.log(player.document)
+          const playerEle = player.document.getElementById("player")
+          playerEle.oncontextmenu = () => {
+            playerEle.querySelector(".easy-player-right-menu").style.display =
+              "none"
+          }
+        }, 2000)
+      })
+    }
   }
 }
 </script>
