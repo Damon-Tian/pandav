@@ -41,3 +41,29 @@ export function get_elec_person(data) {
         data
     })
 }
+
+/**
+ * 热力图人数统计
+ * @param {*} params
+ * @returns
+ */
+export function get_electronic_fence_count(params) {
+    return request({
+        url: "/front/edmp/dataVisualization/getElectronicFenceCount",
+        method: "get",
+        params
+    })
+}
+
+/**
+ * 获取靶向短信统计数据
+ * @param {*} params
+ * @returns
+ */
+export function get_targeted_sms_data(params) {
+    return request({
+        url: "/front/edmp/dataVisualization/getTargetedSmsData",
+        method: "get",
+        params
+    })
+}

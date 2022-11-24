@@ -1,9 +1,6 @@
 <template>
   <div class="p-leftbar" :class="isCollapse ? 'collapse-menu' : ''">
-    <div
-      class="p-leftbar-wrap"
-      style="overflow: auto; height: calc(100vh - 100px); max-height: 970px"
-    >
+    <div class="p-leftbar-wrap">
       <el-menu
         :default-active="activeNav"
         :collapse="isCollapse"
@@ -145,6 +142,15 @@ export default {
 
   .p-leftbar-wrap {
     display: flex;
+    overflow: auto;
+    height: calc(100vh - 100px);
+    max-height: 970px;
+    -ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome Safari */
+    }
   }
 
   .narrow-icon {

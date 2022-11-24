@@ -293,7 +293,9 @@ export default {
                 const geoJson = [
                   {
                     type: "Feature",
-                    properties: {},
+                    properties: {
+                      color: "#62f709"
+                    },
                     geometry: {
                       type: "LineString",
                       coordinates: data.pointList.map((item) => [
@@ -439,7 +441,7 @@ export default {
           }
         }
         const option = {
-          lineColor: "#F4BD1A",
+          lineColor: geoData[0].properties.color || "#F4BD1A",
           lineWidth: 4,
           arrow: false
         }
