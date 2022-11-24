@@ -16,3 +16,16 @@ export function get_line(data, params) {
         params
     })
 }
+/*
+ * 巡护路线
+ * @param {*} data
+ * @returns
+ */
+
+export function get_patrol_detail(params) {
+    return request({
+        url: '/front/patrol/detail',
+        method: 'get',
+        params
+    })
+}

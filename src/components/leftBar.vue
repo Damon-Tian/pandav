@@ -2,7 +2,7 @@
   <div class="p-leftbar" :class="isCollapse ? 'collapse-menu' : ''">
     <div
       class="p-leftbar-wrap"
-      style="overflow: auto; max-height: calc(100vh - 140px)"
+      style="overflow: auto; height: calc(100vh - 100px); max-height: 970px"
     >
       <el-menu
         :default-active="activeNav"
@@ -40,19 +40,19 @@
         :current-tab="currentTab"
       />
     </div>
-    <alarmInfo
+    <!-- <alarmInfo
       v-if="currentTab === 1"
       :is-collapse="isCollapse"
       :current-tab="currentTab"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
 import selectedInfo from "./leftInfo/selectedInfo.vue"
-import alarmInfo from "./leftInfo/alarmInfo.vue"
+// import alarmInfo from "./leftInfo/alarmInfo.vue"
 export default {
-  components: { selectedInfo, alarmInfo },
+  components: { selectedInfo },
   data() {
     return {
       isCollapse: false,

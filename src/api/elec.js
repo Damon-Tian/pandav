@@ -28,3 +28,16 @@ export function get_elec_hotmap(data) {
         data
     })
 }
+/**
+ * 获取电子围栏核心区域 人员轨迹图
+ * @param {*} data
+ * @returns
+ */
+
+export function get_elec_person(data) {
+    return request({
+        url: '/front/edmp/elecRail/heatMap/personCount',
+        method: 'post',
+        data
+    })
+}
