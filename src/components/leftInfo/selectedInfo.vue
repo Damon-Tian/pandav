@@ -451,7 +451,7 @@ export default {
           fillColor:
             id !== "核心保护区" ? "rgba(11,159,251,0.4)" : "rgba(249,9,9,0.4)",
           opacity: 0.2,
-          width: 2,
+          width: 1,
           lineColor: id !== "核心保护区" ? "#0B9FFB" : "#f90909",
           polygon: {
             type: "FeatureCollection",
