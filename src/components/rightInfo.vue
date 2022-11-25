@@ -26,15 +26,14 @@ export default {
     equipmentManagement,
     electron
   },
-  props: {
-    currentTab: {
-      type: [String, Number],
-      default: null
-    }
-  },
   data() {
     return {
       // currentTab: 6,
+    }
+  },
+  computed: {
+    currentTab() {
+      return this.$store.state.app.currentTab
     }
   }
 }

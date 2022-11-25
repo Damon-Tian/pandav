@@ -75,6 +75,7 @@
       <button type="button" @click="line()">添加线</button>
       <button type="button" @click="view">获取视角</button>
       <button type="button" @click="resize">重置</button>
+      <button type="button" @click="addCircle">圆</button>
       <button type="button" @click="background('rgba(200,62,17,0.5)')">
         背景颜色
       </button>
@@ -112,7 +113,7 @@ import "./src/index.less"
 import CreatMap from "./src/ylkj/addlayer.js"
 import { addHeatMap } from "./src/ylkj/heatmap.js"
 import { addPolygon, removePlygon } from "./src/ylkj/poygon.js"
-import { flyBounds, getView, flyTo } from "./src/ylkj/fly.js"
+import { flyBounds, getView, flyTo, setCircle } from "./src/ylkj/fly.js"
 import CHOUZHOUJSON from "./src/ylkj/lib/chongzhou.json"
 import LINE_GEOJSON from "./src/ylkj/lib/testline.json"
 import REGION_GEOJSON from "./src/ylkj/lib/rg.json"
@@ -172,7 +173,7 @@ export default {
         // this.Map2d.addVector()
         if (features.length) {
           console.log(features[0].properties)
-          this.$emit("mapclick", features[0].properties, features)
+          this.$emit("mapclick", features[0], features)
         }
         // this.poup({
         //   center: [103.37310679593571, 30.53780732123583],
@@ -279,6 +280,26 @@ export default {
       this.terrians.push(id)
       this.Map2d.addterrian(url, id)
       // this.Map2d.addterrian(url, id)
+    },
+    addCircle(data) {
+      const geoData = data.pointArray.features.map((item) =>
+        setCircle(item.geometry.coordinates)
+      )
+      console.log(geoData)
+      this.Polygon({
+        id: data.id + "circle",
+        fillColor: "rgb(234,72,21)",
+        opacity: 0.1,
+        width: 1,
+        lineColor: "#f90909",
+        polygon: {
+          type: "FeatureCollection",
+          features: geoData
+        }
+      })
+    },
+    removeCircle(id) {
+      this.removePolygon(id + "circle")
     },
     removeterrian(id) {
       this.Map2d.removterrian(id)

@@ -34,7 +34,7 @@
       <selectedInfo
         ref="selectedInfo"
         :is-collapse="isCollapse"
-        :current-tab="currentTab"
+        @deviceOnlineUrl="handlePlay"
       />
     </div>
     <!-- <alarmInfo
@@ -121,13 +121,16 @@ export default {
           this.currentTab = item.id
         }
       })
-      this.$emit("select-menu", this.currentTab)
+      this.$store.commit("app/SET_TAB", this.currentTab)
     },
     narrowClick() {
       this.isCollapse = !this.isCollapse
     },
     init() {
       this.$refs.selectedInfo.initLayer()
+    },
+    handlePlay(url) {
+      this.$emit("deviceOnlineUrl", url)
     }
   }
 }

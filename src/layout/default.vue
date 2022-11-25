@@ -2,9 +2,13 @@
   <div class="main-container">
     <div class="main-left">
       <top-nav ref="topNav" />
-      <left-bar ref="leftBar" @select-menu="selectMenu" />
+      <left-bar
+        ref="leftBar"
+        @select-menu="selectMenu"
+        @deviceOnlineUrl="handlePlay"
+      />
       <div class="right-block">
-        <right-info :current-tab="currentTab" />
+        <right-info />
       </div>
       <wether />
       <map-box
@@ -16,7 +20,7 @@
       <span class="btn" @click="$refs.topNav.reset()">复位</span>
       <!-- <router-view /> -->
     </div>
-    <camera class="main-right" />
+    <camera ref="cameraRef" class="main-right" />
   </div>
 </template>
 
@@ -48,8 +52,10 @@ export default {
     selectMenu(i) {
       this.currentTab = i
       this.$store.commit("app/SET_MAPFEATURE", null)
+      this.$store.commit("app/SET_TAB", i)
     },
     handleClick(currentFeature) {
+      console.log(currentFeature)
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
     },
     handleOnLoad() {
@@ -67,6 +73,9 @@ export default {
         "chengdu"
       )
       this.$refs.leftBar.init()
+    },
+    handlePlay(url) {
+      this.$refs.cameraRef.play(url)
     }
   }
 }

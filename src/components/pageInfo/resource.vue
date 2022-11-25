@@ -94,10 +94,7 @@
     </info-block>
     <div style="display: none">
       <div ref="messageBox" class="message-box">
-        <div>
-          <div class="title">测试</div>
-          <div>测试</div>
-        </div>
+        <img src="../../assets/img/8431669344745_.pic.jpg" alt="" />
       </div>
     </div>
   </div>
@@ -106,7 +103,7 @@
 <script>
 import infoBlock from "./infoBlock"
 const mapId = "自然资源"
-const mapIcon = require("@/assets/img/p-leftbar-env-active.png")
+const mapIcon = require("../../assets/img/selectedInfo/natural.png")
 const baseConfig = {
   radius: "40",
   activeRadius: "45%",
@@ -193,13 +190,16 @@ export default {
         "大熊猫",
         "娃娃鱼"
       ],
-      currentSelect: 0,
+      currentSelect: 1,
       currentPosition: ""
     }
   },
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    currentFeature() {
+      return this.$store.state.app.map.feature
     }
   },
   watch: {
@@ -209,19 +209,29 @@ export default {
     currentPosition() {
       this.removeMap()
       this.initMap()
+    },
+    currentFeature() {
+      this.detail()
     }
   },
-  mounted() {},
+  mounted() {
+    this.initMap()
+  },
+  beforeDestroy() {
+    this.removeMap()
+    this.$store.state.app.map.mapBox.removePoup()
+  },
   methods: {
     changeDetail(tab) {
       this.currentDetailTab = tab
     },
     async initMap() {
-      const geoData = this.getData()
+      const geoData = await this.getData()
       const data = {
-        imgUrl: mapIcon,
+        imgUrl: geoData[0].img,
         id: mapId,
-        textName: mapId,
+        textName: "name",
+        color: "#fff",
         pointArray: {
           type: "FeatureCollection",
           features: geoData
@@ -237,25 +247,21 @@ export default {
       //接口请求
       return Promise.resolve([
         {
-          id: 1,
           type: "Feature",
-          properties: {
-            name: "测试点位1"
-          }, //其中必须包含id字段，用于高亮点钟图标
+          img: mapIcon,
+          properties: {}, //其中必须包含id字段，用于高亮点钟图标
           geometry: {
             type: "Point",
-            coordinates: [103.513296, 30.589647]
+            coordinates: [103.634, 31.246]
           }
         },
         {
-          id: 2,
           type: "Feature",
-          properties: {
-            name: "测试点位2"
-          }, //其中必须包含id字段，用于高亮点钟图标
+          img: mapIcon,
+          properties: {}, //其中必须包含id字段，用于高亮点钟图标
           geometry: {
             type: "Point",
-            coordinates: [103.523296, 30.599647]
+            coordinates: [103.624, 31.256]
           }
         }
       ])
@@ -263,7 +269,7 @@ export default {
     detail() {
       const dom = this.$refs.messageBox
       this.$store.state.app.map.mapBox.poup({
-        center: [103.37310679593571, 30.53780732123583],
+        center: this.currentFeature.geometry.coordinates,
         centent: dom
       })
     }

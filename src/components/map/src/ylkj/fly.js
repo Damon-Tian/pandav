@@ -7,7 +7,10 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import {
-    bbox
+    bbox,
+    point,
+    buffer,
+    circle
 } from "./lib/truf.js"
 export function flyBounds(map, geojson) {
     let bounds = bbox(geojson)
@@ -68,4 +71,8 @@ export function getView(map) {
         duration: 12000,
         essential: true
     }
+}
+export function setCircle(center) {
+    var point1 = point(center);
+    return buffer(point1, 0.2, { units: 'kilometers' });
 }

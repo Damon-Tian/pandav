@@ -19,6 +19,11 @@
     <camera />
     <Infrare-camera />
     <event-remind />
+    <div style="display: none">
+      <div ref="messageBox" class="message-box">
+        <img src="../../assets/img/8461669345165_.pic.jpg" alt="" />
+      </div>
+    </div>
   </div>
 </template>
 
@@ -27,7 +32,7 @@ import camera from "./equipmentManagement/camera.vue"
 import InfrareCamera from "./equipmentManagement/InfrareCamera.vue"
 import eventRemind from "./equipmentManagement/eventRemind.vue"
 const mapId = "设备管理"
-const mapIcon = require("@/assets/img/p-leftbar-env-active.png")
+const mapIcon = require("../../assets/img/selectedInfo/patrol.png")
 // import environment from "./environment.vue"
 const tabs = ["设备管理", "生态设备"]
 export default {
@@ -39,21 +44,37 @@ export default {
     }
   },
   computed: {
+    currentArea() {
+      return this.$store.state.app.currentArea
+    },
     currentFeature() {
       return this.$store.state.app.map.feature
     }
   },
+  watch: {
+    currentArea() {
+      this.currentPosition = this.currentArea
+    },
+    currentPosition() {
+      this.removeMap()
+      this.initMap()
+    },
+    currentFeature() {
+      this.detail()
+    }
+  },
   beforeDestroy() {
     this.removeMap()
+    this.$store.state.app.map.mapBox.removePoup()
   },
   mounted() {
     this.initMap()
   },
   methods: {
     async initMap() {
-      const geoData = this.getData()
+      const geoData = await this.getData()
       const data = {
-        imgUrl: mapIcon,
+        imgUrl: geoData[0].img,
         id: mapId,
         textName: mapId,
         pointArray: {
@@ -71,28 +92,31 @@ export default {
       //接口请求
       return Promise.resolve([
         {
-          id: 1,
           type: "Feature",
-          properties: {
-            name: "测试点位1"
-          }, //其中必须包含id字段，用于高亮点钟图标
+          img: mapIcon,
+          properties: {}, //其中必须包含id字段，用于高亮点钟图标
           geometry: {
             type: "Point",
-            coordinates: [103.513296, 30.589647]
+            coordinates: [103.32057700807803, 30.64175829877989]
           }
         },
         {
-          id: 2,
           type: "Feature",
-          properties: {
-            name: "测试点位2"
-          }, //其中必须包含id字段，用于高亮点钟图标
+          img: mapIcon,
+          properties: {}, //其中必须包含id字段，用于高亮点钟图标
           geometry: {
             type: "Point",
-            coordinates: [103.523296, 30.599647]
+            coordinates: [103.30359827926577, 30.6077411052311]
           }
         }
       ])
+    },
+    detail() {
+      const dom = this.$refs.messageBox
+      this.$store.state.app.map.mapBox.poup({
+        center: this.currentFeature.geometry.coordinates,
+        centent: dom
+      })
     }
   }
 }

@@ -23,10 +23,10 @@
       "
     >
       <video-player
-        v-for="(item, index) in 3"
+        v-for="(item, index) in list"
         :key="item"
         style="width: 100%; flex: 1"
-        :video-url="videoList[startIndex + index]"
+        :video-url="item"
         :class="{ 'camera-space': index === 1 }"
       />
     </div>
@@ -60,13 +60,27 @@ export default {
         "http://110.185.102.112:8888/live/liveStream_7L0B6C8PAN41CA4_0_0/hls.m3u8",
         "http://110.185.102.112:8888/live/liveStream_7L0D2E2FAC1A847_0_0/hls.m3u8"
       ],
-      startIndex: 0
+      startIndex: 0,
+      url: "",
+      step: 3
+    }
+  },
+  computed: {
+    list() {
+      const urls = this.videoList.slice(
+        this.startIndex,
+        this.startIndex + this.step
+      )
+      if (this.url) {
+        urls.unshift(this.url)
+      }
+      return urls
     }
   },
   mounted() {
     setInterval(() => {
-      if (this.startIndex < this.videoList.length - 4) {
-        this.startIndex += 3
+      if (this.startIndex < this.videoList.length - (this.step + 1)) {
+        this.startIndex += this.step
       } else {
         this.startIndex = 0
       }
@@ -80,6 +94,10 @@ export default {
           this.$store.state.app.map.mapBox.resize()
         }, 500)
       })
+    },
+    play(url) {
+      this.url = url
+      this.step = 2
     }
   }
 }

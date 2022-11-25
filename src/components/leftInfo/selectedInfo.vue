@@ -33,10 +33,16 @@
       </div>
     </div>
     <selected-info
-      v-for="item in subselectedInfo"
+      v-for="(item, index) in subselectedInfoList"
       :key="item.id"
       :select-list="item.children"
       class="sub-selected"
+      :style="`${
+        index !== 0 &&
+        'bottom:' +
+          (subselectedInfoList[index - 1].children.length * 50 + 50) +
+          'px'
+      }`"
     />
   </div>
 </template>
@@ -44,6 +50,11 @@
 <script>
 import { get_elec, get_elec_hotmap, get_elec_person } from "@/api/elec"
 import { get_line, get_patrol_detail } from "@/api/line"
+import { get_device_list, get_device_detail } from "@/api/device"
+const c1 = require("@/assets/img/selectedInfo/heatmap.jpg")
+const c2 = require("@/assets/img/svgIcon/摄像机.svg")
+const c3 = require("@/assets/img/svgIcon/生态设备.svg")
+import { getBase64 } from "@/utils"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
@@ -92,11 +103,6 @@ export default {
     isCollapse: {
       type: Boolean,
       default: false
-    },
-    //左边tab点击的状态
-    currentTab: {
-      type: [Number, String],
-      default: null
     },
     selectList: {
       type: Array,
@@ -159,6 +165,75 @@ export default {
                 if (orgId) {
                   params.orgIds = [orgId]
                 }
+                const { rows } = await get_device_list({
+                  equipmentType: ["infrared_camera"]
+                })
+                const geoJson = []
+                rows.forEach((item) => {
+                  const json = {
+                    type: "Feature",
+                    img: require("../../assets/img/selectedInfo/patrol.png"),
+                    circle: true,
+                    properties: {
+                      ...item
+                    }, //其中必须包含id字段，用于高亮点钟图标
+                    geometry: {
+                      type: "Point",
+                      coordinates: JSON.parse(
+                        item.geoJson
+                      ).geometry.coordinates.flat()
+                    }
+                  }
+                  geoJson.push(json)
+                })
+                return geoJson
+              }
+            },
+            {
+              title: "摄像机",
+              checked: false,
+              type: 1,
+              id: "11",
+              getData: async (orgId) => {
+                const params = {
+                  isCore: 0,
+                  pageNumber: 1,
+                  pageSize: 999
+                }
+                if (orgId) {
+                  params.orgIds = [orgId]
+                }
+                return [
+                  {
+                    type: "Feature",
+                    img: require("../../assets/img/selectedInfo/patrol.png"),
+                    properties: {
+                      type: "video_camera",
+                      deviceOnlineUrl:
+                        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_5_0/hls.m3u8"
+                    }, //其中必须包含id字段，用于高亮点钟图标
+                    geometry: {
+                      type: "Point",
+                      coordinates: [103.634, 31.146]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              title: "生态设备",
+              type: 1,
+              checked: false,
+              id: "12",
+              getData: async (orgId) => {
+                const params = {
+                  isCore: 0,
+                  pageNumber: 1,
+                  pageSize: 999
+                }
+                if (orgId) {
+                  params.orgIds = [orgId]
+                }
                 return [
                   {
                     id: 1,
@@ -175,18 +250,6 @@ export default {
                   }
                 ]
               }
-            },
-            {
-              title: "摄像机",
-              checked: false,
-              type: 1,
-              id: "11"
-            },
-            {
-              title: "生态设备",
-              type: 1,
-              checked: false,
-              id: "12"
             }
           ]
         },
@@ -330,33 +393,53 @@ export default {
     },
     orgId() {
       return this.$store.getters["app/GET_AREA_ID"]
+    },
+    subselectedInfoList() {
+      return this.currentTab === 1 ? this.subselectedInfo : []
+    },
+    currentFeature() {
+      return this.$store.state.app.map.feature
+    },
+    currentTab() {
+      return this.$store.state.app.currentTab
     }
   },
   watch: {
     currentTab() {
-      this.handleLeave()
+      this.handleLeaveEnter()
+      this.initLayer()
     },
     currentArea() {
-      this.needRemoveChecked.concat(commonSelectInfoList).forEach((item) => {
-        this.removelayer(item.type, item.title)
-      })
       //切换图层再重新请求数据再添加图层
       this.initLayer()
+    },
+    currentFeature() {
+      if (this.currentFeature.properties.type === "video_camera") {
+        this.$emit(
+          "deviceOnlineUrl",
+          this.currentFeature.properties.deviceOnlineUrl
+        )
+      }
     }
+  },
+  beforeDestroy() {
+    this.handleLeaveEnter()
+  },
+  mounted() {
+    this.handleLeaveEnter()
   },
   methods: {
     getRemovedList() {
-      const checked = this.showSubSelectList
-        ? this.selectedInfoList.concat(this.showSubSelectList)
-        : this.selectedInfoList
-      //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区
-      const needRemoveChecked = checked.filter(
+      //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区,不包括含有子菜单
+      const needRemoveChecked = this.selectedInfoList.filter(
         (item) =>
           item.checked &&
+          !item.children &&
           !commonSelectInfoList.filter((e) => e.title === item.title).length
       )
       this.needRemoveChecked = needRemoveChecked
     },
+    // 点击图层处理事件，加载点线面，热力图图层
     async handleClick(item) {
       item.checked = !item.checked
       const { type, title } = item
@@ -386,6 +469,8 @@ export default {
       } else {
         this.removelayer(type, title)
       }
+
+      //加载子菜单
       if (item.children && item.checked) {
         this.subselectedInfo.push(item)
       } else {
@@ -398,25 +483,31 @@ export default {
       }
       this.getRemovedList()
     },
-    handleLeave() {
-      this.needRemoveChecked.forEach((item) => {
-        if (this.currentTab == 1) {
-          this.setLayer(item.type, item.title)
+    //处理首页图层展示删除 ，和回显
+    handleLeaveEnter() {
+      const subNeedRemoveChecked = this.selectList.filter(
+        (item) => item.checked
+      )
+      this.needRemoveChecked.concat(subNeedRemoveChecked).forEach((item) => {
+        //首页加载之前勾选的，离开首页删除勾选的图层
+        if (this.currentTab === 1) {
+          item.checked = false
+          this.handleClick(item)
         } else {
           this.removelayer(item.type, item.title)
         }
       })
     },
-    //初始化图层 核心保护区和一般保护区
+    //初始化图层 核心保护区和一般保护区 热力图 人员轨迹图
     async initLayer() {
-      // commonSelectInfoList.forEach((item) => {
-      //   this.removelayer(item.type, item.title)
-      // })
-      //初始化加载 电子围栏 热力图 人员轨迹图
-      this.selectedInfoList1.slice(0, 4).forEach((item) => {
-        this.handleClick(item)
-      })
+      this.selectedInfoList1
+        .slice(0, this.currentTab === 1 ? 4 : 2)
+        .forEach((item) => {
+          item.checked = false
+          this.handleClick(item)
+        })
     },
+    //通过map方法生成图层
     async setLayer(type, id, geoData) {
       // type 1:点 2:线 3:面
       if (type == 1) {
@@ -431,6 +522,10 @@ export default {
           }
         }
         this.$store.state.app.map.mapBox.point(data)
+        // 是否需要绘制 以某个点位为中心的圆圈
+        if (geoData[0].circle) {
+          this.$store.state.app.map.mapBox.addCircle(data)
+        }
       }
       if (type == 2) {
         const data = {
@@ -463,9 +558,11 @@ export default {
         this.$store.state.app.map.mapBox.Polygon(data)
       }
     },
+    //移除图层
     removelayer(type, id) {
       if (type === 1) {
         this.$store.state.app.map.mapBox.removelayer(id)
+        this.$store.state.app.map.mapBox.removeCircle(id)
       } else if (type === 2) {
         this.$store.state.app.map.mapBox.rmline(id)
       } else if (type === 3) {
@@ -519,9 +616,5 @@ export default {
 .sub-selected {
   position: absolute;
   margin-left: 200px;
-
-  & + .sub-selected {
-    bottom: 150px;
-  }
 }
 </style>
