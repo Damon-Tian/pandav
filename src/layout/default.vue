@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="main-left">
       <top-nav ref="topNav" />
-      <left-bar @select-menu="selectMenu" />
+      <left-bar ref="leftBar" @select-menu="selectMenu" />
       <div class="right-block">
         <right-info :current-tab="currentTab" />
       </div>
@@ -51,7 +51,6 @@ export default {
     },
     handleClick(currentFeature) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
-      console.log(currentFeature)
     },
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")
@@ -67,6 +66,7 @@ export default {
         "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
         "chengdu"
       )
+      this.$refs.leftBar.init()
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div id="map">
-    <div class="map-button">
+    <!-- <div class="map-button">
       <button
         type="button"
         @click="
@@ -102,7 +102,7 @@
       <button type="button" @click="drawLine">线</button>
       <button type="button" @click="drawPolygon">面</button>
       <button type="button" @click="deleteDraw">删除</button>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -345,7 +345,7 @@ export default {
       }
     ) {
       addImgIcon(this.map, data)
-      this.flybound(data.pointArray)
+      // this.flybound(data.pointArray)
     },
     // 弹框
     poup(

@@ -11,7 +11,7 @@
           class="selected-info-list__item"
         >
           <div v-if="item.img" class="selected-info-list__item__icon">
-            <img :src="item.img" alt="" />
+            <img :src="item.img" alt="" style="max-width: 18px" />
           </div>
           <div class="selected-info-list__item__text">{{ item.title }}</div>
           <div
@@ -33,30 +33,55 @@
       </div>
     </div>
     <selected-info
-      v-if="showSubSelectList"
-      :select-list="subselectedInfo"
+      v-for="item in subselectedInfo"
+      :key="item.id"
+      :select-list="item.children"
       class="sub-selected"
     />
   </div>
 </template>
 
 <script>
-import img from "../../assets/img/selectedInfo/checked.png"
-import NATRUE_ICON from "@/assets/img/selectedInfo/natural.png"
+import { get_elec, get_elec_hotmap, get_elec_person } from "@/api/elec"
+import { get_line, get_patrol_detail } from "@/api/line"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
     title: "核心保护区",
-    checked: true,
+    checked: false,
     type: 3,
-    id: "1"
+    id: "1",
+    getData: async (orgId) => {
+      const params = {
+        isCore: 0,
+        pageNumber: 1,
+        pageSize: 999
+      }
+      if (orgId) {
+        params.orgIds = [orgId]
+      }
+      const { records } = await get_elec(params)
+      return records.map((item) => JSON.parse(item.geoJson))
+    }
   },
   {
     img: require("../../assets/img/selectedInfo/general.png"),
     title: "一般保护区",
-    checked: true,
+    checked: false,
     type: 3,
-    id: "2"
+    id: "2",
+    getData: async (orgId) => {
+      const params = {
+        isCore: 1,
+        pageNumber: 1,
+        pageSize: 999
+      }
+      if (orgId) {
+        params.orgIds = [orgId]
+      }
+      const { records } = await get_elec(params)
+      return records.map((item) => JSON.parse(item.geoJson))
+    }
   }
 ]
 export default {
@@ -83,63 +108,212 @@ export default {
       selectedInfoList1: [
         ...commonSelectInfoList,
         {
-          img: require("../../assets/img/selectedInfo/natural.png"),
-          title: "自然资源",
+          img: require("../../assets/img/selectedInfo/heatmap.jpg"),
+          title: "人员热力图",
           checked: false,
-          type: 1,
-          id: "4"
+          id: "8",
+          getHotmap: async (orgId) => {
+            const params = {
+              areaCodes: []
+            }
+            if (orgId) {
+              params.areaCodes = [orgId]
+            }
+            return get_elec_hotmap(params)
+          }
         },
         {
-          img: require("../../assets/img/selectedInfo/site.png"),
-          title: "基层站点",
+          img: require("../../assets/img/selectedInfo/person.jpg"),
+          title: "人员轨迹图",
           checked: false,
-          type: 3,
-          id: "5"
+          type: 2,
+          id: "16",
+          getData: async (orgId) => {
+            const params = {
+              areaCodes: []
+            }
+            if (orgId) {
+              params.areaCodes = [orgId]
+            }
+            return get_elec_person(params)
+          }
         },
         {
           img: require("../../assets/img/selectedInfo/patrol.png"),
           title: "设备管理",
           checked: false,
           type: 1,
-          id: "6"
+          id: "6",
+          children: [
+            {
+              title: "红外相机",
+              checked: false,
+              type: 1,
+              id: "10",
+              getData: async (orgId) => {
+                const params = {
+                  isCore: 0,
+                  pageNumber: 1,
+                  pageSize: 999
+                }
+                if (orgId) {
+                  params.orgIds = [orgId]
+                }
+                return [
+                  {
+                    id: 1,
+                    type: "Feature",
+                    img: require("../../assets/img/selectedInfo/patrol.png"),
+                    properties: {}, //其中必须包含id字段，用于高亮点钟图标
+                    geometry: {
+                      type: "MultiPoint",
+                      coordinates: [
+                        [103.194, 30.546],
+                        [103.194, 30.556]
+                      ]
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              title: "摄像机",
+              checked: false,
+              type: 1,
+              id: "11"
+            },
+            {
+              title: "生态设备",
+              type: 1,
+              checked: false,
+              id: "12"
+            }
+          ]
         },
+        {
+          img: require("../../assets/img/selectedInfo/natural.png"),
+          title: "自然资源",
+          checked: false,
+          type: 1,
+          id: "4",
+          getData: async (orgId) => {
+            const params = {
+              isCore: 0,
+              pageNumber: 1,
+              pageSize: 999
+            }
+            if (orgId) {
+              params.orgIds = [orgId]
+            }
+            return [
+              {
+                id: 1,
+                type: "Feature",
+                img: require("../../assets/img/selectedInfo/natural.png"),
+                properties: {}, //其中必须包含id字段，用于高亮点钟图标
+                geometry: {
+                  type: "MultiPoint",
+                  coordinates: [
+                    [103.634, 31.246],
+                    [103.624, 31.256]
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          img: require("../../assets/img/selectedInfo/site.png"),
+          title: "基层站点",
+          checked: false,
+          type: 1,
+          id: "5",
+          getData: async (orgId) => {
+            const params = {
+              isCore: 0,
+              pageNumber: 1,
+              pageSize: 999
+            }
+            if (orgId) {
+              params.orgIds = [orgId]
+            }
+            return [
+              {
+                id: 1,
+                type: "Feature",
+                img: require("../../assets/img/selectedInfo/site.png"),
+                properties: {}, //其中必须包含id字段，用于高亮点钟图标
+                geometry: {
+                  type: "MultiPoint",
+                  coordinates: [
+                    [103.194, 30.546],
+                    [103.624, 30.556]
+                  ]
+                }
+              }
+            ]
+          }
+        },
+
         {
           img: require("../../assets/img/selectedInfo/patrol1.png"),
           title: "巡护管理",
           checked: false,
-          type: 2,
-          id: "7"
-        },
-        {
-          img: require("../../assets/img/selectedInfo/fence.png"),
-          title: "电子围栏",
-          checked: false,
-          type: 3,
-          id: "8"
+          type: 1,
+          id: "7",
+          children: [
+            {
+              title: "巡护样线",
+              checked: false,
+              type: 2,
+              id: "18",
+              getData: async (orgId) => {
+                const params = {}
+                if (orgId) {
+                  params.orgIds = [orgId]
+                }
+                const { rows } = await get_line(params, {
+                  pageNumber: 1,
+                  pageSize: 999
+                })
+                return rows.map((item) => JSON.parse(item.geoJson))
+              }
+            },
+            {
+              title: "巡护路线",
+              checked: false,
+              type: 2,
+              id: "19",
+              getData: async (orgId) => {
+                const params = {}
+                if (orgId) {
+                  params.orgIds = [orgId]
+                }
+                const data = await get_patrol_detail({ id: 109 })
+                const geoJson = [
+                  {
+                    type: "Feature",
+                    properties: {
+                      color: "#62f709"
+                    },
+                    geometry: {
+                      type: "LineString",
+                      coordinates: data.pointList.map((item) => [
+                        Number(item.lon),
+                        Number(item.lat)
+                      ])
+                    }
+                  }
+                ]
+                return geoJson
+              }
+            }
+          ]
         }
       ],
-      selectedInfoList2: commonSelectInfoList,
-      subselectedInfo: [
-        {
-          title: "红外相机",
-          checked: false,
-          type: 1,
-          id: "10"
-        },
-        {
-          title: "摄像机",
-          checked: false,
-          type: 1,
-          id: "11"
-        },
-        {
-          title: "生态设备",
-          type: 1,
-          checked: false,
-          id: "12"
-        }
-      ],
-      needRemoveChecked: []
+      selectedInfoList2: [...commonSelectInfoList],
+      needRemoveChecked: [],
+      subselectedInfo: []
     }
   },
   computed: {
@@ -151,15 +325,11 @@ export default {
         ? this.selectedInfoList1
         : this.selectedInfoList2
     },
-    showSubSelectList() {
-      return (
-        this.selectedInfoList.findIndex(
-          (item) => item.id == 6 && item.checked
-        ) > -1
-      )
-    },
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    orgId() {
+      return this.$store.getters["app/GET_AREA_ID"]
     }
   },
   watch: {
@@ -174,9 +344,6 @@ export default {
       this.initLayer()
     }
   },
-  mounted() {
-    this.initLayer()
-  },
   methods: {
     getRemovedList() {
       const checked = this.showSubSelectList
@@ -190,13 +357,44 @@ export default {
       )
       this.needRemoveChecked = needRemoveChecked
     },
-    handleClick(item) {
+    async handleClick(item) {
       item.checked = !item.checked
       const { type, title } = item
       if (item.checked) {
-        this.setLayer(type, title)
+        if (item.getData) {
+          //点线面操作
+          const geoData = await item.getData(this.orgId)
+          this.setLayer(type, title, geoData)
+        }
+        if (item.getHotmap) {
+          //点线面操作
+          const data = await item.getHotmap(this.orgId)
+          const hotmapData = {
+            id: title,
+            magName: "mag",
+            data: {
+              type: "FeatureCollection",
+              crs: {
+                type: "name",
+                properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+              },
+              features: data
+            }
+          }
+          this.$store.state.app.map.mapBox.addHeatmap(hotmapData)
+        }
       } else {
         this.removelayer(type, title)
+      }
+      if (item.children && item.checked) {
+        this.subselectedInfo.push(item)
+      } else {
+        const index = this.subselectedInfo.findIndex(
+          (sub) => sub.id === item.id
+        )
+        if (index > -1) {
+          this.subselectedInfo.splice(index, 1)
+        }
       }
       this.getRemovedList()
     },
@@ -211,14 +409,19 @@ export default {
     },
     //初始化图层 核心保护区和一般保护区
     async initLayer() {
-      this.needRemoveChecked.concat(commonSelectInfoList).forEach((item) => {})
+      // commonSelectInfoList.forEach((item) => {
+      //   this.removelayer(item.type, item.title)
+      // })
+      //初始化加载 电子围栏 热力图 人员轨迹图
+      this.selectedInfoList1.slice(0, 4).forEach((item) => {
+        this.handleClick(item)
+      })
     },
-    async setLayer(type, id) {
-      const geoData = await this.getData(type, id)
+    async setLayer(type, id, geoData) {
       // type 1:点 2:线 3:面
       if (type == 1) {
         const data = {
-          imgUrl: img,
+          imgUrl: geoData[0].img,
           id,
           textName: "name",
           color: "#fff",
@@ -238,7 +441,7 @@ export default {
           }
         }
         const option = {
-          lineColor: "#f90909",
+          lineColor: geoData[0].properties.color || "#F4BD1A",
           lineWidth: 4,
           arrow: false
         }
@@ -247,11 +450,11 @@ export default {
       if (type == 3) {
         const data = {
           id,
-          fillColor: " rgba(11,159,251,0.4)",
-          opacity: 0.4,
-          width: 2,
-          lineColor: "#0B9FFB",
-          textName: "name",
+          fillColor:
+            id !== "核心保护区" ? "rgba(11,159,251,0.4)" : "rgba(249,9,9,0.4)",
+          opacity: 0.2,
+          width: 1,
+          lineColor: id !== "核心保护区" ? "#0B9FFB" : "#f90909",
           polygon: {
             type: "FeatureCollection",
             features: geoData
@@ -260,138 +463,15 @@ export default {
         this.$store.state.app.map.mapBox.Polygon(data)
       }
     },
-    async getData(type, id) {
-      switch (type) {
-        case 1:
-          return [
-            {
-              id: 1,
-              type: "Feature",
-              properties: {
-                name: "测试点位1"
-              }, //其中必须包含id字段，用于高亮点钟图标
-              geometry: {
-                type: "Point",
-                coordinates: [103.513296, 30.589647]
-              }
-            },
-            {
-              id: 2,
-              type: "Feature",
-              properties: {
-                name: "测试点位2"
-              }, //其中必须包含id字段，用于高亮点钟图标
-              geometry: {
-                type: "Point",
-                coordinates: [103.523296, 30.599647]
-              }
-            }
-          ]
-        case 2:
-          return Promise.resolve([
-            {
-              type: "Feature",
-              properties: {
-                name: "线条1"
-              },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [103.432937, 30.878296],
-                  [103.431534, 30.878371],
-                  [103.430488, 30.878591],
-                  [103.427857, 30.879531],
-                  [103.426433, 30.879565],
-                  [103.425718, 30.879164],
-                  [103.409448, 30.864955],
-                  [103.403892, 30.863962]
-                ]
-              }
-            },
-            {
-              type: "Feature",
-              properties: {
-                name: "线条2"
-              },
-              geometry: {
-                type: "LineString",
-                coordinates: [
-                  [103.543722, 30.828089],
-                  [103.544396, 30.830691],
-                  [103.544171, 30.832102],
-                  [103.543757, 30.833789],
-                  [103.543084, 30.835082],
-                  [103.541632, 30.83608],
-                  [103.54032, 30.836406],
-                  [103.538881, 30.836501],
-                  [103.536328, 30.837267],
-                  [103.534237, 30.837529],
-                  [103.532546, 30.837566],
-                  [103.528372, 30.837354],
-                  [103.525973, 30.836937],
-                  [103.524085, 30.836918],
-                  [103.522437, 30.837802],
-                  [103.521188, 30.83875],
-                  [103.519799, 30.839527]
-                ]
-              }
-            }
-          ])
-        case 3:
-          return Promise.resolve([
-            {
-              type: "Feature",
-              properties: {
-                name: "电子围栏1"
-              },
-              geometry: {
-                type: "MultiPolygon",
-                coordinates: [
-                  [
-                    [
-                      [103.432937, 30.878296],
-                      [103.532937, 30.978296],
-                      [103.632937, 30.778296],
-
-                      [103.432937, 30.878296]
-                    ]
-                  ]
-                ]
-              }
-            },
-            {
-              type: "Feature",
-              properties: {
-                name: "电子围栏2"
-              },
-              geometry: {
-                type: "MultiPolygon",
-                coordinates: [
-                  [
-                    [
-                      [103.513296, 30.589647],
-                      [103.522574, 30.599069],
-                      [103.531795, 30.608084],
-                      [103.561156, 30.616818],
-                      [103.588869, 30.629464],
-                      [103.513296, 30.589647]
-                    ]
-                  ]
-                ]
-              }
-            }
-          ])
-      }
-    },
     removelayer(type, id) {
       if (type === 1) {
         this.$store.state.app.map.mapBox.removelayer(id)
-      }
-      if (type === 2) {
+      } else if (type === 2) {
         this.$store.state.app.map.mapBox.rmline(id)
-      }
-      if (type === 3) {
+      } else if (type === 3) {
         this.$store.state.app.map.mapBox.removePolygon(id)
+      } else {
+        this.$store.state.app.map.mapBox.removelayer(id)
       }
     }
   }
@@ -411,7 +491,7 @@ export default {
 
   &-list {
     position: relative;
-    bottom: -26px;
+    bottom: 0;
     padding: 40px 10px 8px;
     background: rgba(0, 0, 0, 60%);
 
@@ -439,5 +519,9 @@ export default {
 .sub-selected {
   position: absolute;
   margin-left: 200px;
+
+  & + .sub-selected {
+    bottom: 150px;
+  }
 }
 </style>

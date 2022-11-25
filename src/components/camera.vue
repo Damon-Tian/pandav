@@ -22,9 +22,13 @@
         justify-content: space-between;
       "
     >
-      <video-player style="width: 100%; flex: 1" :channel="1" />
-      <video-player style="width: 100%; flex: 1; margin: 2px 0" :channel="2" />
-      <video-player style="width: 100%; flex: 1" :channel="3" />
+      <video-player
+        v-for="(item, index) in 3"
+        :key="item"
+        style="width: 100%; flex: 1"
+        :video-url="videoList[startIndex + index]"
+        :class="{ 'camera-space': index === 1 }"
+      />
     </div>
   </div>
 </template>
@@ -37,8 +41,36 @@ export default {
   },
   data() {
     return {
-      isCollapse: true
+      isCollapse: false,
+      videoList: [
+        "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN1009F_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN47B6F_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L01618PAJ31A78_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L01618PAJBE31A_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L01618PAJD5702_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L01618PAJF96DB_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_1_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_2_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_3_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_4_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_5_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0AB41PAN9BADE_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0AB41PANF3685_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0B6C8PAN41CA4_0_0/hls.m3u8",
+        "http://110.185.102.112:8888/live/liveStream_7L0D2E2FAC1A847_0_0/hls.m3u8"
+      ],
+      startIndex: 0
     }
+  },
+  mounted() {
+    setInterval(() => {
+      if (this.startIndex < this.videoList.length - 4) {
+        this.startIndex += 3
+      } else {
+        this.startIndex = 0
+      }
+    }, 5 * 1000 * 60)
   },
   methods: {
     narrowClick() {
@@ -85,6 +117,10 @@ export default {
         transform: translate(8px, -50%);
       }
     }
+  }
+
+  .camera-space {
+    margin: 2px 0;
   }
 }
 </style>

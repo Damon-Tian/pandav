@@ -31,21 +31,25 @@
         <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
       </span>
 
-      <selectedInfo :is-collapse="isCollapse" :current-tab="currentTab" />
+      <selectedInfo
+        ref="selectedInfo"
+        :is-collapse="isCollapse"
+        :current-tab="currentTab"
+      />
     </div>
-    <alarmInfo
+    <!-- <alarmInfo
       v-if="currentTab === 1"
       :is-collapse="isCollapse"
       :current-tab="currentTab"
-    />
+    /> -->
   </div>
 </template>
 
 <script>
 import selectedInfo from "./leftInfo/selectedInfo.vue"
-import alarmInfo from "./leftInfo/alarmInfo.vue"
+// import alarmInfo from "./leftInfo/alarmInfo.vue"
 export default {
-  components: { selectedInfo, alarmInfo },
+  components: { selectedInfo },
   data() {
     return {
       isCollapse: false,
@@ -121,6 +125,9 @@ export default {
     },
     narrowClick() {
       this.isCollapse = !this.isCollapse
+    },
+    init() {
+      this.$refs.selectedInfo.initLayer()
     }
   }
 }
@@ -132,10 +139,18 @@ export default {
   // background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
   position: absolute;
   z-index: 2;
-  height: 930px;
 
   .p-leftbar-wrap {
     display: flex;
+    overflow: auto;
+    height: calc(100vh - 100px);
+    max-height: 970px;
+    -ms-overflow-style: none; /* IE 10+ */
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none; /* Chrome Safari */
+    }
   }
 
   .narrow-icon {
@@ -171,7 +186,8 @@ export default {
   width: 230px;
   height: 940px;
   border-right: none;
-  background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
+  background: url("../assets/img/p-leftbar.png");
+  background-size: cover;
 
   .el-menu-item {
     position: relative;
