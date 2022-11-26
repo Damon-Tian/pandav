@@ -100,18 +100,27 @@ export default {
   methods: {
     requestFullScreen() {
       const docElm = document.documentElement
-      if (docElm.requestFullscreen) {
-        //W3C
-        docElm.requestFullscreen()
-      } else if (docElm.mozRequestFullScreen) {
-        //FireFox
-        docElm.mozRequestFullScreen()
-      } else if (docElm.webkitRequestFullScreen) {
-        //Chrome等
-        docElm.webkitRequestFullScreen()
-      } else if (docElm.msRequestFullscreen) {
-        //IE11
-        docElm.msRequestFullscreen()
+      const isFullScreen = document.fullscreenElement
+      if (isFullScreen) {
+        if (document.exitFullscreen) {
+          document.exitFullscreen()
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen()
+        } else if (document.mozCancelFullScreen) {
+          document.mozCancelFullScreen()
+        } else if (document.webkitCancelFullScreen) {
+          document.webkitCancelFullScreen()
+        }
+      } else {
+        if (docElm.requestFullscreen) {
+          docElm.requestFullscreen()
+        } else if (docElm.mozRequestFullScreen) {
+          docElm.mozRequestFullScreen()
+        } else if (docElm.webkitRequestFullscreen) {
+          docElm.webkitRequestFullscreen()
+        } else if (docElm.msRequestFullscreen) {
+          docElm.msRequestFullscreen()
+        }
       }
     },
     handleClick(item) {
