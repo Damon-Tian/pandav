@@ -23,3 +23,9 @@ export function getBase64(imgUrl) {
         xhr.send();
     })
 }
+
+export function getImageUrl(url) {
+    const origin = url.split(/\b\/.*/)[0]
+    console.log(url.replace(origin, ""));
+    return url.replace(origin, "")
+}

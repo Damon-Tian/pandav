@@ -50,11 +50,12 @@
 <script>
 import { get_elec, get_elec_hotmap, get_elec_person } from "@/api/elec"
 import { get_line, get_patrol_detail } from "@/api/line"
-import { get_device_list, get_device_detail } from "@/api/device"
+import { get_device_list } from "@/api/device"
+import { get_bio_list } from "@/api/animal"
 const c1 = require("@/assets/img/selectedInfo/heatmap.jpg")
 const c2 = require("@/assets/img/svgIcon/摄像机.svg")
 const c3 = require("@/assets/img/svgIcon/生态设备.svg")
-import { getBase64 } from "@/utils"
+import { getImageUrl } from "@/utils"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
@@ -158,7 +159,6 @@ export default {
               id: "10",
               getData: async (orgId) => {
                 const params = {
-                  isCore: 0,
                   pageNumber: 1,
                   pageSize: 999
                 }
@@ -172,7 +172,7 @@ export default {
                 rows.forEach((item) => {
                   const json = {
                     type: "Feature",
-                    img: require("../../assets/img/selectedInfo/patrol.png"),
+                    img: getImageUrl(item.icon),
                     circle: true,
                     properties: {
                       ...item
@@ -196,28 +196,33 @@ export default {
               id: "11",
               getData: async (orgId) => {
                 const params = {
-                  isCore: 0,
                   pageNumber: 1,
                   pageSize: 999
                 }
                 if (orgId) {
                   params.orgIds = [orgId]
                 }
-                return [
-                  {
+                const { rows } = await get_device_list({
+                  equipmentType: ["video_camera"]
+                })
+                const geoJson = []
+                rows.forEach((item) => {
+                  const json = {
                     type: "Feature",
-                    img: require("../../assets/img/selectedInfo/patrol.png"),
+                    img: getImageUrl(item.icon),
                     properties: {
-                      type: "video_camera",
-                      deviceOnlineUrl:
-                        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_5_0/hls.m3u8"
+                      ...item
                     }, //其中必须包含id字段，用于高亮点钟图标
                     geometry: {
                       type: "Point",
-                      coordinates: [103.634, 31.146]
+                      coordinates: JSON.parse(
+                        item.geoJson
+                      ).geometry.coordinates.flat()
                     }
                   }
-                ]
+                  geoJson.push(json)
+                })
+                return geoJson
               }
             },
             {
@@ -227,28 +232,33 @@ export default {
               id: "12",
               getData: async (orgId) => {
                 const params = {
-                  isCore: 0,
                   pageNumber: 1,
                   pageSize: 999
                 }
                 if (orgId) {
                   params.orgIds = [orgId]
                 }
-                return [
-                  {
-                    id: 1,
+                const { rows } = await get_device_list({
+                  equipmentType: ["ecological_equipment"]
+                })
+                const geoJson = []
+                rows.forEach((item) => {
+                  const json = {
                     type: "Feature",
-                    img: require("../../assets/img/selectedInfo/patrol.png"),
-                    properties: {}, //其中必须包含id字段，用于高亮点钟图标
+                    img: getImageUrl(item.icon),
+                    properties: {
+                      ...item
+                    }, //其中必须包含id字段，用于高亮点钟图标
                     geometry: {
-                      type: "MultiPoint",
-                      coordinates: [
-                        [103.194, 30.546],
-                        [103.194, 30.556]
-                      ]
+                      type: "Point",
+                      coordinates: JSON.parse(
+                        item.geoJson
+                      ).geometry.coordinates.flat()
                     }
                   }
-                ]
+                  geoJson.push(json)
+                })
+                return geoJson
               }
             }
           ]
@@ -261,28 +271,29 @@ export default {
           id: "4",
           getData: async (orgId) => {
             const params = {
-              isCore: 0,
               pageNumber: 1,
               pageSize: 999
             }
             if (orgId) {
               params.orgIds = [orgId]
             }
-            return [
-              {
-                id: 1,
+            const geoJson = []
+            const { records } = await get_bio_list(params)
+            records.forEach((item) => {
+              const json = {
                 type: "Feature",
-                img: require("../../assets/img/selectedInfo/natural.png"),
-                properties: {}, //其中必须包含id字段，用于高亮点钟图标
+                img: getImageUrl(item.icon),
+                properties: {
+                  ...item
+                }, //其中必须包含id字段，用于高亮点钟图标
                 geometry: {
                   type: "MultiPoint",
-                  coordinates: [
-                    [103.634, 31.246],
-                    [103.624, 31.256]
-                  ]
+                  coordinates: JSON.parse(item.geoJson).geometry.coordinates
                 }
               }
-            ]
+              geoJson.push(json)
+            })
+            return geoJson
           }
         },
         {
@@ -317,7 +328,6 @@ export default {
             ]
           }
         },
-
         {
           img: require("../../assets/img/selectedInfo/patrol1.png"),
           title: "巡护管理",
@@ -413,12 +423,30 @@ export default {
       //切换图层再重新请求数据再添加图层
       this.initLayer()
     },
+    //点击不同图层处理
     currentFeature() {
+      // 设备管理 红外相机
+      if (this.currentFeature.properties.type === "infrared_camera") {
+        //
+      }
+      // 设备管理 生态相机
+      if (this.currentFeature.properties.type === "ecological_equipment") {
+        //
+      }
+      // 设备管理 摄像机
       if (this.currentFeature.properties.type === "video_camera") {
         this.$emit(
           "deviceOnlineUrl",
           this.currentFeature.properties.deviceOnlineUrl
         )
+      }
+      // 自然资源 动物
+      if (this.currentFeature.properties.protectionLevel == 1) {
+        //
+      }
+      // 自然资源 植物
+      if (this.currentFeature.properties.protectionLevel == 2) {
+        //
       }
     }
   },
@@ -514,7 +542,6 @@ export default {
         const data = {
           imgUrl: geoData[0].img,
           id,
-          textName: "name",
           color: "#fff",
           pointArray: {
             type: "FeatureCollection",

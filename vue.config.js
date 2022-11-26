@@ -24,7 +24,14 @@ module.exports = {
         pathRewrite: {
           "^/profile": ""
         }
-      }
+      },
+      "/group1": {
+        target: "http://118.121.196.46:8000/group1",
+        changeOrigin: true,
+        pathRewrite: {
+          "^/group1": ""
+        }
+      },
     }
   }
 
