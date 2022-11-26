@@ -61,29 +61,14 @@ export default {
         "http://110.185.102.112:8888/live/liveStream_7L0D2E2FAC1A847_0_0/hls.m3u8"
       ],
       startIndex: 0,
-      url: "",
+      list: [],
       step: 3
     }
   },
-  computed: {
-    list() {
-      const urls = this.videoList.slice(
-        this.startIndex,
-        this.startIndex + this.step
-      )
-      if (this.url) {
-        urls.unshift(this.url)
-      }
-      return urls
-    }
-  },
   mounted() {
+    this.getList()
     setInterval(() => {
-      if (this.startIndex < this.videoList.length - (this.step + 1)) {
-        this.startIndex += this.step
-      } else {
-        this.startIndex = 0
-      }
+      this.getList()
     }, 5 * 1000 * 60)
   },
   methods: {
@@ -95,9 +80,23 @@ export default {
         }, 500)
       })
     },
-    play(url) {
-      this.url = url
-      this.step = 2
+    getList() {
+      let urls = []
+      if (this.startIndex <= this.videoList.length) {
+        urls = this.videoList.slice(
+          this.startIndex,
+          this.startIndex + this.step
+        )
+        this.startIndex += this.step
+      } else {
+        urls = this.videoList
+          .slice(this.startIndex, this.videoList.length)
+          .concat(
+            this.videoList.slice(0, this.videoList.length - this.startIndex)
+          )
+        this.startIndex = this.startIndex - this.videoList.length
+      }
+      this.list = urls
     }
   }
 }

@@ -31,11 +31,7 @@
         <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
       </span>
 
-      <selectedInfo
-        ref="selectedInfo"
-        :is-collapse="isCollapse"
-        @deviceOnlineUrl="handlePlay"
-      />
+      <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
     </div>
     <!-- <alarmInfo
       v-if="currentTab === 1"
@@ -128,9 +124,6 @@ export default {
     },
     init() {
       this.$refs.selectedInfo.initLayer()
-    },
-    handlePlay(url) {
-      this.$emit("deviceOnlineUrl", url)
     }
   }
 }

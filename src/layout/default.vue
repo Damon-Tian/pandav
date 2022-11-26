@@ -2,11 +2,7 @@
   <div class="main-container">
     <div class="main-left">
       <top-nav ref="topNav" />
-      <left-bar
-        ref="leftBar"
-        @select-menu="selectMenu"
-        @deviceOnlineUrl="handlePlay"
-      />
+      <left-bar ref="leftBar" @select-menu="selectMenu" />
       <div class="right-block">
         <right-info />
       </div>
@@ -73,9 +69,6 @@ export default {
         "chengdu"
       )
       this.$refs.leftBar.init()
-    },
-    handlePlay(url) {
-      this.$refs.cameraRef.play(url)
     }
   }
 }

@@ -48,14 +48,19 @@
 </template>
 
 <script>
-import { get_elec, get_elec_hotmap, get_elec_person } from "@/api/elec"
-import { get_line, get_patrol_detail } from "@/api/line"
-import { get_device_list } from "@/api/device"
-import { get_bio_list } from "@/api/animal"
-const c1 = require("@/assets/img/selectedInfo/heatmap.jpg")
-const c2 = require("@/assets/img/svgIcon/摄像机.svg")
-const c3 = require("@/assets/img/svgIcon/生态设备.svg")
-import { getImageUrl } from "@/utils"
+import {
+  get_elec_geojson,
+  get_eleccore_geojson,
+  get_elec_heatmap_geojson,
+  get_elec_person_geojson
+} from "@/api/elec"
+import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
+import {
+  get_infrared_camera_geojson,
+  get_ecological_equipment_geojson,
+  get_video_camera_geojson
+} from "@/api/device"
+import { get_bio_geosjon } from "@/api/animal"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
@@ -63,18 +68,7 @@ const commonSelectInfoList = [
     checked: false,
     type: 3,
     id: "1",
-    getData: async (orgId) => {
-      const params = {
-        isCore: 0,
-        pageNumber: 1,
-        pageSize: 999
-      }
-      if (orgId) {
-        params.orgIds = [orgId]
-      }
-      const { records } = await get_elec(params)
-      return records.map((item) => JSON.parse(item.geoJson))
-    }
+    getData: get_eleccore_geojson
   },
   {
     img: require("../../assets/img/selectedInfo/general.png"),
@@ -82,18 +76,7 @@ const commonSelectInfoList = [
     checked: false,
     type: 3,
     id: "2",
-    getData: async (orgId) => {
-      const params = {
-        isCore: 1,
-        pageNumber: 1,
-        pageSize: 999
-      }
-      if (orgId) {
-        params.orgIds = [orgId]
-      }
-      const { records } = await get_elec(params)
-      return records.map((item) => JSON.parse(item.geoJson))
-    }
+    getData: get_elec_geojson
   }
 ]
 export default {
@@ -119,15 +102,8 @@ export default {
           title: "人员热力图",
           checked: false,
           id: "8",
-          getHotmap: async (orgId) => {
-            const params = {
-              areaCodes: []
-            }
-            if (orgId) {
-              params.areaCodes = [orgId]
-            }
-            return get_elec_hotmap(params)
-          }
+          type: 4,
+          getData: get_elec_heatmap_geojson
         },
         {
           img: require("../../assets/img/selectedInfo/person.jpg"),
@@ -135,15 +111,7 @@ export default {
           checked: false,
           type: 2,
           id: "16",
-          getData: async (orgId) => {
-            const params = {
-              areaCodes: []
-            }
-            if (orgId) {
-              params.areaCodes = [orgId]
-            }
-            return get_elec_person(params)
-          }
+          getData: get_elec_person_geojson
         },
         {
           img: require("../../assets/img/selectedInfo/patrol.png"),
@@ -157,109 +125,21 @@ export default {
               checked: false,
               type: 1,
               id: "10",
-              getData: async (orgId) => {
-                const params = {
-                  pageNumber: 1,
-                  pageSize: 999
-                }
-                if (orgId) {
-                  params.orgIds = [orgId]
-                }
-                const { rows } = await get_device_list({
-                  equipmentType: ["infrared_camera"]
-                })
-                const geoJson = []
-                rows.forEach((item) => {
-                  const json = {
-                    type: "Feature",
-                    img: getImageUrl(item.icon),
-                    circle: true,
-                    properties: {
-                      ...item
-                    }, //其中必须包含id字段，用于高亮点钟图标
-                    geometry: {
-                      type: "Point",
-                      coordinates: JSON.parse(
-                        item.geoJson
-                      ).geometry.coordinates.flat()
-                    }
-                  }
-                  geoJson.push(json)
-                })
-                return geoJson
-              }
+              getData: get_infrared_camera_geojson
             },
             {
               title: "摄像机",
               checked: false,
               type: 1,
               id: "11",
-              getData: async (orgId) => {
-                const params = {
-                  pageNumber: 1,
-                  pageSize: 999
-                }
-                if (orgId) {
-                  params.orgIds = [orgId]
-                }
-                const { rows } = await get_device_list({
-                  equipmentType: ["video_camera"]
-                })
-                const geoJson = []
-                rows.forEach((item) => {
-                  const json = {
-                    type: "Feature",
-                    img: getImageUrl(item.icon),
-                    properties: {
-                      ...item
-                    }, //其中必须包含id字段，用于高亮点钟图标
-                    geometry: {
-                      type: "Point",
-                      coordinates: JSON.parse(
-                        item.geoJson
-                      ).geometry.coordinates.flat()
-                    }
-                  }
-                  geoJson.push(json)
-                })
-                return geoJson
-              }
+              getData: get_video_camera_geojson
             },
             {
               title: "生态设备",
               type: 1,
               checked: false,
               id: "12",
-              getData: async (orgId) => {
-                const params = {
-                  pageNumber: 1,
-                  pageSize: 999
-                }
-                if (orgId) {
-                  params.orgIds = [orgId]
-                }
-                const { rows } = await get_device_list({
-                  equipmentType: ["ecological_equipment"]
-                })
-                const geoJson = []
-                rows.forEach((item) => {
-                  const json = {
-                    type: "Feature",
-                    img: getImageUrl(item.icon),
-                    properties: {
-                      ...item
-                    }, //其中必须包含id字段，用于高亮点钟图标
-                    geometry: {
-                      type: "Point",
-                      coordinates: JSON.parse(
-                        item.geoJson
-                      ).geometry.coordinates.flat()
-                    }
-                  }
-                  geoJson.push(json)
-                })
-                return geoJson
-              }
+              getData: get_ecological_equipment_geojson
             }
           ]
         },
@@ -269,32 +149,7 @@ export default {
           checked: false,
           type: 1,
           id: "4",
-          getData: async (orgId) => {
-            const params = {
-              pageNumber: 1,
-              pageSize: 999
-            }
-            if (orgId) {
-              params.orgIds = [orgId]
-            }
-            const geoJson = []
-            const { records } = await get_bio_list(params)
-            records.forEach((item) => {
-              const json = {
-                type: "Feature",
-                img: getImageUrl(item.icon),
-                properties: {
-                  ...item
-                }, //其中必须包含id字段，用于高亮点钟图标
-                geometry: {
-                  type: "MultiPoint",
-                  coordinates: JSON.parse(item.geoJson).geometry.coordinates
-                }
-              }
-              geoJson.push(json)
-            })
-            return geoJson
-          }
+          getData: get_bio_geosjon
         },
         {
           img: require("../../assets/img/selectedInfo/site.png"),
@@ -340,46 +195,14 @@ export default {
               checked: false,
               type: 2,
               id: "18",
-              getData: async (orgId) => {
-                const params = {}
-                if (orgId) {
-                  params.orgIds = [orgId]
-                }
-                const { rows } = await get_line(params, {
-                  pageNumber: 1,
-                  pageSize: 999
-                })
-                return rows.map((item) => JSON.parse(item.geoJson))
-              }
+              getData: get_line_geojson
             },
             {
               title: "巡护路线",
               checked: false,
               type: 2,
               id: "19",
-              getData: async (orgId) => {
-                const params = {}
-                if (orgId) {
-                  params.orgIds = [orgId]
-                }
-                const data = await get_patrol_detail({ id: 109 })
-                const geoJson = [
-                  {
-                    type: "Feature",
-                    properties: {
-                      color: "#62f709"
-                    },
-                    geometry: {
-                      type: "LineString",
-                      coordinates: data.pointList.map((item) => [
-                        Number(item.lon),
-                        Number(item.lat)
-                      ])
-                    }
-                  }
-                ]
-                return geoJson
-              }
+              getData: get_patrol_detail_geojson
             }
           ]
         }
@@ -435,10 +258,7 @@ export default {
       }
       // 设备管理 摄像机
       if (this.currentFeature.properties.type === "video_camera") {
-        this.$emit(
-          "deviceOnlineUrl",
-          this.currentFeature.properties.deviceOnlineUrl
-        )
+        //
       }
       // 自然资源 动物
       if (this.currentFeature.properties.protectionLevel == 1) {
@@ -473,26 +293,9 @@ export default {
       const { type, title } = item
       if (item.checked) {
         if (item.getData) {
-          //点线面操作
+          // 绘制图层
           const geoData = await item.getData(this.orgId)
           this.setLayer(type, title, geoData)
-        }
-        if (item.getHotmap) {
-          //点线面操作
-          const data = await item.getHotmap(this.orgId)
-          const hotmapData = {
-            id: title,
-            magName: "mag",
-            data: {
-              type: "FeatureCollection",
-              crs: {
-                type: "name",
-                properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
-              },
-              features: data
-            }
-          }
-          this.$store.state.app.map.mapBox.addHeatmap(hotmapData)
         }
       } else {
         this.removelayer(type, title)
@@ -537,7 +340,7 @@ export default {
     },
     //通过map方法生成图层
     async setLayer(type, id, geoData) {
-      // type 1:点 2:线 3:面
+      // type 1:点 2:线 3:面,4:热力图
       if (type == 1) {
         const data = {
           imgUrl: geoData[0].img,
@@ -584,6 +387,21 @@ export default {
         }
         this.$store.state.app.map.mapBox.Polygon(data)
       }
+      if (type == 4) {
+        const data = {
+          id,
+          magName: "mag",
+          data: {
+            type: "FeatureCollection",
+            crs: {
+              type: "name",
+              properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+            },
+            features: geoData
+          }
+        }
+        this.$store.state.app.map.mapBox.addHeatmap(data)
+      }
     },
     //移除图层
     removelayer(type, id) {
@@ -594,7 +412,7 @@ export default {
         this.$store.state.app.map.mapBox.rmline(id)
       } else if (type === 3) {
         this.$store.state.app.map.mapBox.removePolygon(id)
-      } else {
+      } else if (type === 4) {
         this.$store.state.app.map.mapBox.removelayer(id)
       }
     }

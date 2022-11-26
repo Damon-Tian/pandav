@@ -21,7 +21,7 @@ export function get_elec(data) {
  * @returns
  */
 
-export function get_elec_hotmap(data) {
+export function get_elec_heatmap(data) {
     return request({
         url: '/front/edmp/elecRail/heatMap',
         method: 'post',
@@ -66,4 +66,78 @@ export function get_targeted_sms_data(params) {
         method: "get",
         params
     })
+}
+
+
+
+// 到处每个接口可拼装好的geojson
+
+
+/**
+ * 获取一般核心区域geojson
+ * @param {*} params
+ * @returns
+ */
+export async function get_eleccore_geojson(orgId) {
+    const params = {
+        isCore: 0,
+        pageNumber: 1,
+        pageSize: 999
+    }
+    if (orgId) {
+        params.orgIds = [orgId]
+    }
+    const { records } = await get_elec(params)
+    return records.map((item) => JSON.parse(item.geoJson))
+}
+
+/**
+ * 获取一般保护区区域geojson
+ * @param {*} params
+ * @returns
+ */
+export async function get_elec_geojson(orgId) {
+    const params = {
+        isCore: 1,
+        pageNumber: 1,
+        pageSize: 999
+    }
+    if (orgId) {
+        params.orgIds = [orgId]
+    }
+    const { records } = await get_elec(params)
+    return records.map((item) => JSON.parse(item.geoJson))
+}
+
+/**
+ * 获取热力图geojson
+ * @param {*} params
+ * @returns
+ */
+export async function get_elec_heatmap_geojson(orgId, timeRange) {
+    const params = {
+        areaCodes: []
+    }
+    if (orgId) {
+        params.areaCodes = [orgId]
+    }
+    if (timeRange) {
+        //
+    }
+    const geoJson = await get_elec_heatmap(params)
+    return geoJson
+}
+/**
+ * 获取核心区域人员 轨迹geojson
+ * @param {*} params
+ * @returns
+ */
+export async function get_elec_person_geojson(orgId) {
+    const params = {
+        areaCodes: []
+    }
+    if (orgId) {
+        params.areaCodes = [orgId]
+    }
+    return get_elec_person(params)
 }
