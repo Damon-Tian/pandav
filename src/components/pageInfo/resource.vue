@@ -93,15 +93,14 @@
       </div>
     </info-block>
     <div style="display: none">
-      <div ref="messageBox" class="message-box">
-        <img src="../../assets/img/8431669344745_.pic.jpg" alt="" />
-      </div>
+      <ResourcesInfo :id="InfoId" ref="messageBox" />
     </div>
   </div>
 </template>
 
 <script>
 import infoBlock from "./infoBlock"
+import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
 const mapId = "自然资源"
 const mapIcon = require("../../assets/img/selectedInfo/natural.png")
 const baseConfig = {
@@ -117,9 +116,10 @@ const baseConfig = {
   lineWidth: 15
 }
 export default {
-  components: { infoBlock },
+  components: { infoBlock, ResourcesInfo },
   data() {
     return {
+      InfoId: null,
       currentDetailTab: "动物多样性",
       detailTabs: ["动物多样性", "植物多样性"],
       animalConfig: {
@@ -267,11 +267,13 @@ export default {
       ])
     },
     detail() {
-      const dom = this.$refs.messageBox
+      const dom = this.$refs.messageBox.$el
+      // this.$refs.messageBox.onload(1)
       this.$store.state.app.map.mapBox.poup({
         center: this.currentFeature.geometry.coordinates,
         centent: dom
       })
+      this.InfoId = 1
     }
   }
 }
