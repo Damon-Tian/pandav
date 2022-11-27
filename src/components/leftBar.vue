@@ -118,6 +118,8 @@ export default {
         }
       })
       this.$store.commit("app/SET_TAB", this.currentTab)
+      this.$store.commit("app/SET_MAPFEATURE", null)
+      this.$store.state.app.map.mapBox.removePoup()
     },
     narrowClick() {
       this.isCollapse = !this.isCollapse

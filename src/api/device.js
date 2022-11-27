@@ -29,6 +29,18 @@ export function get_device_detail(params) {
         params
     })
 }
+/*
+ * 获取设备详情
+ * @param {*} id
+ * @returns
+ */
+
+export function get_device_by_id(id) {
+    return request({
+        url: '/front/edmp/device/getDetails/' + id,
+        method: 'get'
+    })
+}
 
 //获取设备 geojson
 

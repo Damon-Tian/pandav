@@ -45,15 +45,13 @@
       }`"
     />
     <div
-      v-if="
-        !selectList.length &&
-        selectedInfoList.some(
-          (item) => item.title == '人员热力图' && item.checked
-        )
-      "
+      v-if="showHeatmap"
       class="zoom-map"
       :style="{
         right: isRightCollapse ? '2%' : '27%'
+      }"
+      :class="{
+        'electron-area': currentTab == 7
       }"
     >
       <div class="count">
@@ -68,6 +66,22 @@
         <div class="item"></div>
         <div class="item"></div>
       </div>
+    </div>
+    <div
+      v-if="showHeatmap"
+      class="slide-timebar"
+      :style="{
+        right: isRightCollapse ? '40%' : '50%'
+      }"
+    >
+      <el-slider
+        v-model="currentTime"
+        :step="1"
+        show-stops
+        :max="24"
+        :format-tooltip="formatTooltip"
+        @change="timeChange"
+      />
     </div>
   </div>
 </template>
@@ -86,6 +100,8 @@ import {
   get_video_camera_geojson
 } from "@/api/device"
 import { get_bio_geosjon } from "@/api/animal"
+import { get_station_geojson } from "@/api/station"
+import { DateFormat, debounce } from "@/utils"
 const commonSelectInfoList = [
   {
     img: require("../../assets/img/selectedInfo/core.png"),
@@ -182,31 +198,7 @@ export default {
           checked: false,
           type: 1,
           id: "5",
-          getData: async (orgId) => {
-            const params = {
-              isCore: 0,
-              pageNumber: 1,
-              pageSize: 999
-            }
-            if (orgId) {
-              params.orgIds = [orgId]
-            }
-            return [
-              {
-                id: 1,
-                type: "Feature",
-                img: require("../../assets/img/selectedInfo/site.png"),
-                properties: {}, //其中必须包含id字段，用于高亮点钟图标
-                geometry: {
-                  type: "MultiPoint",
-                  coordinates: [
-                    [103.194, 30.546],
-                    [103.624, 30.556]
-                  ]
-                }
-              }
-            ]
-          }
+          getData: get_station_geojson
         },
         {
           img: require("../../assets/img/selectedInfo/patrol1.png"),
@@ -234,10 +226,20 @@ export default {
       ],
       selectedInfoList2: [...commonSelectInfoList],
       needRemoveChecked: [],
-      subselectedInfo: []
+      subselectedInfo: [],
+      currentTime: 24
     }
   },
   computed: {
+    showHeatmap() {
+      return (
+        !this.selectList.length &&
+        (this.selectedInfoList.some(
+          (item) => item.title == "人员热力图" && item.checked
+        ) ||
+          this.currentTab == 7)
+      )
+    },
     selectedInfoList() {
       if (this.selectList && this.selectList.length) {
         return this.selectList
@@ -417,7 +419,28 @@ export default {
       } else if (type === 4) {
         this.$store.state.app.map.mapBox.removelayer(id)
       }
-    }
+    },
+    //热力图滑块相关
+    formatTooltip(val) {
+      return DateFormat(this.getDateBySilderVal(), "yyyy-MM-dd hh点")
+    },
+    //1,24时刻计算热力图时间
+    getDateBySilderVal() {
+      //三小时延迟
+      let dateNow = new Date().getTime() - 1000 * 60 * 60 * 3
+      if (this.currentTime < 24) {
+        dateNow -= (24 - this.currentTime) * 1000 * 60 * 60
+      }
+      return dateNow
+    },
+    timeChange: debounce(async function () {
+      const time = DateFormat(this.getDateBySilderVal(), "yyyyMMddhh")
+      //清除热力图
+      const { type, id } = { type: 4, id: "人员热力图" }
+      this.removelayer(type, id)
+      const geoData = await get_elec_heatmap_geojson(this.orgId, time)
+      this.setLayer(type, id, geoData)
+    })
   }
 }
 </script>
@@ -508,5 +531,16 @@ export default {
       background: linear-gradient(#41dfe9, #718cd4);
     }
   }
+}
+
+.electron-area {
+  top: unset;
+  bottom: 50px;
+}
+
+.slide-timebar {
+  position: fixed;
+  bottom: 10px;
+  width: 400px;
 }
 </style>

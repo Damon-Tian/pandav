@@ -80,6 +80,7 @@
             {{ item }}
           </span>
         </div>
+        <button @click="removeMap">移除</button>
         <div class="info-content detail-content">
           <span
             v-for="(item, index) in animalList"
@@ -92,17 +93,12 @@
         </div>
       </div>
     </info-block>
-    <div style="display: none">
-      <ResourcesInfo :id="InfoId" ref="messageBox" />
-    </div>
   </div>
 </template>
 
 <script>
-import infoBlock from "./infoBlock"
-import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
+import { get_bio_geosjon } from "@/api/animal"
 const mapId = "自然资源"
-const mapIcon = require("../../assets/img/selectedInfo/natural.png")
 const baseConfig = {
   radius: "40",
   activeRadius: "45%",
@@ -116,7 +112,6 @@ const baseConfig = {
   lineWidth: 15
 }
 export default {
-  components: { infoBlock, ResourcesInfo },
   data() {
     return {
       InfoId: null,
@@ -197,9 +192,6 @@ export default {
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
-    },
-    currentFeature() {
-      return this.$store.state.app.map.feature
     }
   },
   watch: {
@@ -209,28 +201,23 @@ export default {
     currentPosition() {
       this.removeMap()
       this.initMap()
-    },
-    currentFeature() {
-      this.detail()
     }
-  },
-  mounted() {
-    this.initMap()
   },
   beforeDestroy() {
     this.removeMap()
-    this.$store.state.app.map.mapBox.removePoup()
+  },
+  mounted() {
+    this.initMap()
   },
   methods: {
     changeDetail(tab) {
       this.currentDetailTab = tab
     },
     async initMap() {
-      const geoData = await this.getData()
+      const geoData = await get_bio_geosjon()
       const data = {
         imgUrl: geoData[0].img,
         id: mapId,
-        textName: "name",
         color: "#fff",
         pointArray: {
           type: "FeatureCollection",
@@ -241,39 +228,6 @@ export default {
     },
     removeMap() {
       this.$store.state.app.map.mapBox.removelayer(mapId)
-    },
-    getData() {
-      const params = {}
-      //接口请求
-      return Promise.resolve([
-        {
-          type: "Feature",
-          img: mapIcon,
-          properties: {}, //其中必须包含id字段，用于高亮点钟图标
-          geometry: {
-            type: "Point",
-            coordinates: [103.634, 31.246]
-          }
-        },
-        {
-          type: "Feature",
-          img: mapIcon,
-          properties: {}, //其中必须包含id字段，用于高亮点钟图标
-          geometry: {
-            type: "Point",
-            coordinates: [103.624, 31.256]
-          }
-        }
-      ])
-    },
-    detail() {
-      const dom = this.$refs.messageBox.$el
-      // this.$refs.messageBox.onload(1)
-      this.$store.state.app.map.mapBox.poup({
-        center: this.currentFeature.geometry.coordinates,
-        centent: dom
-      })
-      this.InfoId = 1
     }
   }
 }

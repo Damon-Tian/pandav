@@ -36,12 +36,14 @@
         </div>
         <div class="row">
           <div class="row__label">
-            {{ type == "infrared_camera" ? "实时抓拍" : "在线监控" }}：
+            {{ type == "video_camera" ? "在线监控" : "实时抓拍" }}：
           </div>
-          <div v-if="type == 'infrared_camera'" class="row__img">
+          <div v-if="type == 'video_camera'" class="row__video">
+            <videoPlayer :video-url="dataDetail.deviceOnlineUrl" />
+          </div>
+          <div v-else class="row__img">
             <img v-for="(item, index) in url" :key="index" :src="item" alt="" />
           </div>
-          <div v-else class="row__video"></div>
         </div>
       </div>
     </div>
@@ -49,9 +51,12 @@
 </template>
 
 <script>
-import { get_device_list } from "@/api/mapPopupInfo"
+import { get_device_by_id } from "@/api/device"
+import videoPlayer from "../videoPlayer/videoPlayer.vue"
 export default {
-  components: {},
+  components: {
+    videoPlayer
+  },
   props: {
     id: {
       type: [String, Number],
@@ -59,7 +64,7 @@ export default {
     },
     type: {
       type: String,
-      default: "infrared_camera"
+      default: "video_camera"
     }
   },
   data() {
@@ -72,24 +77,15 @@ export default {
     id: {
       handler: function () {
         if (this.id) {
-          this.etOrg()
+          this.getDeviceDetail()
         }
-      }
+      },
+      immediate: true
     }
   },
   methods: {
-    async getDeviceList() {
-      const data = await get_device_list({
-        modelType: this.type,
-        pageNumber: 1,
-        pageSize: 99999
-      })
-      data.records.map((item) => {
-        if (item.deviceId == this.id) {
-          this.dataDetail = item
-          this.url = this.dataDetail.url.split(",")
-        }
-      })
+    async getDeviceDetail() {
+      this.dataDetail = await get_device_by_id(this.id)
     }
   }
 }
@@ -97,7 +93,7 @@ export default {
 
 <style lang="less" scoped>
 .camera-info {
-  width: 300px;
+  width: 350px;
   height: 334px;
   padding: 12px;
   border: 1px solid #00aeff;

@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="main-left">
       <top-nav ref="topNav" />
-      <left-bar ref="leftBar" @select-menu="selectMenu" />
+      <left-bar ref="leftBar" />
       <div class="right-block">
         <right-info />
       </div>
@@ -17,7 +17,15 @@
       <!-- <router-view /> -->
     </div>
     <camera ref="cameraRef" class="main-right" />
-    <videoPlayer v-if="videoUrl" ref="videoPlayerRef" style="display: none" />
+    <!-- // 地图弹窗 -->
+    <div style="display: none">
+      <component
+        :is="componentId"
+        :id="infoId"
+        ref="messageBox"
+        :type="cameraType"
+      />
+    </div>
   </div>
 </template>
 
@@ -28,7 +36,10 @@ import camera from "@/components/camera.vue"
 import rightInfo from "@/components/rightInfo"
 import wether from "@/components/wether"
 import mapBox from "@/components/map/index"
-import videoPlayer from "@/components/videoPlayer/videoPlayer.vue"
+import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
+import CameraInfo from "@/components/mapPopupInfo/cameraInfo.vue"
+import PipeCareStation from "@/components/mapPopupInfo/pipeCareStation.vue"
+import HeatMap from "@/components/mapPopupInfo/heatmap.vue"
 export default {
   components: {
     topNav,
@@ -37,23 +48,22 @@ export default {
     rightInfo,
     wether,
     mapBox,
-    videoPlayer
+    ResourcesInfo,
+    CameraInfo,
+    PipeCareStation,
+    HeatMap
   },
   data() {
     return {
-      currentTab: 1,
-      videoUrl: ""
+      componentId: null,
+      infoId: null,
+      cameraType: ""
     }
   },
   mounted() {
     this.$store.commit("app/SET_MAPBOX", this.$refs.mapBox)
   },
   methods: {
-    selectMenu(i) {
-      this.currentTab = i
-      this.$store.commit("app/SET_MAPFEATURE", null)
-      this.$store.commit("app/SET_TAB", i)
-    },
     handleClick(currentFeature) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
       this.handleFeature(currentFeature)
@@ -75,37 +85,39 @@ export default {
       this.$refs.leftBar.init()
     },
     async handleFeature(currentFeature) {
-      this.videoUrl = ""
+      //设备
+      if (currentFeature.properties.equipmentType) {
+        this.cameraType = currentFeature.properties.equipmentType
+        this.componentId = "CameraInfo"
+        this.infoId = currentFeature.properties.equipmentId
+      }
+      //自然资源
+      if (currentFeature.properties.protectionLevel) {
+        this.componentId = "ResourcesInfo"
+        this.infoId = currentFeature.properties.equipmentId
+      }
+
+      //保护站
+      if (currentFeature.properties.stationName) {
+        this.componentId = "PipeCareStation"
+      }
+
+      // 热力图
+      if (currentFeature.properties.mag) {
+        this.componentId = "HeatMap"
+      }
+
+      this.showPopu(currentFeature)
+    },
+    showPopu(currentFeature) {
       console.log(currentFeature)
-      // 设备管理 红外相机
-      if (currentFeature.properties.equipmentType === "infrared_camera") {
-        //
-      }
-      // 设备管理 生态相机
-      if (currentFeature.properties.equipmentType === "ecological_equipment") {
-        //
-      }
-      // 设备管理 摄像机
-      if (currentFeature.properties.equipmentType === "video_camera") {
-        //
-        const { deviceOnlineUrl } = await new Promise((resolve) => {
-          setTimeout(() => {
-            resolve({
-              deviceOnlineUrl:
-                "http://110.185.102.112:8888/live/liveStream_7L01618PAJF96DB_0_0.flv"
-            })
-          }, 500)
+      this.$nextTick(() => {
+        const dom = this.$refs.messageBox.$el
+        this.$store.state.app.map.mapBox.poup({
+          center: currentFeature.geometry.coordinates,
+          centent: dom
         })
-        this.videoUrl = deviceOnlineUrl
-      }
-      // 自然资源 动物
-      if (currentFeature.properties.protectionLevel == 1) {
-        //
-      }
-      // 自然资源 植物
-      if (currentFeature.properties.protectionLevel == 2) {
-        //
-      }
+      })
     }
   }
 }

@@ -61,7 +61,13 @@
 </template>
 
 <script>
-import { get_electronic_fence_count, get_targeted_sms_data } from "@/api/elec";
+import {
+  get_electronic_fence_count,
+  get_targeted_sms_data,
+  get_elec_heatmap_geojson
+} from "@/api/elec"
+
+const mapId = "人员热力图"
 export default {
   components: {},
   data() {
@@ -72,31 +78,54 @@ export default {
         totalNum: 0,
         coreNum: 0,
         count: 0,
-        generalNum: 0,
-      },
-    };
+        generalNum: 0
+      }
+    }
+  },
+  beforeDestroy() {
+    this.removeMap()
   },
   mounted() {
-    this.getElectronicFenceCount();
-    this.getTargetedSmsData();
+    this.getElectronicFenceCount()
+    this.getTargetedSmsData()
+    this.initMap()
   },
   methods: {
     //热力图接口
     async getElectronicFenceCount() {
-      const data = await get_electronic_fence_count();
-      this.fenceData.coreNum = data.coreNum;
-      this.fenceData.count = data.count;
-      this.fenceData.generalNum = data.generalNum;
+      const data = await get_electronic_fence_count()
+      this.fenceData.coreNum = data.coreNum
+      this.fenceData.count = data.count
+      this.fenceData.generalNum = data.generalNum
     },
     //靶向短信接口
     async getTargetedSmsData() {
-      const data = await get_targeted_sms_data();
-      this.fenceData.totalNum = data.totalNum;
-      this.fenceData.numOfCoreAreas = data.numOfCoreAreas;
-      this.fenceData.numOfGeneralAreas = data.numOfGeneralAreas;
+      const data = await get_targeted_sms_data()
+      this.fenceData.totalNum = data.totalNum
+      this.fenceData.numOfCoreAreas = data.numOfCoreAreas
+      this.fenceData.numOfGeneralAreas = data.numOfGeneralAreas
     },
-  },
-};
+    async initMap() {
+      const geoData = await get_elec_heatmap_geojson()
+      const data = {
+        id: mapId,
+        magName: "mag",
+        data: {
+          type: "FeatureCollection",
+          crs: {
+            type: "name",
+            properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
+          },
+          features: geoData
+        }
+      }
+      this.$store.state.app.map.mapBox.addHeatmap(data)
+    },
+    removeMap() {
+      this.$store.state.app.map.mapBox.removelayer(mapId)
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>

@@ -31,8 +31,12 @@
 import camera from "./equipmentManagement/camera.vue"
 import InfrareCamera from "./equipmentManagement/InfrareCamera.vue"
 import eventRemind from "./equipmentManagement/eventRemind.vue"
-const mapId = "设备管理"
-const mapIcon = require("../../assets/img/selectedInfo/patrol.png")
+const mapId = ["红外相机", "摄像机", "生态设备"]
+import {
+  get_infrared_camera_geojson,
+  get_ecological_equipment_geojson,
+  get_video_camera_geojson
+} from "@/api/device"
 // import environment from "./environment.vue"
 const tabs = ["设备管理", "生态设备"]
 export default {
@@ -46,9 +50,6 @@ export default {
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
-    },
-    currentFeature() {
-      return this.$store.state.app.map.feature
     }
   },
   watch: {
@@ -58,64 +59,37 @@ export default {
     currentPosition() {
       this.removeMap()
       this.initMap()
-    },
-    currentFeature() {
-      this.detail()
     }
   },
   beforeDestroy() {
     this.removeMap()
-    this.$store.state.app.map.mapBox.removePoup()
   },
   mounted() {
     this.initMap()
   },
   methods: {
     async initMap() {
-      const geoData = await this.getData()
-      const data = {
-        imgUrl: geoData[0].img,
-        id: mapId,
-        textName: mapId,
-        pointArray: {
-          type: "FeatureCollection",
-          features: geoData
+      const geoData1 = await get_infrared_camera_geojson()
+      const geoData2 = await get_video_camera_geojson()
+      const geoData3 = await get_ecological_equipment_geojson()
+      const datas = [geoData1, geoData2, geoData3]
+      mapId.forEach((id, index) => {
+        const geoData = datas[index]
+        const data = {
+          imgUrl: geoData[0].img,
+          id,
+          pointArray: {
+            type: "FeatureCollection",
+            features: geoData
+          }
         }
-      }
-      this.$store.state.app.map.mapBox.point(data)
+        console.log(data)
+        this.$store.state.app.map.mapBox.point(data)
+      })
     },
     removeMap() {
-      this.$store.state.app.map.mapBox.removelayer(mapId)
-    },
-    getData() {
-      const params = {}
-      //接口请求
-      return Promise.resolve([
-        {
-          type: "Feature",
-          img: mapIcon,
-          properties: {}, //其中必须包含id字段，用于高亮点钟图标
-          geometry: {
-            type: "Point",
-            coordinates: [103.32057700807803, 30.64175829877989]
-          }
-        },
-        {
-          type: "Feature",
-          img: mapIcon,
-          properties: {}, //其中必须包含id字段，用于高亮点钟图标
-          geometry: {
-            type: "Point",
-            coordinates: [103.30359827926577, 30.6077411052311]
-          }
-        }
-      ])
-    },
-    detail() {
-      const dom = this.$refs.messageBox
-      this.$store.state.app.map.mapBox.poup({
-        center: this.currentFeature.geometry.coordinates,
-        centent: dom
+      mapId.forEach((id) => {
+        this.$store.state.app.map.mapBox.removelayer(id)
       })
     }
   }

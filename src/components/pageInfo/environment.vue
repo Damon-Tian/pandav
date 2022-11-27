@@ -31,7 +31,6 @@
         </div>
       </div>
     </infoBlock>
-    <button @click="initMap">测试</button>
     <infoBlock>
       <div class="env-second info-content">
         <div class="env-second__label-info">
@@ -161,8 +160,10 @@ export default {
   },
   mounted() {
     this.initChart()
+    this.initMap()
   },
-  destroyed() {
+  beforeDestroy() {
+    console.log(this)
     this.removeMap()
   },
   methods: {

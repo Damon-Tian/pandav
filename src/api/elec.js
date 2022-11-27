@@ -122,7 +122,7 @@ export async function get_elec_heatmap_geojson(orgId, timeRange) {
         params.areaCodes = [orgId]
     }
     if (timeRange) {
-        //
+        params.queryDate = timeRange
     }
     const geoJson = await get_elec_heatmap(params)
     return geoJson
