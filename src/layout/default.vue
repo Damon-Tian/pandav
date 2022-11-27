@@ -71,8 +71,8 @@ export default {
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")
       this.$refs.mapBox.fly({
-        center: [103.37200312027926, 30.671440838957167],
-        zoom: 9.838592817487967,
+        center: [103.3440669299489, 30.675952923426294],
+        zoom: 10.019816714374489,
         pitch: 58.69748625766818,
         bearing: 0,
         duration: 12000,
@@ -92,9 +92,9 @@ export default {
         this.infoId = currentFeature.properties.equipmentId
       }
       //自然资源
-      if (currentFeature.properties.protectionLevel) {
+      if (currentFeature.properties.bioId) {
         this.componentId = "ResourcesInfo"
-        this.infoId = currentFeature.properties.equipmentId
+        this.infoId = currentFeature.properties.bioId
       }
 
       //保护站

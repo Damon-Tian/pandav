@@ -1,3 +1,21 @@
+
+// 基层站点 api
+
+import request from '@/utils/request'
+
+/**
+ * 基层站点列表
+ * @param {*} params
+ * @returns
+ */
+
+export function get_station_list(params) {
+    return request({
+        url: '/front/org',
+        method: 'get',
+        params
+    })
+}
 export async function get_station_geojson(orgId) {
     const params = {
         isCore: 0,

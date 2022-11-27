@@ -64,6 +64,7 @@ export default {
 <style lang="less" scoped>
 .resources-info {
   width: 300px;
+  max-height: 300px;
   padding: 12px;
   border: 1px solid #00aeff;
   background: rgba(0, 29, 155, 60%);
@@ -89,6 +90,7 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    padding-bottom: 10px;
     background: rgba(0, 0, 0, 60%);
 
     &__top {

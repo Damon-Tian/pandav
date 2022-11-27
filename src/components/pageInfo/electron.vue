@@ -6,19 +6,21 @@
           <div class="electron__row__title">核心区域</div>
           <div class="electron__row__info">
             <div class="electron-area">
-              <div class="area-title">实时人数</div>
-              <div class="area-number">{{ fenceData.coreNum }}</div>
-            </div>
-            <div class="separated-line"></div>
-            <div class="electron-area">
-              <div class="area-title">累计人数</div>
-              <div class="area-number" style="color: #00eaff">
-                {{ Number(fenceData.coreNum) * 3 }}
+              <div class="area-title">上一时段</div>
+              <div class="area-number">
+                {{ fenceData.personCountPrev.coreNum }}
               </div>
             </div>
             <div class="separated-line"></div>
             <div class="electron-area">
-              <div class="area-title">信息发送条数</div>
+              <div class="area-title">当前时段</div>
+              <div class="area-number" style="color: #00eaff">
+                {{ fenceData.personCountNow.coreNum }}
+              </div>
+            </div>
+            <div class="separated-line"></div>
+            <div class="electron-area">
+              <div class="area-title">短信通知人次</div>
               <div class="area-number" style="color: #d9ea16">
                 {{ fenceData.numOfCoreAreas }}
               </div>
@@ -36,19 +38,21 @@
             "
           >
             <div class="electron-area">
-              <div class="area-title">实时人数</div>
-              <div class="area-number">{{ fenceData.generalNum }}</div>
-            </div>
-            <div class="separated-line"></div>
-            <div class="electron-area">
-              <div class="area-title">累计人数</div>
-              <div class="area-number" style="color: #00eaff">
-                {{ Number(fenceData.generalNum) * 3 }}
+              <div class="area-title">上一时段</div>
+              <div class="area-number">
+                {{ fenceData.personCountPrev.generalNum }}
               </div>
             </div>
             <div class="separated-line"></div>
             <div class="electron-area">
-              <div class="area-title">信息发送条数</div>
+              <div class="area-title">当前时段</div>
+              <div class="area-number" style="color: #00eaff">
+                {{ fenceData.personCountNow.generalNum }}
+              </div>
+            </div>
+            <div class="separated-line"></div>
+            <div class="electron-area">
+              <div class="area-title">短信通知人次</div>
               <div class="area-number" style="color: #d9ea16">
                 {{ fenceData.numOfGeneralAreas }}
               </div>
@@ -64,10 +68,12 @@
 import {
   get_electronic_fence_count,
   get_targeted_sms_data,
-  get_elec_heatmap_geojson
+  get_elec_heatmap_geojson,
+  get_elec_person_geojson
 } from "@/api/elec"
 
 const mapId = "人员热力图"
+const mapId1 = "人员轨迹"
 export default {
   components: {},
   data() {
@@ -76,9 +82,8 @@ export default {
         numOfCoreAreas: 0,
         numOfGeneralAreas: 0,
         totalNum: 0,
-        coreNum: 0,
-        count: 0,
-        generalNum: 0
+        personCountNow: {},
+        personCountPrev: {}
       }
     }
   },
@@ -88,15 +93,15 @@ export default {
   mounted() {
     this.getElectronicFenceCount()
     this.getTargetedSmsData()
-    this.initMap()
+    this.initHeatMap()
+    this.initPersonMap()
   },
   methods: {
     //热力图接口
     async getElectronicFenceCount() {
       const data = await get_electronic_fence_count()
-      this.fenceData.coreNum = data.coreNum
-      this.fenceData.count = data.count
-      this.fenceData.generalNum = data.generalNum
+      this.fenceData.personCountPrev = data.personCountPrev
+      this.fenceData.personCountNow = data.personCountNow
     },
     //靶向短信接口
     async getTargetedSmsData() {
@@ -105,7 +110,7 @@ export default {
       this.fenceData.numOfCoreAreas = data.numOfCoreAreas
       this.fenceData.numOfGeneralAreas = data.numOfGeneralAreas
     },
-    async initMap() {
+    async initHeatMap() {
       const geoData = await get_elec_heatmap_geojson()
       const data = {
         id: mapId,
@@ -121,8 +126,25 @@ export default {
       }
       this.$store.state.app.map.mapBox.addHeatmap(data)
     },
+    async initPersonMap() {
+      const geoData = await get_elec_person_geojson()
+      const data = {
+        id: mapId1,
+        geojson: {
+          features: geoData,
+          type: "FeatureCollection"
+        }
+      }
+      const option = {
+        lineColor: geoData[0].properties.color || "#F4BD1A",
+        lineWidth: 4,
+        arrow: false
+      }
+      this.$store.state.app.map.mapBox.line(data, option)
+    },
     removeMap() {
       this.$store.state.app.map.mapBox.removelayer(mapId)
+      this.$store.state.app.map.mapBox.removelayer(mapId1)
     }
   }
 }

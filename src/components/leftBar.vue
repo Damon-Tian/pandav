@@ -33,19 +33,19 @@
 
       <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
     </div>
-    <!-- <alarmInfo
+    <alarmInfo
       v-if="currentTab === 1"
       :is-collapse="isCollapse"
       :current-tab="currentTab"
-    /> -->
+    />
   </div>
 </template>
 
 <script>
 import selectedInfo from "./leftInfo/selectedInfo.vue"
-// import alarmInfo from "./leftInfo/alarmInfo.vue"
+import alarmInfo from "./leftInfo/alarmInfo.vue"
 export default {
-  components: { selectedInfo },
+  components: { selectedInfo, alarmInfo },
   data() {
     return {
       isCollapse: false,

@@ -71,7 +71,7 @@
       v-if="showHeatmap"
       class="slide-timebar"
       :style="{
-        right: isRightCollapse ? '40%' : '50%'
+        right: isRightCollapse ? 'calc(2% + 80px)' : 'calc(27% + 80px)'
       }"
     >
       <el-slider
@@ -540,7 +540,8 @@ export default {
 
 .slide-timebar {
   position: fixed;
-  bottom: 10px;
+  bottom: 5px;
   width: 400px;
+  transition: right 0.5s;
 }
 </style>

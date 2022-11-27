@@ -50,6 +50,7 @@ export default {
   background: rgba(255, 50, 50, 30%);
   border-radius: 4px;
   color: #fffefe;
+  cursor: pointer;
 
   &__left {
     display: flex;

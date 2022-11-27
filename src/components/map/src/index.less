@@ -1,13 +1,19 @@
 #map {
   width: 100%;
   height: 100%;
+
   .map-button {
     position: fixed;
+    z-index: 10;
     top: 50px;
     left: 50%;
-    z-index: 10;
+  }
+
+  .mapboxgl-popup-close-button {
+    display: none;
   }
 }
+
 #mapbox {
   width: 100%;
   height: 100%;

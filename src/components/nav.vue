@@ -29,8 +29,8 @@ export default {
           id: "chengdu",
           url: "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
           view: {
-            center: [103.37200312027926, 30.671440838957167],
-            zoom: 9.838592817487967,
+            center: [103.3440669299489, 30.675952923426294],
+            zoom: 10.019816714374489,
             pitch: 58.69748625766818,
             bearing: 0,
             duration: 12000,

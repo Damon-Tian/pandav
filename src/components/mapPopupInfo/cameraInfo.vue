@@ -4,7 +4,10 @@
     <div class="camera-info__box">
       <div class="camera-info__box__top">{{ dataDetail.deviceName }}</div>
       <div class="camera-info__box__info">
-        <div class="row">
+        <div
+          v-if="type == 'video_camera' || type == 'infrared_camera'"
+          class="row"
+        >
           <span class="row__label">设备编号：</span>
           <span class="row__value">{{ dataDetail.deviceSn }}</span>
         </div>
@@ -22,7 +25,13 @@
             {{ dataDetail.latitude }}
           </span>
         </div>
-        <div class="row">
+        <div v-if="dataDetail.deploymentTime" class="row">
+          <span class="row__label">布设时间：</span>
+          <span class="row__value">
+            {{ dataDetail.deploymentTime }}
+          </span>
+        </div>
+        <div v-if="type == 'infrared_camera'" class="row">
           <span class="row__label">剩余电量：</span>
           <span class="row__value">
             {{ dataDetail.remainingElectricity }}
@@ -34,14 +43,17 @@
             {{ dataDetail.deviceStatus ? "异常" : "正常" }}
           </span>
         </div>
-        <div class="row">
+        <div
+          v-if="type == 'video_camera' || type == 'infrared_camera'"
+          class="row"
+        >
           <div class="row__label">
             {{ type == "video_camera" ? "在线监控" : "实时抓拍" }}：
           </div>
           <div v-if="type == 'video_camera'" class="row__video">
             <videoPlayer :video-url="dataDetail.deviceOnlineUrl" />
           </div>
-          <div v-else class="row__img">
+          <div v-if="type == 'infrared_camera'" class="row__img">
             <img
               v-if="imgUrl.length"
               :src="imgUrl[0]"
@@ -128,7 +140,7 @@ export default {
 <style lang="less" scoped>
 .camera-info {
   width: 350px;
-  height: 334px;
+  max-height: 334px;
   padding: 12px;
   border: 1px solid #00aeff;
   background: rgba(0, 29, 155, 60%);
@@ -154,6 +166,7 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    padding-bottom: 10px;
     background: rgba(0, 0, 0, 60%);
     overflow-y: auto;
 

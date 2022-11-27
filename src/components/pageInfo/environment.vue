@@ -105,9 +105,8 @@
 <script>
 import Charts from "@jiaminghi/charts"
 import infoBlock from "./infoBlock"
-
+import { get_ecological_equipment_geojson } from "@/api/device"
 const mapId = "生态环境"
-const mapIcon = require("@/assets/img/p-leftbar-env-active.png")
 export default {
   components: { infoBlock },
   data() {
@@ -258,9 +257,9 @@ export default {
       envChart.setOption(option1)
     },
     async initMap() {
-      const geoData = await this.getData()
+      const geoData = await get_ecological_equipment_geojson()
       const data = {
-        imgUrl: mapIcon,
+        imgUrl: geoData[0].img,
         id: mapId,
         textName: mapId,
         pointArray: {
@@ -272,34 +271,6 @@ export default {
     },
     removeMap() {
       this.$store.state.app.map.mapBox.removelayer(mapId)
-    },
-    getData() {
-      const params = {}
-      //接口请求
-      return Promise.resolve([
-        {
-          id: 1,
-          type: "Feature",
-          properties: {
-            name: "测试点位1"
-          }, //其中必须包含id字段，用于高亮点钟图标
-          geometry: {
-            type: "Point",
-            coordinates: [103.513296, 30.589647]
-          }
-        },
-        {
-          id: 2,
-          type: "Feature",
-          properties: {
-            name: "测试点位1"
-          }, //其中必须包含id字段，用于高亮点钟图标
-          geometry: {
-            type: "Point",
-            coordinates: [103.523296, 30.599647]
-          }
-        }
-      ])
     }
   }
 }

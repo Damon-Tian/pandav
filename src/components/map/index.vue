@@ -172,9 +172,20 @@ export default {
         const features = this.map.queryRenderedFeatures(e.point)
         // this.Map2d.addVector()
         if (features.length) {
-          const feature = features.filter(
-            (item) => item.layer.id.indexOf("保护区") == -1
-          )[0]
+          let feature
+          if (features.length > 1) {
+            feature = features.filter(
+              (item) => item.layer.id.indexOf("保护区") == -1
+            )
+            if (feature.length > 1) {
+              feature = feature[0]
+            } else {
+              features[0]
+            }
+          } else {
+            feature = features[0]
+          }
+          console.log(features)
           this.$emit("mapclick", feature, features)
         }
         // this.poup({

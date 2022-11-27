@@ -53,7 +53,7 @@ export default {
 <style lang="less" scoped>
 .camera-info {
   width: 350px;
-  height: 334px;
+  max-height: 334px;
   padding: 12px;
   border: 1px solid #00aeff;
   background: rgba(0, 29, 155, 60%);
@@ -79,6 +79,7 @@ export default {
     width: 100%;
     height: 100%;
     box-sizing: border-box;
+    padding-bottom: 10px;
     background: rgba(0, 0, 0, 60%);
     overflow-y: auto;
 
