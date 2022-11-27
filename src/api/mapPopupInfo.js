@@ -40,3 +40,16 @@ export function get_device_list(data) {
     data
   })
 }
+
+/**
+ * 获取实时抓拍列表
+ * @param {*} data
+ * @returns
+ */
+export function get_real_time_shoot(data) {
+  return request({
+    url: "/front/edmp/realTimeShoot/page",
+    method: "post",
+    data
+  })
+}

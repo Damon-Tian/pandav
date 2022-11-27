@@ -6,8 +6,7 @@
       <div class="pipe-care-station__box__info">
         <div class="row">
           <span class="row__label">建设时间：</span>
-          <!-- 暂时没有这个字段 -->
-          <!-- <span class="row__value">{{ dataDetail.distribution }}</span> -->
+          <span class="row__value">{{ dataDetail.buildTime }}</span>
         </div>
         <div class="row">
           <span class="row__label">在编人数：</span>
@@ -59,9 +58,10 @@ export default {
     id: {
       handler: function () {
         if (this.id) {
-          this.etOrg()
+          this.getOrg()
         }
-      }
+      },
+      immediate: true
     }
   },
   methods: {
@@ -126,7 +126,7 @@ export default {
       font-size: 14px;
 
       .row {
-        // margin-top: 14px;
+        margin-top: 10px;
 
         &__label {
           margin-right: 10px;
@@ -135,7 +135,6 @@ export default {
 
         &__value {
           color: #d8d8d8;
-          line-height: 24px;
         }
       }
     }

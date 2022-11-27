@@ -42,7 +42,17 @@
             <videoPlayer :video-url="dataDetail.deviceOnlineUrl" />
           </div>
           <div v-else class="row__img">
-            <img v-for="(item, index) in url" :key="index" :src="item" alt="" />
+            <img
+              v-if="imgUrl.length"
+              :src="imgUrl[0]"
+              alt=""
+              class="content__box"
+            />
+            <videoPlayer
+              v-if="videoUrl.length"
+              :video-url="videoUrl[0]"
+              class="content__box"
+            />
           </div>
         </div>
       </div>
@@ -52,6 +62,7 @@
 
 <script>
 import { get_device_by_id } from "@/api/device"
+import { get_real_time_shoot } from "@/api/mapPopupInfo"
 import videoPlayer from "../videoPlayer/videoPlayer.vue"
 export default {
   components: {
@@ -70,7 +81,9 @@ export default {
   data() {
     return {
       dataDetail: {},
-      url: ""
+      imgUrl: [],
+      videoUrl: [],
+      realTimeShoot: []
     }
   },
   watch: {
@@ -86,6 +99,29 @@ export default {
   methods: {
     async getDeviceDetail() {
       this.dataDetail = await get_device_by_id(this.id)
+      if (this.type !== "video_camera") {
+        console.log(this.dataDetail.deviceSn, "this.dataDetail.deviceSn")
+        const data = await get_real_time_shoot({
+          pageSize: 99999,
+          pageNumber: 1,
+          searchParam: this.dataDetail.deviceSn
+        })
+        this.realTimeShoot = data.records
+        this.realTimeShoot.map((item) => {
+          if (item.path) {
+            item.url = item.path.split(",")
+            if (item.url[0].indexOf("mp4") > -1) {
+              item.fileType = 2
+            } else {
+              item.fileType = 1
+            }
+          }
+        })
+        this.imgUrl = this.realTimeShoot.find((item) => item.fileType === 1).url
+        this.videoUrl = this.realTimeShoot.find(
+          (item) => item.fileType === 2
+        ).url
+      }
     }
   }
 }
@@ -137,7 +173,7 @@ export default {
       font-size: 14px;
 
       .row {
-        margin-top: 14px;
+        margin-top: 10px;
 
         &__label {
           margin-right: 10px;
@@ -154,9 +190,9 @@ export default {
           justify-content: space-between;
           margin-top: 10px;
 
-          img {
-            width: 124px;
-            height: 72px;
+          .content__box {
+            width: 152px !important;
+            height: 85px !important;
             margin-bottom: 10px;
           }
         }

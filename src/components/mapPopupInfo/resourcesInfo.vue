@@ -48,7 +48,8 @@ export default {
         if (this.id) {
           this.biodiversityDetails()
         }
-      }
+      },
+      immediate: true
     }
   },
   methods: {
@@ -106,7 +107,7 @@ export default {
       overflow-y: auto;
 
       .row {
-        // margin-top: 14px;
+        margin-top: 10px;
 
         &__label {
           margin-right: 10px;
