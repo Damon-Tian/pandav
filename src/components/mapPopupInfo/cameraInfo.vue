@@ -100,21 +100,19 @@ export default {
     async getDeviceDetail() {
       this.dataDetail = await get_device_by_id(this.id)
       if (this.type !== "video_camera") {
-        console.log(this.dataDetail.deviceSn, "this.dataDetail.deviceSn")
         const data = await get_real_time_shoot({
           pageSize: 99999,
           pageNumber: 1,
           searchParam: this.dataDetail.deviceSn
         })
         this.realTimeShoot = data.records
+        if (!this.realTimeShoot.length) return
         this.realTimeShoot.map((item) => {
-          if (item.path) {
-            item.url = item.path.split(",")
-            if (item.url[0].indexOf("mp4") > -1) {
-              item.fileType = 2
-            } else {
-              item.fileType = 1
-            }
+          item.url = item.path.split(",")
+          if (item.url[0].indexOf("mp4") > -1) {
+            item.fileType = 2
+          } else {
+            item.fileType = 1
           }
         })
         this.imgUrl = this.realTimeShoot.find((item) => item.fileType === 1).url
