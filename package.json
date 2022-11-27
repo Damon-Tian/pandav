@@ -15,6 +15,7 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
+    "@easydarwin/easyplayer": "^5.0.5",
     "@jiaminghi/data-view": "^2.10.0",
     "axios": "^1.2.0",
     "core-js": "^3.6.5",

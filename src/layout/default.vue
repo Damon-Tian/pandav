@@ -17,6 +17,7 @@
       <!-- <router-view /> -->
     </div>
     <camera ref="cameraRef" class="main-right" />
+    <videoPlayer v-if="videoUrl" ref="videoPlayerRef" style="display: none" />
   </div>
 </template>
 
@@ -27,6 +28,7 @@ import camera from "@/components/camera.vue"
 import rightInfo from "@/components/rightInfo"
 import wether from "@/components/wether"
 import mapBox from "@/components/map/index"
+import videoPlayer from "@/components/videoPlayer/videoPlayer.vue"
 export default {
   components: {
     topNav,
@@ -34,11 +36,13 @@ export default {
     camera,
     rightInfo,
     wether,
-    mapBox
+    mapBox,
+    videoPlayer
   },
   data() {
     return {
-      currentTab: 1
+      currentTab: 1,
+      videoUrl: ""
     }
   },
   mounted() {
@@ -51,8 +55,8 @@ export default {
       this.$store.commit("app/SET_TAB", i)
     },
     handleClick(currentFeature) {
-      console.log(currentFeature)
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
+      this.handleFeature(currentFeature)
     },
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")
@@ -69,6 +73,39 @@ export default {
         "chengdu"
       )
       this.$refs.leftBar.init()
+    },
+    async handleFeature(currentFeature) {
+      this.videoUrl = ""
+      console.log(currentFeature)
+      // 设备管理 红外相机
+      if (currentFeature.properties.equipmentType === "infrared_camera") {
+        //
+      }
+      // 设备管理 生态相机
+      if (currentFeature.properties.equipmentType === "ecological_equipment") {
+        //
+      }
+      // 设备管理 摄像机
+      if (currentFeature.properties.equipmentType === "video_camera") {
+        //
+        const { deviceOnlineUrl } = await new Promise((resolve) => {
+          setTimeout(() => {
+            resolve({
+              deviceOnlineUrl:
+                "http://110.185.102.112:8888/live/liveStream_7L01618PAJF96DB_0_0.flv"
+            })
+          }, 500)
+        })
+        this.videoUrl = deviceOnlineUrl
+      }
+      // 自然资源 动物
+      if (currentFeature.properties.protectionLevel == 1) {
+        //
+      }
+      // 自然资源 植物
+      if (currentFeature.properties.protectionLevel == 2) {
+        //
+      }
     }
   }
 }

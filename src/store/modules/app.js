@@ -6,7 +6,8 @@ const state = {
         feature: null
     },
     currentArea: 'chengdu',
-    currentTab: 1
+    currentTab: 1,
+    isRightCollapse: false
 }
 
 const mutations = {
@@ -21,6 +22,9 @@ const mutations = {
     },
     SET_TAB: (state, currentTab) => {
         state.currentTab = currentTab
+    },
+    SET_RIGHT_COLLAPSE: (state, isCollapse) => {
+        state.isRightCollapse = isCollapse
     }
 }
 

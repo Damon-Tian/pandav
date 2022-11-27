@@ -1,20 +1,16 @@
 <template>
-  <div style="width: 330px; height: 200px">
-    <!-- <easy-player :video-url="videoUrl" :live="true" style="height:100px"></easy-player> -->
-    <iframe
-      ref="player"
-      :src="`/static/test.html?videoUrl=${videoUrl}&title=${title}`"
-      scrolling="”no”"
-      frameborder="0"
-      style="width: 100%; height: 100%"
-      width="100%"
-      height="100%"
-    />
-  </div>
+  <easy-player
+    ref="playerRef"
+    :video-url="videoUrl"
+    :live="true"
+    style="width: 100%; height: 100%"
+  ></easy-player>
 </template>
 
 <script>
+import EasyPlayer from "@easydarwin/easyplayer"
 export default {
+  components: { EasyPlayer },
   props: {
     channel: {
       type: Number,
@@ -31,31 +27,19 @@ export default {
     }
   },
   watch: {
-    videoUrl() {
-      this.cancelContentMenu()
-    }
+    videoUrl() {}
   },
-  // components: { EasyPlayer },
   mounted() {
     this.getVideoList()
-    this.cancelContentMenu()
+    // this.cancelContentMenu()
   },
   methods: {
-    async getVideoList() {},
-    cancelContentMenu() {
-      const player =
-        this.$refs.player.contentWindow || this.$refs.player.contentDocument
-      this.$nextTick(() => {
-        setTimeout(() => {
-          console.log(player.document)
-          const playerEle = player.document.getElementById("player")
-          playerEle.oncontextmenu = () => {
-            playerEle.querySelector(".easy-player-right-menu").style.display =
-              "none"
-          }
-        }, 2000)
-      })
-    }
+    async getVideoList() {}
   }
 }
 </script>
+<style>
+.easy-player-right-menu {
+  display: none !important;
+}
+</style>

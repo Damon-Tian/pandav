@@ -99,7 +99,7 @@ export default {
 .weather-time {
   position: absolute;
   z-index: 2;
-  top: 80px;
+  top: 90px;
   right: 20px;
   display: flex;
   height: 35px;

@@ -44,6 +44,31 @@
           'px'
       }`"
     />
+    <div
+      v-if="
+        !selectList.length &&
+        selectedInfoList.some(
+          (item) => item.title == '人员热力图' && item.checked
+        )
+      "
+      class="zoom-map"
+      :style="{
+        right: isRightCollapse ? '2%' : '27%'
+      }"
+    >
+      <div class="count">
+        <div>100人</div>
+        <div>80人</div>
+        <div>60人</div>
+        <div>40人</div>
+      </div>
+      <div class="map">
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+        <div class="item"></div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -230,11 +255,11 @@ export default {
     subselectedInfoList() {
       return this.currentTab === 1 ? this.subselectedInfo : []
     },
-    currentFeature() {
-      return this.$store.state.app.map.feature
-    },
     currentTab() {
       return this.$store.state.app.currentTab
+    },
+    isRightCollapse() {
+      return this.$store.state.app.isRightCollapse
     }
   },
   watch: {
@@ -245,29 +270,6 @@ export default {
     currentArea() {
       //切换图层再重新请求数据再添加图层
       this.initLayer()
-    },
-    //点击不同图层处理
-    currentFeature() {
-      // 设备管理 红外相机
-      if (this.currentFeature.properties.type === "infrared_camera") {
-        //
-      }
-      // 设备管理 生态相机
-      if (this.currentFeature.properties.type === "ecological_equipment") {
-        //
-      }
-      // 设备管理 摄像机
-      if (this.currentFeature.properties.type === "video_camera") {
-        //
-      }
-      // 自然资源 动物
-      if (this.currentFeature.properties.protectionLevel == 1) {
-        //
-      }
-      // 自然资源 植物
-      if (this.currentFeature.properties.protectionLevel == 2) {
-        //
-      }
     }
   },
   beforeDestroy() {
@@ -461,5 +463,50 @@ export default {
 .sub-selected {
   position: absolute;
   margin-left: 200px;
+}
+
+.zoom-map {
+  position: fixed;
+  top: 180px;
+  display: flex;
+  transition: right 0.5s;
+
+  .count {
+    margin-right: 10px;
+    font-size: 12px;
+
+    div {
+      height: 40px;
+      color: #fff;
+      line-height: 40px;
+    }
+  }
+
+  .map {
+    overflow: hidden;
+    width: 15px;
+    height: 160px;
+    border-radius: 15px;
+
+    .item {
+      height: 40px;
+    }
+
+    & > div:first-child {
+      background: linear-gradient(#ff0003, #ddfe02);
+    }
+
+    & > div:nth-child(2) {
+      background: linear-gradient(#ddfe02, #7ed62f);
+    }
+
+    & > div:nth-child(3) {
+      background: linear-gradient(#7ed62f, #41dfe9);
+    }
+
+    & > div:nth-child(4) {
+      background: linear-gradient(#41dfe9, #718cd4);
+    }
+  }
 }
 </style>

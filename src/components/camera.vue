@@ -69,11 +69,12 @@ export default {
     this.getList()
     setInterval(() => {
       this.getList()
-    }, 5 * 1000 * 60)
+    }, 5 * 60 * 1000)
   },
   methods: {
     narrowClick() {
       this.isCollapse = !this.isCollapse
+      this.$store.commit("app/SET_RIGHT_COLLAPSE", this.isCollapse)
       this.$nextTick(() => {
         setTimeout(() => {
           this.$store.state.app.map.mapBox.resize()
@@ -82,7 +83,7 @@ export default {
     },
     getList() {
       let urls = []
-      if (this.startIndex <= this.videoList.length) {
+      if (this.startIndex <= this.videoList.length - this.step) {
         urls = this.videoList.slice(
           this.startIndex,
           this.startIndex + this.step
@@ -92,9 +93,12 @@ export default {
         urls = this.videoList
           .slice(this.startIndex, this.videoList.length)
           .concat(
-            this.videoList.slice(0, this.videoList.length - this.startIndex)
+            this.videoList.slice(
+              0,
+              this.step - (this.videoList.length - this.startIndex)
+            )
           )
-        this.startIndex = this.startIndex - this.videoList.length
+        this.startIndex = this.videoList.length - this.startIndex
       }
       this.list = urls
     }
