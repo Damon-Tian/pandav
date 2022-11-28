@@ -6,33 +6,27 @@
       <div class="pipe-care-station__box__info">
         <div class="row">
           <span class="row__label">建设时间：</span>
-          <span class="row__value">{{ dataDetail.buildTime }}</span>
+          <span class="row__value">{{ dataDetail.buildTime }}年</span>
         </div>
         <div class="row">
           <span class="row__label">在编人数：</span>
-          <span class="row__value">{{ dataDetail.permanent }}</span>
+          <span class="row__value">{{ dataDetail.permanent }}人</span>
         </div>
         <div class="row">
           <span class="row__label">编外人数：</span>
-          <span class="row__value">{{ dataDetail.unPermanent }}</span>
+          <span class="row__value">{{ dataDetail.unPermanent }}人</span>
         </div>
         <div class="row">
           <span class="row__label">占地面积：</span>
-          <span class="row__value">
-            {{ dataDetail.floorArea }}
-          </span>
+          <span class="row__value"> {{ dataDetail.floorArea }}平方米 </span>
         </div>
         <div class="row">
           <span class="row__label">建筑面积：</span>
-          <span class="row__value">
-            {{ dataDetail.coveredArea }}
-          </span>
+          <span class="row__value"> {{ dataDetail.coveredArea }}平方米 </span>
         </div>
         <div class="row">
           <span class="row__label">规划管护面积：</span>
-          <span class="row__value">
-            {{ dataDetail.protectArea }}
-          </span>
+          <span class="row__value"> {{ dataDetail.protectArea }}公顷 </span>
         </div>
       </div>
     </div>
@@ -49,34 +43,12 @@ export default {
       default: null
     }
   },
-  data() {
-    return {
-      dataDetail: {}
+  computed: {
+    dataDetail() {
+      return this.$store.state.app.map.feature.properties
     }
   },
-  watch: {
-    id: {
-      handler: function () {
-        if (this.id) {
-          this.getOrg()
-        }
-      },
-      immediate: true
-    }
-  },
-  methods: {
-    async getOrg() {
-      const data = await get_org({
-        pageNumber: 1,
-        pageSize: 99999
-      })
-      data.records.map((item) => {
-        if (item.id == this.id) {
-          this.dataDetail = item
-        }
-      })
-    }
-  }
+  methods: {}
 }
 </script>
 

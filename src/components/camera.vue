@@ -101,6 +101,9 @@ export default {
         this.startIndex = this.videoList.length - this.startIndex
       }
       this.list = urls
+    },
+    setVideoUrl(url) {
+      this.$set(this.list, 0, url)
     }
   }
 }

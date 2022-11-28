@@ -7,24 +7,26 @@
         <div class="row">
           <span class="row__label">时间：</span>
           <span class="row__value">{{
-            formatTime(dataDetail.properties.time)
+            formatTime(dataDetail.properties?.time)
           }}</span>
         </div>
         <div class="row">
           <span class="row__label">人数：</span>
-          <span class="row__value">{{ dataDetail.properties.personNum }}</span>
+          <span class="row__value">{{ dataDetail.properties?.personNum }}</span>
         </div>
-        <div class="row">
-          <span class="row__label">经度：</span>
-          <span class="row__value">{{
-            dataDetail.geometry.coordinates[0]
-          }}</span>
-        </div>
-        <div class="row">
-          <span class="row__label">纬度：</span>
-          <span class="row__value">
-            {{ dataDetail.geometry.coordinates[1] }}
-          </span>
+        <div v-if="!dataDetail.multiple">
+          <div class="row">
+            <span class="row__label">经度：</span>
+            <span class="row__value">{{
+              dataDetail.geometry.coordinates[0]
+            }}</span>
+          </div>
+          <div class="row">
+            <span class="row__label">纬度：</span>
+            <span class="row__value">
+              {{ dataDetail.geometry?.coordinates[1] }}
+            </span>
+          </div>
         </div>
       </div>
     </div>
@@ -35,7 +37,28 @@
 export default {
   computed: {
     dataDetail() {
-      return this.$store.state.app.map.feature
+      let feature = {}
+      const heatMapFeatures = this.$store.state.app.map.features.filter(
+        (item) => item.properties.mag
+      )
+      if (heatMapFeatures.length == 1) {
+        feature = heatMapFeatures[0]
+      } else {
+        heatMapFeatures.forEach((item, index) => {
+          if (index === 0) {
+            feature = { ...item, multiple: true }
+          } else {
+            feature.properties.personNum =
+              Number(item.properties.personNum) +
+              Number(feature.properties.personNum)
+
+            feature.properties.mag =
+              Number(item.properties.mag) + Number(feature.properties.mag)
+          }
+        })
+      }
+      console.log(feature)
+      return feature
     }
   },
   methods: {

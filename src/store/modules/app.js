@@ -3,7 +3,8 @@
 const state = {
     map: {
         mapBox: null,
-        feature: null
+        feature: null,
+        features: []
     },
     currentArea: 'chengdu',
     currentTab: 1,
@@ -16,6 +17,9 @@ const mutations = {
     },
     SET_MAPFEATURE: (state, feature) => {
         state.map.feature = feature
+    },
+    SET_MAPFEATURES: (state, features) => {
+        state.map.features = features
     },
     SET_CURRENTAREA: (state, currentArea) => {
         state.currentArea = currentArea

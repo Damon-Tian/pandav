@@ -12,15 +12,19 @@
         src="../../assets/img/alarmInfo/warning.png"
         alt=""
       />
-      <div class="alarm-info__title">这里是巡护事件的报警信息...</div>
+      <div class="alarm-info__title" @click="goRealtimeCapture('346F2403E097')">
+        红外相机(346F2403E097)抓拍到事件
+      </div>
     </div>
     <i class="el-icon-close alarm-info__icon" @click="isShow = !isShow"></i>
   </div>
 </template>
 
 <script>
+import mixins from "@/mixins"
 export default {
   components: {},
+  mixins: [mixins],
   props: {
     //左边tabs是否展开
     isCollapse: {

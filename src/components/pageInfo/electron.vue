@@ -1,6 +1,9 @@
 <template>
   <div class="electron">
     <info-block title="电子围栏">
+      <div slot="titleRight" style="font-size: 12px">
+        数据采集时间：{{ collectTime }}
+      </div>
       <div class="info-content">
         <div class="electron__row">
           <div class="electron__row__title">核心区域</div>
@@ -71,7 +74,7 @@ import {
   get_elec_heatmap_geojson,
   get_elec_person_geojson
 } from "@/api/elec"
-
+import { formatTime } from "@/utils"
 const mapId = "人员热力图"
 const mapId1 = "人员轨迹"
 export default {
@@ -82,9 +85,25 @@ export default {
         numOfCoreAreas: 0,
         numOfGeneralAreas: 0,
         totalNum: 0,
-        personCountNow: {},
-        personCountPrev: {}
+        collectTime: "",
+        personCountNow: {
+          generalNum: 0,
+          coreNum: 0
+        },
+        personCountPrev: {
+          generalNum: 0,
+          coreNum: 0
+        }
       }
+    }
+  },
+  computed: {
+    collectTime() {
+      let time = ""
+      if (this.fenceData.collectTime) {
+        time = formatTime(this.fenceData.collectTime)
+      }
+      return time
     }
   },
   beforeDestroy() {
@@ -102,6 +121,7 @@ export default {
       const data = await get_electronic_fence_count()
       this.fenceData.personCountPrev = data.personCountPrev
       this.fenceData.personCountNow = data.personCountNow
+      this.fenceData.collectTime = data.collectTime
     },
     //靶向短信接口
     async getTargetedSmsData() {

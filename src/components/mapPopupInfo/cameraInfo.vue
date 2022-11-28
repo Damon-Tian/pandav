@@ -43,15 +43,14 @@
             {{ dataDetail.deviceStatus ? "异常" : "正常" }}
           </span>
         </div>
-        <div
-          v-if="type == 'video_camera' || type == 'infrared_camera'"
-          class="row"
-        >
+        <div v-if="type == 'infrared_camera'" class="row">
           <div class="row__label">
-            {{ type == "video_camera" ? "在线监控" : "实时抓拍" }}：
-          </div>
-          <div v-if="type == 'video_camera'" class="row__video">
-            <videoPlayer :video-url="dataDetail.deviceOnlineUrl" />
+            实时抓拍：
+            <span
+              style="color: #fff; cursor: pointer"
+              @click="goRealtimeCapture(dataDetail.deviceSn)"
+              >查看更多></span
+            >
           </div>
           <div v-if="type == 'infrared_camera'" class="row__img">
             <img
@@ -76,10 +75,12 @@
 import { get_device_by_id } from "@/api/device"
 import { get_real_time_shoot } from "@/api/mapPopupInfo"
 import videoPlayer from "../videoPlayer/videoPlayer.vue"
+import mixins from "@/mixins"
 export default {
   components: {
     videoPlayer
   },
+  mixins: [mixins],
   props: {
     id: {
       type: [String, Number],
@@ -111,6 +112,9 @@ export default {
   methods: {
     async getDeviceDetail() {
       this.dataDetail = await get_device_by_id(this.id)
+      if (this.type == "video_camera" && this.dataDetail.deviceOnlineUrl) {
+        this.$emit("onlineUrl", this.dataDetail.deviceOnlineUrl)
+      }
       if (this.type !== "video_camera") {
         const data = await get_real_time_shoot({
           pageSize: 99999,
@@ -146,6 +150,7 @@ export default {
   background: rgba(0, 29, 155, 60%);
   border-radius: 4px;
   box-shadow: 0 0 25px 0 rgba(0, 175, 255, 40%) inset;
+  overflow-y: auto;
 
   ::-webkit-scrollbar {
     width: 5px;
@@ -168,7 +173,6 @@ export default {
     box-sizing: border-box;
     padding-bottom: 10px;
     background: rgba(0, 0, 0, 60%);
-    overflow-y: auto;
 
     &__top {
       height: 40px;

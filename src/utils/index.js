@@ -81,3 +81,11 @@ export function debounce(fn, delay, immdiate = false) {
         }
     }
 }
+
+export function formatTime(val) {
+    const y = val.slice(0, 4)
+    const m = val.slice(4, 6)
+    const d = val.slice(6, 8)
+    const h = val.slice(8, 10)
+    return `${y}-${m}-${d} ${h}点`
+}

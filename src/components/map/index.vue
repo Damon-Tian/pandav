@@ -175,17 +175,18 @@ export default {
           let feature
           if (features.length > 1) {
             feature = features.filter(
-              (item) => item.layer.id.indexOf("保护区") == -1
+              (item) =>
+                item.source.indexOf("保护区") == -1 &&
+                item.source.indexOf("热力图") == -1
             )
-            if (feature.length > 1) {
+            if (feature.length == 1) {
               feature = feature[0]
             } else {
-              features[0]
+              feature = features[0]
             }
           } else {
             feature = features[0]
           }
-          console.log(features)
           this.$emit("mapclick", feature, features)
         }
         // this.poup({

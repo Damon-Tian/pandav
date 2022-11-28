@@ -2,7 +2,7 @@
 // 基层站点 api
 
 import request from '@/utils/request'
-
+const stationImg = require("../assets/img/selectedInfo/基层站点.png")
 /**
  * 基层站点列表
  * @param {*} params
@@ -18,41 +18,30 @@ export function get_station_list(params) {
 }
 export async function get_station_geojson(orgId) {
     const params = {
-        isCore: 0,
         pageNumber: 1,
         pageSize: 999
     }
     if (orgId) {
         params.orgIds = [orgId]
     }
-    return [
-        {
-            id: 1,
+    const { records } = await get_station_list(params)
+    const geoJson = []
+    records.filter(item => item.lot && item.lat).forEach(item => {
+        const json = {
+            id: item.id,
             type: "Feature",
-            img: require("../assets/img/selectedInfo/基层站点.png"),
+            img: stationImg,
             properties: {
-                stationName: '基层站点2'
+                stationName: item.name,
+                ...item
             },
             geometry: {
                 type: "Point",
-                coordinates:
-                    [103.624, 30.556]
-
-            }
-        },
-        {
-            id: 2,
-            type: "Feature",
-            img: require("../assets/img/selectedInfo/基层站点.png"),
-            properties: {
-                stationName: '基层站点1'
-            },
-            geometry: {
-                type: "Point",
-                coordinates:
-                    [103.194, 30.546]
+                coordinates: [Number(item.lot), Number(item.lat)]
 
             }
         }
-    ]
+        geoJson.push(json)
+    })
+    return geoJson
 }

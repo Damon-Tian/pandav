@@ -9,7 +9,7 @@
       <wether />
       <map-box
         ref="mapBox"
-        style="width: 100%"
+        style="position: absolute; top: 0; left: 0; width: 100%"
         @mapclick="handleClick"
         @onload="handleOnLoad"
       />
@@ -24,6 +24,7 @@
         :id="infoId"
         ref="messageBox"
         :type="cameraType"
+        @onlineUrl="handleSetVideoUrl"
       />
     </div>
   </div>
@@ -64,8 +65,10 @@ export default {
     this.$store.commit("app/SET_MAPBOX", this.$refs.mapBox)
   },
   methods: {
-    handleClick(currentFeature) {
+    handleClick(currentFeature, features) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
+      this.$store.commit("app/SET_MAPFEATURES", features)
+      console.log(features)
       this.handleFeature(currentFeature)
     },
     handleOnLoad() {
@@ -85,6 +88,7 @@ export default {
       this.$refs.leftBar.init()
     },
     async handleFeature(currentFeature) {
+      console.log(currentFeature)
       //设备
       if (currentFeature.properties.equipmentType) {
         this.cameraType = currentFeature.properties.equipmentType
@@ -92,22 +96,25 @@ export default {
         this.infoId = currentFeature.properties.equipmentId
       }
       //自然资源
-      if (currentFeature.properties.bioId) {
+      else if (currentFeature.properties.bioId) {
         this.componentId = "ResourcesInfo"
         this.infoId = currentFeature.properties.bioId
       }
 
       //保护站
-      if (currentFeature.properties.stationName) {
+      else if (currentFeature.properties.stationName) {
         this.componentId = "PipeCareStation"
       }
 
       // 热力图
-      if (currentFeature.properties.mag) {
+      else if (currentFeature.properties.mag) {
         this.componentId = "HeatMap"
+      } else {
+        this.componentId = null
       }
-
-      this.showPopu(currentFeature)
+      if (this.componentId) {
+        this.showPopu(currentFeature)
+      }
     },
     showPopu(currentFeature) {
       console.log(currentFeature)
@@ -118,6 +125,9 @@ export default {
           centent: dom
         })
       })
+    },
+    handleSetVideoUrl(url) {
+      this.$refs.cameraRef.setVideoUrl(url)
     }
   }
 }

@@ -17,6 +17,19 @@ export function get_line(data, params) {
     })
 }
 /*
+ * 巡护路线列表十条
+ * @param {*} data
+ * @returns
+ */
+
+export function get_patrol_list(params) {
+    return request({
+        url: '/front/patrol/page',
+        method: 'get',
+        params
+    })
+}
+/*
  * 巡护路线
  * @param {*} data
  * @returns
@@ -50,32 +63,45 @@ export async function get_line_geojson(orgId) {
     return rows.map((item) => JSON.parse(item.geoJson))
 
 }
+
 /*
  * 某条巡护路线geojson
  * @param {*} data
  * @returns
  */
 
-export async function get_patrol_detail_geojson(orgId, id = 109) {
+export async function get_patrol_detail_geojson(orgId) {
     const params = {}
     if (orgId) {
         params.orgIds = [orgId]
     }
-    const data = await get_patrol_detail({ id })
-    const geoJson = [
-        {
-            type: "Feature",
-            properties: {
-                color: "#62f709"
-            },
-            geometry: {
-                type: "LineString",
-                coordinates: data.pointList.map((item) => [
-                    Number(item.lon),
-                    Number(item.lat)
-                ])
+    const { records } = await get_patrol_list({ pageNum: 1, pageSize: 10 })
+    const requsets = []
+    records.forEach(item => {
+        requsets.push(get_patrol_detail({ id: item.patrolId }))
+    })
+    const data = await Promise.allSettled(requsets)
+    console.log(data);
+    const geoJson = []
+    data.forEach(detail => {
+        if (detail.status == "fulfilled") {
+            const json = {
+                type: "Feature",
+                properties: {
+                    color: "#62f709"
+                },
+                geometry: {
+                    type: "LineString",
+                    coordinates: detail.value.pointList.map((item) => [
+                        Number(item.lon),
+                        Number(item.lat)
+                    ])
+                }
             }
+            geoJson.push(json)
         }
-    ]
+
+    })
+    console.log(geoJson);
     return geoJson
 }

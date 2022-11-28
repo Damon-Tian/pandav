@@ -2,7 +2,7 @@
   <!-- :style="{
       left: isCollapse ? '134px' : '264px'
     }" -->
-  <div class="selected-info">
+  <div class="selected-info" :style="`${isCollapse && 'left:110px'}`">
     <div>
       <div class="selected-info-list">
         <div
@@ -40,7 +40,7 @@
       :style="`${
         index !== 0 &&
         'bottom:' +
-          (subselectedInfoList[index - 1].children.length * 50 + 50) +
+          (subselectedInfoList[index - 1].children.length * 50 + 30) +
           'px'
       }`"
     />
@@ -55,16 +55,25 @@
       }"
     >
       <div class="count">
-        <div>100人</div>
-        <div>80人</div>
-        <div>60人</div>
-        <div>40人</div>
+        <div
+          v-for="(item, index) in 5"
+          :key="item"
+          :class="{
+            'gray-count':
+              currentHeatMapRange !== '' && currentHeatMapRange !== index
+          }"
+          @click="handleFilterHeatMap(index)"
+        >
+          {{ index != 4 ? (5 - index) * 20 : 0 }}人
+        </div>
       </div>
       <div class="map">
-        <div class="item"></div>
-        <div class="item"></div>
-        <div class="item"></div>
-        <div class="item"></div>
+        <div
+          v-for="(item, index) in 5"
+          :key="item"
+          class="item"
+          @click="handleFilterHeatMap(index)"
+        ></div>
       </div>
     </div>
     <div
@@ -91,7 +100,8 @@ import {
   get_elec_geojson,
   get_eleccore_geojson,
   get_elec_heatmap_geojson,
-  get_elec_person_geojson
+  get_elec_person_geojson,
+  get_elec_area_geojson
 } from "@/api/elec"
 import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
 import {
@@ -153,6 +163,14 @@ export default {
           type: 2,
           id: "16",
           getData: get_elec_person_geojson
+        },
+        {
+          img: require("@/assets/img/p-leftbar-electron.png"),
+          title: "电子围栏范围",
+          checked: false,
+          type: 3,
+          id: "16",
+          getData: get_elec_area_geojson
         },
         {
           img: require("../../assets/img/selectedInfo/patrol.png"),
@@ -225,9 +243,11 @@ export default {
         }
       ],
       selectedInfoList2: [...commonSelectInfoList],
-      needRemoveChecked: [],
       subselectedInfo: [],
-      currentTime: 24
+      currentTime: 24,
+      // 筛选热力图人数
+      currentHeatMapRange: "",
+      needRemoveChecked: []
     }
   },
   computed: {
@@ -263,34 +283,42 @@ export default {
     isRightCollapse() {
       return this.$store.state.app.isRightCollapse
     }
+    //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区,不包括含有子菜单
   },
   watch: {
-    currentTab() {
-      this.handleLeaveEnter()
-      this.initLayer()
+    currentTab(oldvalue, newvalue) {
+      if (oldvalue == 1) {
+        this.$nextTick(() => {
+          this.handleNeedReomvedCheck()
+        })
+      } else {
+        this.handleNeedReomvedCheck()
+      }
     },
     currentArea() {
       //切换图层再重新请求数据再添加图层
       this.initLayer()
+    },
+    selectedInfoList: {
+      deep: true,
+      handler(val) {
+        const list = this.selectedInfoList.filter(
+          (item) =>
+            item.checked &&
+            !item.children &&
+            !commonSelectInfoList.filter((e) => e.title === item.title).length
+        )
+        this.needRemoveChecked = list
+      }
     }
   },
-  beforeDestroy() {
-    this.handleLeaveEnter()
+  destroyed() {
+    this.handleNeedReomvedCheck()
   },
   mounted() {
-    this.handleLeaveEnter()
+    this.handleNeedReomvedCheck()
   },
   methods: {
-    getRemovedList() {
-      //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区,不包括含有子菜单
-      const needRemoveChecked = this.selectedInfoList.filter(
-        (item) =>
-          item.checked &&
-          !item.children &&
-          !commonSelectInfoList.filter((e) => e.title === item.title).length
-      )
-      this.needRemoveChecked = needRemoveChecked
-    },
     // 点击图层处理事件，加载点线面，热力图图层
     async handleClick(item) {
       item.checked = !item.checked
@@ -316,10 +344,9 @@ export default {
           this.subselectedInfo.splice(index, 1)
         }
       }
-      this.getRemovedList()
     },
-    //处理首页图层展示删除 ，和回显
-    handleLeaveEnter() {
+    // 切换地图，切换tab菜单 显示隐藏需要的图层
+    handleNeedReomvedCheck() {
       const subNeedRemoveChecked = this.selectList.filter(
         (item) => item.checked
       )
@@ -332,6 +359,7 @@ export default {
           this.removelayer(item.type, item.title)
         }
       })
+      this.currentHeatMapRange = ""
     },
     //初始化图层 核心保护区和一般保护区 热力图 人员轨迹图
     async initLayer() {
@@ -379,11 +407,10 @@ export default {
       if (type == 3) {
         const data = {
           id,
-          fillColor:
-            id !== "核心保护区" ? "rgba(11,159,251,0.4)" : "rgba(249,9,9,0.4)",
+          fillColor: geoData[0].properties.fillColor || "rgba(11,159,251,0.4)",
           opacity: 0.2,
           width: 1,
-          lineColor: id !== "核心保护区" ? "#0B9FFB" : "#f90909",
+          lineColor: geoData[0].properties.lineColor || "#0B9FFB",
           polygon: {
             type: "FeatureCollection",
             features: geoData
@@ -434,19 +461,52 @@ export default {
       return dateNow
     },
     timeChange: debounce(async function () {
+      this.currentHeatMapRange = ""
       const time = DateFormat(this.getDateBySilderVal(), "yyyyMMddhh")
       //清除热力图
       const { type, id } = { type: 4, id: "人员热力图" }
       this.removelayer(type, id)
       const geoData = await get_elec_heatmap_geojson(this.orgId, time)
       this.setLayer(type, id, geoData)
-    })
+    }),
+    //过滤热力图
+    async handleFilterHeatMap(index) {
+      //清除热力图
+      const { type, id } = { type: 4, id: "人员热力图" }
+      this.removelayer(type, id)
+      const geoData = await get_elec_heatmap_geojson(this.orgId)
+      let filterGeoData = []
+      if (index == 0) {
+        filterGeoData = geoData.filter(
+          (item) => item.properties.personNum >= 100
+        )
+      } else if (index == 4) {
+        filterGeoData = geoData.filter((item) => item.properties.personNum < 40)
+      } else {
+        filterGeoData = geoData.filter(
+          (item) =>
+            item.properties.personNum < 40 + index * 20 &&
+            item.properties.personNum >= 40 + (index - 1) * 20
+        )
+      }
+      if (index === this.currentHeatMapRange) {
+        this.currentHeatMapRange = ""
+        filterGeoData = geoData
+      } else {
+        this.currentHeatMapRange = index
+      }
+
+      this.setLayer(type, id, filterGeoData)
+    }
   }
 }
 </script>
 
 <style lang="less" scoped>
 .selected-info {
+  position: absolute;
+  bottom: 0;
+  left: 240px;
   display: flex;
   width: 180px;
   box-sizing: border-box;
@@ -459,16 +519,16 @@ export default {
   &-list {
     position: relative;
     bottom: 0;
-    padding: 40px 10px 8px;
+    padding: 10px 10px 8px;
     background: rgba(0, 0, 0, 60%);
 
     &__item {
       display: flex;
       justify-content: space-between;
-      margin-bottom: 32px;
+      line-height: 50px;
 
       &__text {
-        width: 86px;
+        width: 100px;
         color: #fff;
       }
 
@@ -484,8 +544,7 @@ export default {
 }
 
 .sub-selected {
-  position: absolute;
-  margin-left: 200px;
+  margin-left: -40px;
 }
 
 .zoom-map {
@@ -496,7 +555,9 @@ export default {
 
   .count {
     margin-right: 10px;
+    cursor: pointer;
     font-size: 12px;
+    text-align: right;
 
     div {
       height: 40px;
@@ -505,10 +566,15 @@ export default {
     }
   }
 
+  .gray-count {
+    color: #bbb !important;
+    opacity: 0.7;
+  }
+
   .map {
     overflow: hidden;
     width: 15px;
-    height: 160px;
+    height: 200px;
     border-radius: 15px;
 
     .item {
@@ -529,6 +595,10 @@ export default {
 
     & > div:nth-child(4) {
       background: linear-gradient(#41dfe9, #718cd4);
+    }
+
+    & > div:nth-child(5) {
+      background: linear-gradient(#718cd4, rgba(255, 255, 255, 0%));
     }
   }
 }

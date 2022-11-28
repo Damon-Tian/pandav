@@ -4,7 +4,6 @@
       <el-menu
         :default-active="activeNav"
         :collapse="isCollapse"
-        class="leftbar-menu"
         @select="selectMenu"
       >
         <el-menu-item
@@ -22,22 +21,21 @@
       <!-- :style="{
           right: isCollapse ? '104px' : '-27px'
         }" -->
-      <span
-        class="narrow-icon"
-        :class="isCollapse ? 'narrow-icon-collapse' : ''"
-        @click="narrowClick"
-      >
-        <img src="@/assets/img/p-leftbar-narrow.png" alt="" />
-        <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
-      </span>
-
-      <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
     </div>
     <alarmInfo
       v-if="currentTab === 1"
       :is-collapse="isCollapse"
       :current-tab="currentTab"
     />
+    <span
+      class="narrow-icon"
+      :class="isCollapse ? 'narrow-icon-collapse' : ''"
+      @click="narrowClick"
+    >
+      <img src="@/assets/img/p-leftbar-narrow.png" alt="" />
+      <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
+    </span>
+    <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
   </div>
 </template>
 
@@ -118,7 +116,6 @@ export default {
         }
       })
       this.$store.commit("app/SET_TAB", this.currentTab)
-      this.$store.commit("app/SET_MAPFEATURE", null)
       this.$store.state.app.map.mapBox.removePoup()
     },
     narrowClick() {
@@ -135,8 +132,10 @@ export default {
 .p-leftbar {
   // margin-top: 34px;
   // background: url("../assets/img/p-leftbar.png") 100% 100% no-repeat;
-  position: absolute;
+  position: relative;
   z-index: 2;
+  padding-left: 20px;
+  float: left;
 
   .p-leftbar-wrap {
     display: flex;
@@ -152,8 +151,9 @@ export default {
   }
 
   .narrow-icon {
-    position: relative;
-    left: 15px;
+    position: absolute;
+    top: 50%;
+    right: -6px;
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -180,12 +180,10 @@ export default {
 .el-menu {
   position: relative;
   top: 30px;
-  left: 20px;
   width: 230px;
   height: 940px;
   border-right: none;
-  background: url("../assets/img/p-leftbar.png");
-  background-size: cover;
+  background: url("../assets/img/p-leftbar.png") 100% 100%;
 
   .el-menu-item {
     position: relative;
