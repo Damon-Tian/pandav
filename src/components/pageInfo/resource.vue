@@ -98,6 +98,7 @@
 
 <script>
 import { get_bio_geosjon } from "@/api/animal"
+import mapUtil from "@/mixins/mapUtil"
 const mapId = "自然资源"
 const baseConfig = {
   radius: "40",
@@ -112,6 +113,7 @@ const baseConfig = {
   lineWidth: 15
 }
 export default {
+  mixins: [mapUtil],
   data() {
     return {
       InfoId: null,
@@ -215,19 +217,10 @@ export default {
     },
     async initMap() {
       const geoData = await get_bio_geosjon()
-      const data = {
-        imgUrl: geoData[0].img,
-        id: mapId,
-        color: "#fff",
-        pointArray: {
-          type: "FeatureCollection",
-          features: geoData
-        }
-      }
-      this.$store.state.app.map.mapBox.point(data)
+      this.setLayer(1, mapId, geoData)
     },
     removeMap() {
-      this.$store.state.app.map.mapBox.removelayer(mapId)
+      this.removelayer(1, mapId)
     }
   }
 }

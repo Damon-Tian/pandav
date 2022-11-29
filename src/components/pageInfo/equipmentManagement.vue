@@ -37,10 +37,11 @@ import {
   get_ecological_equipment_geojson,
   get_video_camera_geojson
 } from "@/api/device"
-// import environment from "./environment.vue"
+import mapUtil from "@/mixins/mapUtil"
 const tabs = ["设备管理", "生态设备"]
 export default {
   components: { camera, InfrareCamera, eventRemind },
+  mixins: [mapUtil],
   data() {
     return {
       tabs,
@@ -74,22 +75,12 @@ export default {
       const geoData3 = await get_ecological_equipment_geojson()
       const datas = [geoData1, geoData2, geoData3]
       mapId.forEach((id, index) => {
-        const geoData = datas[index]
-        const data = {
-          imgUrl: geoData[0].img,
-          id,
-          pointArray: {
-            type: "FeatureCollection",
-            features: geoData
-          }
-        }
-        console.log(data)
-        this.$store.state.app.map.mapBox.point(data)
+        this.setLayer(1, id, datas[index])
       })
     },
     removeMap() {
       mapId.forEach((id) => {
-        this.$store.state.app.map.mapBox.removelayer(id)
+        this.removeLayer(1, mapId[id])
       })
     }
   }

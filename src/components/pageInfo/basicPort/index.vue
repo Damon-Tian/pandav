@@ -10,8 +10,10 @@ import PortInfo from "./PortInfo.vue"
 import DetailInfo from "./DetailInfo.vue"
 const mapId = "基层站点"
 import { get_station_geojson } from "@/api/station"
+import mapUtil from "@/mixins/mapUtil"
 export default {
   components: { DetailInfo, PortInfo },
+  mixins: [mapUtil],
   data() {
     return {
       currentPosition: ""
@@ -40,19 +42,10 @@ export default {
   methods: {
     async initMap() {
       const geoData = await get_station_geojson()
-      const data = {
-        imgUrl: geoData[0].img,
-        id: mapId,
-        color: "#fff",
-        pointArray: {
-          type: "FeatureCollection",
-          features: geoData
-        }
-      }
-      this.$store.state.app.map.mapBox.point(data)
+      this.setLayer(1, mapId, geoData)
     },
     removeMap() {
-      this.$store.state.app.map.mapBox.removelayer(mapId)
+      this.removelayer(1, mapId)
     }
   }
 }

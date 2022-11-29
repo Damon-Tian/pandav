@@ -107,8 +107,10 @@ import Charts from "@jiaminghi/charts"
 import infoBlock from "./infoBlock"
 import { get_ecological_equipment_geojson } from "@/api/device"
 const mapId = "生态环境"
+import mapUtil from "@/mixins/mapUtil"
 export default {
   components: { infoBlock },
+  mixins: [mapUtil],
   data() {
     return {
       currentPosition: "",
@@ -258,19 +260,10 @@ export default {
     },
     async initMap() {
       const geoData = await get_ecological_equipment_geojson()
-      const data = {
-        imgUrl: geoData[0].img,
-        id: mapId,
-        textName: mapId,
-        pointArray: {
-          type: "FeatureCollection",
-          features: geoData
-        }
-      }
-      this.$store.state.app.map.mapBox.point(data)
+      this.setLayer(1, mapId, geoData)
     },
     removeMap() {
-      this.$store.state.app.map.mapBox.removelayer(mapId)
+      this.removelayer(1, mapId)
     }
   }
 }

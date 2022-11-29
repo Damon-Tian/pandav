@@ -31,7 +31,9 @@ import stations from "./stations"
 import patrolType from "./patrolType"
 import patrolList from "./patrolList"
 import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
-const mapId = "巡护管理"
+import mapUtil from "@/mixins/mapUtil"
+const mapId = "巡护样线"
+const mapId1 = "巡护路线"
 export default {
   components: {
     infoBlock,
@@ -39,6 +41,7 @@ export default {
     patrolType,
     patrolList
   },
+  mixins: [mapUtil],
   data() {
     return {
       dateRange: [new Date(), new Date()]
@@ -56,33 +59,30 @@ export default {
     currentPosition() {
       this.removeMap()
       this.initMap()
+      this.initPatrolMap()
     }
   },
   mounted() {
     this.initMap()
+    this.initPatrolMap()
   },
   beforeDestroy() {
     this.removeMap()
   },
   methods: {
+    //巡护样线
     async initMap() {
       const geoData = await get_line_geojson()
-      const data = {
-        id: mapId,
-        geojson: {
-          features: geoData,
-          type: "FeatureCollection"
-        }
-      }
-      const option = {
-        lineColor: geoData[0].properties.color || "#F4BD1A",
-        lineWidth: 4,
-        arrow: false
-      }
-      this.$store.state.app.map.mapBox.line(data, option)
+      this.setLayer(2, mapId, geoData)
+    },
+    //巡护路线
+    async initPatrolMap() {
+      const geoData = await get_patrol_detail_geojson()
+      this.setLayer(2, mapId1, geoData)
     },
     removeMap() {
-      this.$store.state.app.map.mapBox.removelayer(mapId)
+      this.removelayer(2, mapId)
+      this.removelayer(2, mapId1)
     }
   }
 }

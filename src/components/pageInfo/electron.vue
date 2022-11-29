@@ -77,8 +77,10 @@ import {
 import { formatTime } from "@/utils"
 const mapId = "人员热力图"
 const mapId1 = "人员轨迹"
+import mapUtil from "@/mixins/mapUtil"
 export default {
   components: {},
+  mixins: [mapUtil],
   data() {
     return {
       fenceData: {
@@ -132,39 +134,15 @@ export default {
     },
     async initHeatMap() {
       const geoData = await get_elec_heatmap_geojson()
-      const data = {
-        id: mapId,
-        magName: "mag",
-        data: {
-          type: "FeatureCollection",
-          crs: {
-            type: "name",
-            properties: { name: "urn:ogc:def:crs:OGC:1.3:CRS84" }
-          },
-          features: geoData
-        }
-      }
-      this.$store.state.app.map.mapBox.addHeatmap(data)
+      this.setLayer(4, mapId, geoData)
     },
     async initPersonMap() {
       const geoData = await get_elec_person_geojson()
-      const data = {
-        id: mapId1,
-        geojson: {
-          features: geoData,
-          type: "FeatureCollection"
-        }
-      }
-      const option = {
-        lineColor: geoData[0].properties.color || "#F4BD1A",
-        lineWidth: 4,
-        arrow: false
-      }
-      this.$store.state.app.map.mapBox.line(data, option)
+      this.setLayer(2, mapId1, geoData)
     },
     removeMap() {
-      this.$store.state.app.map.mapBox.removelayer(mapId)
-      this.$store.state.app.map.mapBox.removelayer(mapId1)
+      this.removeMap(4, mapId)
+      this.removeMap(2, mapId1)
     }
   }
 }
