@@ -1,6 +1,6 @@
 <template>
   <div class="electron">
-    <info-block title="电子围栏">
+    <info-block title="电子围栏" line>
       <div slot="titleRight" style="font-size: 12px">
         数据采集时间：{{ collectTime }}
       </div>
@@ -11,21 +11,33 @@
             <div class="electron-area">
               <div class="area-title">上一时段</div>
               <div class="area-number">
-                {{ fenceData.personCountPrev.coreNum }}
+                <countTo
+                  :start-val="0"
+                  :end-val="fenceData.personCountPrev.coreNum"
+                  :duration="3000"
+                />
               </div>
             </div>
             <div class="separated-line"></div>
             <div class="electron-area">
               <div class="area-title">当前时段</div>
               <div class="area-number" style="color: #00eaff">
-                {{ fenceData.personCountNow.coreNum }}
+                <countTo
+                  :start-val="0"
+                  :end-val="fenceData.personCountNow.coreNum"
+                  :duration="3000"
+                />
               </div>
             </div>
             <div class="separated-line"></div>
             <div class="electron-area">
               <div class="area-title">短信通知人次</div>
               <div class="area-number" style="color: #d9ea16">
-                {{ fenceData.numOfCoreAreas }}
+                <countTo
+                  :start-val="0"
+                  :end-val="fenceData.numOfCoreAreas"
+                  :duration="3000"
+                />
               </div>
             </div>
           </div>
@@ -43,21 +55,33 @@
             <div class="electron-area">
               <div class="area-title">上一时段</div>
               <div class="area-number">
-                {{ fenceData.personCountPrev.generalNum }}
+                <countTo
+                  :start-val="0"
+                  :end-val="fenceData.personCountPrev.generalNum"
+                  :duration="3000"
+                />
               </div>
             </div>
             <div class="separated-line"></div>
             <div class="electron-area">
               <div class="area-title">当前时段</div>
               <div class="area-number" style="color: #00eaff">
-                {{ fenceData.personCountNow.generalNum }}
+                <countTo
+                  :start-val="0"
+                  :end-val="fenceData.personCountNow.generalNum"
+                  :duration="3000"
+                />
               </div>
             </div>
             <div class="separated-line"></div>
             <div class="electron-area">
               <div class="area-title">短信通知人次</div>
               <div class="area-number" style="color: #d9ea16">
-                {{ fenceData.numOfGeneralAreas }}
+                <countTo
+                  :start-val="0"
+                  :end-val="fenceData.numOfGeneralAreas"
+                  :duration="1000"
+                />
               </div>
             </div>
           </div>
@@ -141,8 +165,8 @@ export default {
       this.setLayer(2, mapId1, geoData)
     },
     removeMap() {
-      this.removeMap(4, mapId)
-      this.removeMap(2, mapId1)
+      this.removelayer(4, mapId)
+      this.removelayer(2, mapId1)
     }
   }
 }

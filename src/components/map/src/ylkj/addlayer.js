@@ -54,7 +54,7 @@ class CreatMap {
       zoom: 11.99715452226343,
       bearing: 0,
       touchZoomRotate: true,
-      style: 'http://3888z2k945.wicp.vip:6150/file/POI/hbPOI/p12/resources/styles/root.json'
+      style: 'http://3888z2k945.wicp.vip:6150/file/POI/hbnew/p12/resources/styles/root.json'
     })
     // this.addterrian()
     // onComponentMount (()=>{

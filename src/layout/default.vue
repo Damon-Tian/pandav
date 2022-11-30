@@ -61,6 +61,16 @@ export default {
       cameraType: ""
     }
   },
+  computed: {
+    currentArea() {
+      return this.$store.state.app.currentArea
+    }
+  },
+  watch: {
+    currentArea() {
+      this.setBorder()
+    }
+  },
   mounted() {
     this.$store.commit("app/SET_MAPBOX", this.$refs.mapBox)
   },
@@ -68,11 +78,11 @@ export default {
     handleClick(currentFeature, features) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
       this.$store.commit("app/SET_MAPFEATURES", features)
-      console.log(features)
       this.handleFeature(currentFeature)
     },
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")
+      this.setBorder()
       this.$refs.mapBox.fly({
         center: [103.3440669299489, 30.675952923426294],
         zoom: 10.019816714374489,
@@ -88,7 +98,6 @@ export default {
       this.$refs.leftBar.init()
     },
     async handleFeature(currentFeature) {
-      console.log(currentFeature)
       //设备
       if (currentFeature.properties.equipmentType) {
         this.cameraType = currentFeature.properties.equipmentType
@@ -117,7 +126,6 @@ export default {
       }
     },
     showPopu(currentFeature) {
-      console.log(currentFeature)
       this.$nextTick(() => {
         const dom = this.$refs.messageBox.$el
         this.$store.state.app.map.mapBox.poup({
@@ -128,6 +136,16 @@ export default {
     },
     handleSetVideoUrl(url) {
       this.$refs.cameraRef.setVideoUrl(url)
+    },
+    setBorder() {
+      if (this.currentArea === "chengdu") {
+        this.$refs.mapBox.regionBorder("regionborder", {
+          lineColor: "#FFFF00",
+          lineWidth: 2
+        })
+      } else {
+        this.$refs.mapBox.rmline("regionborder")
+      }
     }
   }
 }

@@ -1,7 +1,10 @@
 <template>
-  <info-block title="摄像头" class="camera" line>
+  <info-block title="摄像机" class="camera" line>
     <div slot="titleRight" class="title-right">
-      1732<span class="title-right__unit">个</span>
+      <countTo :start-val="0" :end-val="statisc.total" :duration="3000" /><span
+        class="title-right__unit"
+        >个</span
+      >
     </div>
     <div class="info-content">
       <div class="info-content__state" style="margin-right: 52px">
@@ -19,7 +22,11 @@
               alt=""
             />
             <div class="info-content__state__info__rectangularimg__text">
-              1528个
+              <countTo
+                :start-val="0"
+                :end-val="statisc.normal"
+                :duration="3000"
+              />个
             </div>
           </div>
         </div>
@@ -42,7 +49,11 @@
               alt=""
             />
             <div class="info-content__state__info__rectangularimg__text">
-              146个
+              <countTo
+                :start-val="0"
+                :end-val="statisc.error"
+                :duration="3000"
+              />个
             </div>
           </div>
         </div>
@@ -54,7 +65,23 @@
 <script>
 import infoBlock from "../infoBlock.vue"
 export default {
-  components: { infoBlock }
+  components: { infoBlock },
+  data() {
+    return {
+      statisc: {
+        normal: 0,
+        error: 0,
+        total: 0
+      }
+    }
+  },
+  mounted() {
+    this.statisc = {
+      normal: 1725,
+      error: 134,
+      total: 1859
+    }
+  }
 }
 </script>
 
@@ -65,7 +92,6 @@ export default {
     font-size: 30px;
 
     &__unit {
-      margin-left: 10px;
       color: #fff;
       font-size: 14px;
     }

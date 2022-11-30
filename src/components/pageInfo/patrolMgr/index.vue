@@ -1,7 +1,7 @@
 /* 巡护管理页面 */
 <template>
   <div>
-    <info-block title="巡护终端" line>
+    <info-block title="手持终端" line>
       <div slot="titleRight" class="title">
         <span class="count">132</span>
         <span class="unit">个</span>
@@ -72,12 +72,14 @@ export default {
   methods: {
     //巡护样线
     async initMap() {
-      const geoData = await get_line_geojson()
+      const geoData = await get_line_geojson(this.$store.state.app.orgId)
       this.setLayer(2, mapId, geoData)
     },
     //巡护路线
     async initPatrolMap() {
-      const geoData = await get_patrol_detail_geojson()
+      const geoData = await get_patrol_detail_geojson(
+        this.$store.state.app.orgId
+      )
       this.setLayer(2, mapId1, geoData)
     },
     removeMap() {

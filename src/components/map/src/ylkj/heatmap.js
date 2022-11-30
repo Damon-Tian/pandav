@@ -74,8 +74,8 @@ export function addHeatMap(map, data) {
                 "interpolate",
                 ["linear"],
                 ["zoom"],
-                8, 11,
-                18, 111
+                8, 8,
+                18, 20
             ],
             // Adjust the heatmap radius by zoom level
 

@@ -59,13 +59,13 @@ export function addLine(map, data, option) {
         'paint': {
             'line-color': (option && option.lineColor) ? option.lineColor : '#f00',
             'line-width': (option && option.lineWidth) ? option.lineWidth : 2,
+            'line-opacity': (option && option.opacity) ? option.opacity : 1,
             // 'line-color': '#f00',
             // 'line-width': 2,
 
         }
     })
     // [103.432937,30.878296]
-    console.log('结果', data.geojson)
     if (data.textName) {
         try {
             let point = [];

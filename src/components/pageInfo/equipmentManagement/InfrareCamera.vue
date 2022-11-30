@@ -1,7 +1,10 @@
 <template>
   <info-block title="红外相机" class="Infrare-camera" line>
     <div slot="titleRight" class="title-right">
-      376<span class="title-right__unit">台</span>
+      <countTo :start-val="0" :end-val="statisc.total" :duration="3000" /><span
+        class="title-right__unit"
+        >台</span
+      >
     </div>
     <div class="info-content">
       <el-table
@@ -31,8 +34,13 @@
                 color: #81bfff;
                 font-size: 18px;
               "
-              >{{ scope.row.equipment }}</span
             >
+              <countTo
+                :start-val="0"
+                :end-val="scope.row.equipment"
+                :duration="3000"
+              />
+            </span>
           </template>
         </el-table-column>
         <el-table-column prop="newEquipment" label="新设备" width="70">
@@ -43,8 +51,12 @@
                 color: #38ff59;
                 font-size: 18px;
               "
-              >{{ scope.row.newEquipment }}</span
             >
+              <countTo
+                :start-val="0"
+                :end-val="scope.row.newEquipment"
+                :duration="3000"
+            /></span>
           </template>
         </el-table-column>
         <el-table-column prop="oldEquipment" label="旧设备" width="70">
@@ -55,8 +67,12 @@
                 color: #fdff44;
                 font-size: 18px;
               "
-              >{{ scope.row.oldEquipment }}</span
             >
+              <countTo
+                :start-val="0"
+                :end-val="scope.row.oldEquipment"
+                :duration="3000"
+            /></span>
           </template>
         </el-table-column>
       </el-table>
@@ -103,7 +119,15 @@ export default {
           oldEquipment: 64,
           width: "20%"
         }
-      ]
+      ],
+      statisc: {
+        total: 0
+      }
+    }
+  },
+  mounted() {
+    this.statisc = {
+      total: 376
     }
   }
 }
@@ -116,7 +140,6 @@ export default {
     font-size: 30px;
 
     &__unit {
-      margin-left: 10px;
       color: #fff;
       font-size: 14px;
     }

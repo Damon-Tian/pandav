@@ -179,6 +179,7 @@ export default {
                 item.source.indexOf("保护区") == -1 &&
                 item.source.indexOf("热力图") == -1
             )
+
             if (feature.length == 1) {
               feature = feature[0]
             } else {
@@ -241,7 +242,7 @@ export default {
       this.line(
         { id: id, geojson: REGION_GEOJSON },
         Object.assign(
-          { lineColor: "#FFFF00", lineWidth: 2, arrow: false },
+          { lineColor: "#FFFF00", lineWidth: 2, arrow: false, opacity: 0.4 },
           option
         )
       )
@@ -299,7 +300,6 @@ export default {
       const geoData = data.pointArray.features.map((item) =>
         setCircle(item.geometry.coordinates)
       )
-      console.log(geoData)
       this.Polygon({
         id: data.id + "circle",
         fillColor: "rgb(234,72,21)",

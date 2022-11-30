@@ -154,7 +154,7 @@ export default {
     align-items: center;
     color: white;
     cursor: pointer;
-    font-size: 36px;
+    font-size: 2vw;
     font-weight: 800;
     letter-spacing: 2px;
   }
@@ -170,7 +170,7 @@ export default {
       padding: 70px 18px 48px;
       color: #00b4ff;
       cursor: pointer;
-      font-size: 24px;
+      font-size: 1.3vw;
 
       &::before {
         position: absolute;

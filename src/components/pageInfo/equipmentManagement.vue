@@ -80,7 +80,7 @@ export default {
     },
     removeMap() {
       mapId.forEach((id) => {
-        this.removeLayer(1, mapId[id])
+        this.removelayer(1, id)
       })
     }
   }

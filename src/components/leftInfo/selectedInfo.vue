@@ -298,6 +298,8 @@ export default {
       }
     },
     currentArea() {
+      console.log(this.needRemoveChecked)
+      this.handleNeedReomvedCheck()
       //切换图层再重新请求数据再添加图层
       this.initLayer()
     },
