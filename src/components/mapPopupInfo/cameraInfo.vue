@@ -152,18 +152,18 @@ export default {
   box-shadow: 0 0 25px 0 rgba(0, 175, 255, 40%) inset;
   overflow-y: auto;
 
-  ::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 5px;
     background-color: transparent;
   }
 
   /* 滚动条上的滚动滑块 */
-  ::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: #3b60ab;
     border-radius: 3px;
   }
 
-  ::-webkit-scrollbar-corner {
+  &::-webkit-scrollbar-corner {
     background-color: transparent;
   }
 

@@ -6,6 +6,72 @@
 
 */
 export default {
+    data() {
+        return {
+            hrefs: [
+                {
+                    name: "综合概况",
+                    id: "chengdu",
+                    url: "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    view: {
+                        center: [103.3440669299489, 30.675952923426294],
+                        zoom: 10.019816714374489,
+                        pitch: 58.69748625766818,
+                        bearing: 0,
+                        essential: true
+                    }
+                },
+                {
+                    name: "崇州站",
+                    id: "chongzhou",
+                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    view: {
+                        bearing: 0,
+                        center: [103.45711202800089, 30.522769602585484],
+                        essential: true,
+                        pitch: 53.51769981743894,
+                        zoom: 10.310552966704606
+                    }
+                },
+                {
+                    name: "大邑站",
+                    id: "dayi",
+                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    view: {
+                        bearing: 0,
+                        center: [103.42625254689449, 30.492047976346925],
+                        essential: true,
+                        pitch: 53.51769095010108,
+                        zoom: 10.531624037345626
+                    }
+                },
+                {
+                    name: "彭州站",
+                    id: "pengzhou",
+                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    view: {
+                        bearing: 0,
+                        center: [103.8764645196427, 31.03717774580734],
+                        essential: true,
+                        pitch: 53.93684150325133,
+                        zoom: 10.39665090798298
+                    }
+                },
+                {
+                    name: "都江堰站",
+                    id: "dujiangyan",
+                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    view: {
+                        bearing: 0,
+                        center: [103.60124114271571, 30.925828475655365],
+                        essential: true,
+                        pitch: 55.289572892161736,
+                        zoom: 10.784372529307735
+                    }
+                }
+            ]
+        }
+    },
     methods: {
         //通过map方法生成图层
         async setLayer(type, id, geoData) {
@@ -22,6 +88,9 @@ export default {
                         type: "FeatureCollection",
                         features: geoData
                     }
+                }
+                if (geoData[0].textName) {
+                    data.textName = geoData[0].textName;
                 }
                 this.$store.state.app.map.mapBox.point(data)
                 // 是否需要绘制 以某个点位为中心的圆圈
@@ -41,6 +110,18 @@ export default {
                     lineColor: geoData[0].properties.color || "#F4BD1A",
                     lineWidth: 4,
                     arrow: false
+                }
+                //设置线条名称
+                if (geoData[0].textName) {
+                    data.textName = geoData[0].textName
+                }
+                //设置线条起始点
+                if (geoData[0].start) {
+                    data.start = geoData[0].start
+                }
+                //设置线条终点
+                if (geoData[0].end) {
+                    data.end = geoData[0].end
                 }
                 this.$store.state.app.map.mapBox.line(data, option)
             }
@@ -87,5 +168,30 @@ export default {
                 this.$store.state.app.map.mapBox.removelayer(id)
             }
         },
-    },
+        flyTo(geoData) {
+            this.$store.state.app.map.mapBox.flybound({
+                type: "FeatureCollection",
+                features: geoData
+            })
+        },
+        reset() {
+            const currentItem = this.hrefs.find((item) => item.id == this.$store.state.app.currentArea)
+            this.$store.state.app.map.mapBox.fly(currentItem.view)
+        },
+        //设置地图边界
+        setBorder() {
+            if (this.$store.state.app.currentArea === "chengdu") {
+                this.$refs.mapBox.regionBorder("regionborder", {
+                    lineColor: "#FFFF00",
+                    lineWidth: 2
+                })
+            } else {
+                this.$refs.mapBox.rmline("regionborder")
+            }
+        },
+        showPopu(data) {
+            this.$store.state.app.map.mapBox.poup(data)
+        }
+    }
+
 }

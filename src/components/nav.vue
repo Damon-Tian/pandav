@@ -20,78 +20,9 @@
 </template>
 
 <script>
+import mapUtil from "@/mixins/mapUtil"
 export default {
-  data() {
-    return {
-      hrefs: [
-        {
-          name: "综合概况",
-          id: "chengdu",
-          url: "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
-          view: {
-            center: [103.3440669299489, 30.675952923426294],
-            zoom: 10.019816714374489,
-            pitch: 58.69748625766818,
-            bearing: 0,
-            duration: 12000,
-            essential: true
-          }
-        },
-        {
-          name: "崇州站",
-          id: "chongzhou",
-          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
-          view: {
-            bearing: 0,
-            center: [103.45711202800089, 30.522769602585484],
-            duration: 12000,
-            essential: true,
-            pitch: 53.51769981743894,
-            zoom: 10.310552966704606
-          }
-        },
-        {
-          name: "大邑站",
-          id: "dayi",
-          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png",
-          view: {
-            bearing: 0,
-            center: [103.42625254689449, 30.492047976346925],
-            duration: 12000,
-            essential: true,
-            pitch: 53.51769095010108,
-            zoom: 10.531624037345626
-          }
-        },
-        {
-          name: "彭州站",
-          id: "pengzhou",
-          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
-          view: {
-            bearing: 0,
-            center: [103.8764645196427, 31.03717774580734],
-            duration: 12000,
-            essential: true,
-            pitch: 53.93684150325133,
-            zoom: 10.39665090798298
-          }
-        },
-        {
-          name: "都江堰站",
-          id: "dujiangyan",
-          url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png",
-          view: {
-            bearing: 0,
-            center: [103.60124114271571, 30.925828475655365],
-            duration: 12000,
-            essential: true,
-            pitch: 55.289572892161736,
-            zoom: 10.784372529307735
-          }
-        }
-      ]
-    }
-  },
+  mixins: [mapUtil],
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
@@ -127,10 +58,6 @@ export default {
       this.$store.commit("app/SET_CURRENTAREA", item.id)
       this.$store.state.app.map.mapBox.fly(item.view)
       this.$store.state.app.map.mapBox.addlayer(item.url, item.id)
-    },
-    reset() {
-      const currentItem = this.hrefs.find((item) => item.id == this.currentArea)
-      this.$store.state.app.map.mapBox.fly(currentItem.view)
     }
   }
 }

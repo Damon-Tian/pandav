@@ -2,33 +2,43 @@
   <div
     v-if="alarmList.length"
     class="alarm-info"
+    :class="{ 'alarm-info-scroll': more }"
     :style="{
-      left: isCollapse ? '140px' : '264px',
-      height: !more ? '40px' : alarmList.length * 40 + 'px'
+      left: isCollapse ? '140px' : '264px'
     }"
   >
     <div
-      ref="alarmBox"
-      class="alarm-info__box"
-      :style="{ '--y': -(scrollIndex - 1) * 40 + 'px' }"
+      style="position: relative; width: 100%"
+      :style="{
+        height: !more
+          ? '40px'
+          : alarmList.length > 5
+          ? 200 + 'px'
+          : alarmList.length * 40 + 'px'
+      }"
     >
       <div
-        v-for="(item, index) in scrollList"
-        :key="index"
-        class="alarm-info__left"
-        @mouseenter="handleStopAutoScroll"
-        @mouseleave="handleMouseLeave"
+        ref="alarmBox"
+        class="alarm-info__box"
+        :style="{ '--y': -(scrollIndex - 1) * 40 + 'px' }"
       >
-        <img
-          class="alarm-info__img"
-          src="../../assets/img/alarmInfo/warning.png"
-          alt=""
-        />
         <div
-          class="alarm-info__title"
-          @click="goRealtimeCapture('346F2403E097')"
+          v-for="(item, index) in scrollList"
+          :key="index"
+          class="alarm-info__left"
+          :class="{ 'alarm-info__active-title': item.checked }"
+          @mouseenter="handleStopAutoScroll"
+          @mouseleave="handleMouseLeave"
+          @click="handleClick(item)"
         >
-          {{ item.title }}
+          <img
+            class="alarm-info__img"
+            src="../../assets/img/svgIcon/报警.svg"
+            alt=""
+          />
+          <div class="alarm-info__title">
+            {{ item.title }}
+          </div>
         </div>
       </div>
     </div>
@@ -40,9 +50,11 @@
 
 <script>
 import mixins from "@/mixins"
+import mapUtil from "@/mixins/mapUtil"
+import { get_patrol_detail_geojson } from "@/api/line"
 export default {
   components: {},
-  mixins: [mixins],
+  mixins: [mixins, mapUtil],
   props: {
     //左边tabs是否展开
     isCollapse: {
@@ -63,9 +75,13 @@ export default {
   },
   computed: {
     scrollList() {
-      return this.more
+      const list = this.more
         ? this.alarmList
         : this.alarmList.concat([this.alarmList[0]])
+      return list
+    },
+    orgId() {
+      return this.$store.getters["app/GET_AREA_ID"]
     }
   },
   watch: {
@@ -79,28 +95,42 @@ export default {
   },
   mounted() {
     setTimeout(() => {
-      this.alarmList = [
+      const data = [
         {
           title: "红外相机(346F2403E097)抓拍到事件",
+          type: "抓拍",
           id: 1
         },
         {
           title: "红外相机(346F2403E098)抓拍到事件点的",
+          type: "抓拍",
           id: 2
         },
         {
           title: "红外相机(346F2403E099)抓拍到事件反反复复",
+          type: "抓拍",
           id: 3
         },
         {
           title: "红外相机(346F2403E067)抓拍到事件",
+          type: "抓拍",
           id: 4
         },
         {
           title: "红外相机(346F2403E057)抓拍到事件",
+          type: "抓拍",
           id: 5
+        },
+        {
+          title: "用户及时上传(346F2403E057)",
+          type: "事件",
+          id: 6
         }
       ]
+      data.forEach((item) => {
+        item.checked = false
+      })
+      this.alarmList = data
       if (this.alarmList.length > 1) {
         this.handleAutoScroll()
       }
@@ -136,6 +166,26 @@ export default {
       if (!this.more) {
         this.handleAutoScroll()
       }
+    },
+    async handleClick(item) {
+      item.checked = !item.checked
+      if (item.type == "抓拍") {
+        //
+      }
+      if (item.type == "事件") {
+        //
+        if (item.checked) {
+          const geoData = await get_patrol_detail_geojson(this.orgId, {
+            pageSize: 1
+          })
+          this.setLayer(2, item.title, geoData)
+          //飞到定位点位
+          this.flyTo(geoData.slice(0, 1))
+        } else {
+          this.removelayer(2, item.title)
+          this.reset()
+        }
+      }
     }
   }
 }
@@ -156,6 +206,21 @@ export default {
   cursor: pointer;
   transition: all 0.5s;
 
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: transparent;
+  }
+
+  /* 滚动条上的滚动滑块 */
+  &::-webkit-scrollbar-thumb {
+    background: #3b60ab;
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-corner {
+    background-color: transparent;
+  }
+
   &__left {
     display: flex;
     height: 40px;
@@ -171,10 +236,20 @@ export default {
 
   &__title {
     margin-left: 11px;
+    font-size: 14px;
+  }
+
+  &__active-title {
+    color: #23d9fb;
+  }
+
+  &__img {
+    width: 30px;
+    height: 30px;
   }
 
   &__icon {
-    position: absolute;
+    position: sticky;
     top: 10px;
     right: 10px;
     display: inline-block;
@@ -186,5 +261,9 @@ export default {
     line-height: 20px;
     text-align: center;
   }
+}
+
+.alarm-info-scroll {
+  overflow: auto;
 }
 </style>

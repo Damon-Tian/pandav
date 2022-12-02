@@ -12,6 +12,7 @@
             <div class="active-ring-chart">
               <dv-active-ring-chart :config="animalConfig" class="plantClass" />
               <div class="active-ring-label">
+                <div class="ring-chart-title">国家保护动物</div>
                 <li v-for="(item, index) in animalConfig.data" :key="item.name">
                   <span
                     class="label-dot"
@@ -22,22 +23,7 @@
                 </li>
               </div>
             </div>
-            <div class="ring-chart-title">国家保护动物</div>
           </div>
-        </div>
-        <div class="animal-bottom">
-          <li>
-            <span>极危</span>
-            <span class="animal-red">12</span>
-          </li>
-          <li>
-            <span>濒危</span>
-            <span class="animal-brown">12</span>
-          </li>
-          <li>
-            <span>易危</span>
-            <span class="animal-yellow">12</span>
-          </li>
         </div>
       </div>
     </info-block>
@@ -53,6 +39,7 @@
           <div class="active-ring-chart">
             <dv-active-ring-chart :config="plantConfig" class="plantClass" />
             <div class="active-ring-label">
+              <div class="ring-chart-title">国家保护植物</div>
               <li v-for="(item, index) in plantConfig.data" :key="item.name">
                 <span
                   class="label-dot"
@@ -63,7 +50,6 @@
               </li>
             </div>
           </div>
-          <div class="ring-chart-title">国家保护植物</div>
         </div>
       </div>
     </info-block>
@@ -80,7 +66,6 @@
             {{ item }}
           </span>
         </div>
-        <button @click="removeMap">移除</button>
         <div class="info-content detail-content">
           <span
             v-for="(item, index) in animalList"
@@ -129,14 +114,6 @@ export default {
           {
             name: "二级",
             value: 72
-          },
-          {
-            name: "三有",
-            value: 23
-          },
-          {
-            name: "其他",
-            value: 23
           }
         ]
       },
@@ -150,14 +127,6 @@ export default {
           {
             name: "二级",
             value: 80
-          },
-          {
-            name: "三有",
-            value: 26
-          },
-          {
-            name: "其他",
-            value: 24
           }
         ]
       },
@@ -217,6 +186,7 @@ export default {
     },
     async initMap() {
       const geoData = await get_bio_geosjon()
+      console.log(geoData)
       this.setLayer(1, mapId, geoData)
     },
     removeMap() {
@@ -282,6 +252,8 @@ export default {
 
   .ring-chart-title {
     padding-left: 3px;
+    color: #fff;
+    font-weight: 600;
   }
 
   .active-ring-chart {
@@ -299,6 +271,7 @@ export default {
       li {
         display: flex;
         align-items: center;
+        margin-bottom: 10px;
 
         span {
           display: inline-block;

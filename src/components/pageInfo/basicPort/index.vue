@@ -1,7 +1,7 @@
 <template>
   <div>
     <PortInfo />
-    <DetailInfo />
+    <DetailInfo v-if="detail" :data-detail="detail" />
   </div>
 </template>
 
@@ -16,21 +16,27 @@ export default {
   mixins: [mapUtil],
   data() {
     return {
-      currentPosition: ""
+      detail: null
     }
   },
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    currentFeature() {
+      return this.$store.state.app.map.feature
     }
   },
   watch: {
     currentArea() {
-      this.currentPosition = this.currentArea
-    },
-    currentPosition() {
       this.removeMap()
       this.initMap()
+    },
+    currentFeature() {
+      // 基层站点详情
+      if (this.currentFeature && this.currentFeature.properties.stationName) {
+        this.detail = { ...this.currentFeature.properties }
+      }
     }
   },
   mounted() {

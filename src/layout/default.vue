@@ -12,6 +12,7 @@
         style="position: absolute; top: 0; left: 0; width: 100%"
         @mapclick="handleClick"
         @onload="handleOnLoad"
+        @markerClick="handleMarkerClick"
       />
       <span class="btn" @click="$refs.topNav.reset()">复位</span>
       <!-- <router-view /> -->
@@ -41,6 +42,7 @@ import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
 import CameraInfo from "@/components/mapPopupInfo/cameraInfo.vue"
 import PipeCareStation from "@/components/mapPopupInfo/pipeCareStation.vue"
 import HeatMap from "@/components/mapPopupInfo/heatmap.vue"
+import mapUtil from "@/mixins/mapUtil"
 export default {
   components: {
     topNav,
@@ -54,6 +56,7 @@ export default {
     PipeCareStation,
     HeatMap
   },
+  mixins: [mapUtil],
   data() {
     return {
       componentId: null,
@@ -64,6 +67,9 @@ export default {
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    currentTab() {
+      return this.$store.state.app.currentTab
     }
   },
   watch: {
@@ -83,20 +89,14 @@ export default {
     handleOnLoad() {
       this.$refs.mapBox.background("#081940")
       this.setBorder()
-      this.$refs.mapBox.fly({
-        center: [103.3440669299489, 30.675952923426294],
-        zoom: 10.019816714374489,
-        pitch: 58.69748625766818,
-        bearing: 0,
-        duration: 12000,
-        essential: true
-      })
+      this.reset()
       this.$refs.mapBox.addlayer(
         "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
         "chengdu"
       )
       this.$refs.leftBar.init()
     },
+    //图层点击
     async handleFeature(currentFeature) {
       //设备
       if (currentFeature.properties.equipmentType) {
@@ -110,8 +110,8 @@ export default {
         this.infoId = currentFeature.properties.bioId
       }
 
-      //保护站
-      else if (currentFeature.properties.stationName) {
+      //保护站 ,只在首页地图显示卡片
+      else if (currentFeature.properties.stationName && this.currentTab === 1) {
         this.componentId = "PipeCareStation"
       }
 
@@ -122,30 +122,21 @@ export default {
         this.componentId = null
       }
       if (this.componentId) {
-        this.showPopu(currentFeature)
+        this.$nextTick(() => {
+          const dom = this.$refs.messageBox.$el
+          this.showPopu({
+            center: currentFeature.geometry.coordinates,
+            centent: dom
+          })
+        })
       }
     },
-    showPopu(currentFeature) {
-      this.$nextTick(() => {
-        const dom = this.$refs.messageBox.$el
-        this.$store.state.app.map.mapBox.poup({
-          center: currentFeature.geometry.coordinates,
-          centent: dom
-        })
-      })
+    //marker点击
+    async handleMarkerClick(marker) {
+      console.log(marker)
     },
     handleSetVideoUrl(url) {
       this.$refs.cameraRef.setVideoUrl(url)
-    },
-    setBorder() {
-      if (this.currentArea === "chengdu") {
-        this.$refs.mapBox.regionBorder("regionborder", {
-          lineColor: "#FFFF00",
-          lineWidth: 2
-        })
-      } else {
-        this.$refs.mapBox.rmline("regionborder")
-      }
     }
   }
 }
