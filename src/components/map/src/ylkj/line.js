@@ -10,8 +10,8 @@ import {
     uuid,
 } from "./util.js";
 import ARRAOW_ICON from "./lib/returnbtn.png";
-import DEFAULT_ICON from "./lib/RESOURCE.png";
-import EVENT_ICON from "../../src/ylkj/lib/elec.png"
+import DEFAULT_ICON from "@/assets/img/3701669967141_.pic.jpg";
+import EVENT_ICON from "@/assets/img/3711669967141_.pic.jpg";
 const {
     createMarker
 } = window.egis;
