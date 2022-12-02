@@ -15,13 +15,13 @@
     "lint-staged": "lint-staged"
   },
   "dependencies": {
-    "@easydarwin/easyplayer": "^5.0.5",
     "@jiaminghi/data-view": "^2.10.0",
     "axios": "^1.2.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.10",
     "normalize.css": "^8.0.1",
     "reset-css": "^5.0.1",
+    "swiper": "7.4.1",
     "vue": "^2.6.11",
     "vue-count-to": "^1.0.13",
     "vue-router": "^3.5.0",

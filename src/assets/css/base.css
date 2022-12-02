@@ -34,6 +34,9 @@ body {
 .mapboxgl-popup-tip {
   border-top-color: #04aeff !important;
 }
+.mapboxgl-ctrl-bottom-right {
+  display: none;
+}
 .message-box {
   width: 300px;
   padding: 10px;
