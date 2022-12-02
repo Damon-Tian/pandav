@@ -6,27 +6,33 @@
       <div class="pipe-care-station__box__info">
         <div class="row">
           <span class="row__label">建设时间：</span>
-          <span class="row__value">{{ dataDetail.buildTime }}年</span>
+          <span class="row__value">{{ dataDetail.buildTime || "--" }}年</span>
         </div>
         <div class="row">
           <span class="row__label">在编人数：</span>
-          <span class="row__value">{{ dataDetail.permanent }}人</span>
+          <span class="row__value">{{ dataDetail.permanent || "--" }}人</span>
         </div>
         <div class="row">
           <span class="row__label">编外人数：</span>
-          <span class="row__value">{{ dataDetail.unPermanent }}人</span>
+          <span class="row__value">{{ dataDetail.unPermanent || "--" }}人</span>
         </div>
         <div class="row">
           <span class="row__label">占地面积：</span>
-          <span class="row__value"> {{ dataDetail.floorArea }}平方米 </span>
+          <span class="row__value">
+            {{ dataDetail.floorArea || "--" }}平方米
+          </span>
         </div>
         <div class="row">
           <span class="row__label">建筑面积：</span>
-          <span class="row__value"> {{ dataDetail.coveredArea }}平方米 </span>
+          <span class="row__value">
+            {{ dataDetail.coveredArea || "--" }}平方米
+          </span>
         </div>
         <div class="row">
           <span class="row__label">规划管护面积：</span>
-          <span class="row__value"> {{ dataDetail.protectArea }}公顷 </span>
+          <span class="row__value">
+            {{ dataDetail.protectArea || "--" }}公顷
+          </span>
         </div>
       </div>
     </div>
@@ -62,18 +68,18 @@ export default {
   border-radius: 4px;
   box-shadow: 0 0 25px 0 rgba(0, 175, 255, 40%) inset;
 
-  ::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 5px;
     background-color: transparent;
   }
 
   /* 滚动条上的滚动滑块 */
-  ::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: #3b60ab;
     border-radius: 3px;
   }
 
-  ::-webkit-scrollbar-corner {
+  &::-webkit-scrollbar-corner {
     background-color: transparent;
   }
 

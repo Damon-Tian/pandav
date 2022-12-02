@@ -1,38 +1,32 @@
 /* 巡护列表 */
 <template>
-  <info-block title="巡护列表">
-    <div class="patrol-list">
-      <table>
-        <tr class="header">
-          <th width="50" align="left">编号</th>
-          <th align="left">巡护事件</th>
-          <th align="left">巡护类型</th>
-          <th width="80" align="left">巡护人</th>
+  <div class="patrol-list">
+    <table>
+      <tr class="header">
+        <th width="50" align="left">编号</th>
+        <th align="left">巡护事件</th>
+        <th align="left">巡护类型</th>
+        <th width="80" align="left">巡护人</th>
+      </tr>
+      <tbody>
+        <tr
+          v-for="(item, index) in data"
+          :key="item.num"
+          :class="{ active: currentIndex === index }"
+          @click="currentIndex = index"
+        >
+          <td>{{ item.num }}</td>
+          <td>{{ item.event }}</td>
+          <td>{{ item.type }}</td>
+          <td>{{ item.user }}</td>
         </tr>
-        <tbody>
-          <tr
-            v-for="(item, index) in data"
-            :key="item.num"
-            :class="{ active: currentIndex === index }"
-            @click="currentIndex = index"
-          >
-            <td>{{ item.num }}</td>
-            <td>{{ item.event }}</td>
-            <td>{{ item.type }}</td>
-            <td>{{ item.user }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </info-block>
+      </tbody>
+    </table>
+  </div>
 </template>
 
 <script>
-import infoBlock from "../infoBlock"
 export default {
-  components: {
-    infoBlock
-  },
   data() {
     return {
       data: [
@@ -69,8 +63,7 @@ export default {
 </script>
 <style scoped lang="less">
 .patrol-list {
-  padding: 0 10px;
-  background: rgba(0, 0, 0, 60%);
+  margin-top: 10px;
 
   table {
     width: 100%;

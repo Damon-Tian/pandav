@@ -123,6 +123,7 @@ import ELEC_ICON from "./src/ylkj/lib/elec.png"
 import C1 from "./src/ylkj/lib/C1toline.json"
 import Plotting from "./src/ylkj/lib/potting/plotting.js"
 const { createPopup } = window.egis
+let currentId = null
 // import { setMap } from "@egis/map"
 export default {
   data() {
@@ -187,6 +188,26 @@ export default {
             }
           } else {
             feature = features[0]
+          }
+
+          // 基层站点点击图层高亮
+
+          if (feature.properties.stationName) {
+            if (currentId && currentId !== feature.id) {
+              this.map.setFeatureState(
+                { source: feature.layer.id, id: currentId },
+                { click: false }
+              )
+            }
+            this.map.setFeatureState(
+              { source: feature.layer.id, id: feature.id },
+              { click: true }
+            )
+            currentId = feature.id
+          }
+
+          if (feature.layer.type == "symbol") {
+            feature.layer.paint["text-color"] = "#aaa"
           }
           this.$emit("mapclick", feature, features)
         }
@@ -405,14 +426,17 @@ export default {
         id: "lines",
         geojson: LINE_GEOJSON,
         textName: "样线编号",
-        icon: "",
-        calback: function (e) {
-          console.log("点击了", e)
-        }
+        icon: ""
       },
       option = { lineColor: "#0080FF", lineWidth: 10, arrow: true }
     ) {
+      data.calback = (data) => {
+        this.handleMarkClick(data)
+      }
       addLine(this.map, data, option)
+    },
+    handleMarkClick(data) {
+      this.$emit("markerClick", data)
     },
     // 移除线
     rmline(id) {

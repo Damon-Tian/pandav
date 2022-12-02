@@ -1,53 +1,76 @@
 /* 站点饼图，占比 */
 <template>
   <div>
-    <div class="stations-btns">
-      <div>
-        人次
-        <div class="stations-btn">{{ getPersons }}人次</div>
+    <div class="bg">
+      <div class="stations-btns">
+        <div>
+          人次
+          <div class="stations-btn">
+            <countTo
+              :start-val="0"
+              :end-val="getPersons"
+              :duration="3000"
+            />人次
+          </div>
+        </div>
+        <div>
+          里程
+          <div class="stations-btn">
+            <countTo :start-val="0" :end-val="getKm" :duration="3000" />km
+          </div>
+        </div>
       </div>
-      <div>
-        里程
-        <div class="stations-btn">{{ getKm }}km</div>
-      </div>
-    </div>
-    <div class="stations">
-      <div class="stationPie">
-        <div ref="stationPie" style="height: 100%"></div>
-        <div class="bg"></div>
-      </div>
-      <table>
-        <tr>
-          <th width="10"></th>
-          <th align="left" style="width: 130px">站点</th>
-          <th align="right" style="width: 50px">人次</th>
-          <th align="right">里程</th>
-        </tr>
-        <tbody>
-          <tr v-for="(item, i) in data" :key="item.station">
-            <td width="10"></td>
-            <td align="left">
-              <div class="legend-name">
-                <span
-                  class="legend-item"
-                  :style="'background:' + colorList[i]"
-                ></span>
-                {{ item.station }}
-              </div>
-            </td>
-            <td align="right">{{ item.person }}</td>
-            <td align="right">{{ item.km }}</td>
+      <div class="stations">
+        <div class="stationPie">
+          <div ref="stationPie" style="height: 100%"></div>
+          <div class="bg"></div>
+        </div>
+        <table>
+          <tr>
+            <th width="10"></th>
+            <th align="left" style="width: 130px">站点</th>
+            <th align="right" style="width: 50px">人次</th>
+            <th align="right">里程</th>
           </tr>
-        </tbody>
-      </table>
+          <tbody>
+            <tr v-for="(item, i) in data" :key="item.station">
+              <td width="10"></td>
+              <td align="left">
+                <div class="legend-name">
+                  <span
+                    class="legend-item"
+                    :style="'background:' + colorList[i]"
+                  ></span>
+                  {{ item.station }}
+                </div>
+              </td>
+              <td align="right">
+                <countTo
+                  :start-val="0"
+                  :end-val="item.person"
+                  :duration="3000"
+                />
+              </td>
+              <td align="right">
+                <countTo :start-val="0" :end-val="item.km" :duration="3000" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <patrolList class="bg" style="padding: 0 10px" />
   </div>
 </template>
 
 <script>
+import patrolList from "./patrolList"
 import Charts from "@jiaminghi/charts"
 let colorList = ["#71ED93", "#02FCFF", "#FFF960", "#33AEFF"]
 export default {
+  components: {
+    patrolList
+  },
   props: {
     data: {
       type: Array,
@@ -117,6 +140,11 @@ export default {
 }
 </script>
 <style scoped lang="less">
+.bg {
+  padding: 10px;
+  background: rgb(0, 0, 0);
+}
+
 .stations-btns {
   display: flex;
   justify-content: space-between;
@@ -182,14 +210,18 @@ export default {
   .legend-name {
     display: flex;
     align-items: center;
+    color: #02fcff;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: #02fcff;
   }
 
   .legend-item {
     display: inline-block;
     width: 8px;
     height: 8px;
+    border-bottom: 1px solid #0b90c2;
     margin-right: 5px;
-    vertical-align: middle;
   }
 }
 </style>

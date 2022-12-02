@@ -31,6 +31,7 @@ export async function get_station_geojson(orgId) {
             id: item.id,
             type: "Feature",
             img: stationImg,
+            textName: 'name',
             properties: {
                 stationName: item.name,
                 ...item

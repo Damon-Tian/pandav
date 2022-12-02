@@ -42,21 +42,9 @@ export function flyBounds(map, geojson) {
                 }
  * @return {*}
  */
-export function flyTo(map, option = {
-    bearing: 9.600000000000023,
-    center: [103.58806946916616, 30.630077549993786],
-    duration: 12000,
-    essential: true,
-    pitch: 73.99999999999997,
-    zoom: 16.001771985334283
-}) {
-    let target = Object.assign({
-        center: [104.5, 30],
-        zoom: 8,
-        bearing: 130,
-        pitch: 75
-    }, option)
-    map.flyTo(target)
+export function flyTo(map, option) {
+
+    map.flyTo({ ...option, curve: 1, duration: 2000 })
 }
 export function getView(map) {
     const center = map.getCenter();

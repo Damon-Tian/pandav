@@ -49,7 +49,7 @@ class CreatMap {
       // crs: 'EGSP:3857',
       pitch: 65.5,
       // ./lib/fonts/{fontstack}/{range}.pbf
-      maxZoom: 18,
+      maxZoom: 20,
       minZoom: 8,
       zoom: 11.99715452226343,
       bearing: 0,

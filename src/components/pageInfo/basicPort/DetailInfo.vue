@@ -4,26 +4,26 @@
       <div class="p-label-inline">
         <div class="p-label-info">
           <span>站点名称：</span>
-          <span>xxx保护站</span>
+          <span>{{ dataDetail.name }}</span>
         </div>
         <div class="p-label-info">
           <span>建设时间：</span>
-          <span>2019年</span>
+          <span>{{ dataDetail.buildTime || "--" }}年</span>
         </div>
       </div>
       <div class="p-label-inline">
         <div class="p-label-info">
           <span>占地面积：</span>
-          <span>6577㎡</span>
+          <span>{{ dataDetail.floorArea || "--" }}㎡</span>
         </div>
         <div class="p-label-info">
           <span>建筑面积：</span>
-          <span>3577㎡</span>
+          <span>{{ dataDetail.coveredArea || "--" }}㎡</span>
         </div>
       </div>
       <div class="p-label-info">
-        <span>人员：</span>
-        <span> 在编(8) 编外(2) 总计(10) </span>
+        <span>规划管护面积： </span>
+        <span>{{ dataDetail.protectArea || "--" }}公顷</span>
       </div>
       <div class="p-label-info" style="margin-bottom: 20px">
         <span>站点位置是否在大熊猫公园内： </span>

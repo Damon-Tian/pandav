@@ -48,7 +48,7 @@ export function addHeatMap(map, data) {
                 ['linear'],
                 ['zoom'],
                 8, 1,
-                18, 9
+                20, 9
             ],
             // Color ramp for heatmap.  Domain is 0 (low) to 1 (high).
             // Begin color ramp at 0-stop with a 0-transparancy color
@@ -75,7 +75,7 @@ export function addHeatMap(map, data) {
                 ["linear"],
                 ["zoom"],
                 8, 8,
-                18, 20
+                20, 20
             ],
             // Adjust the heatmap radius by zoom level
 
@@ -85,7 +85,7 @@ export function addHeatMap(map, data) {
                 ['linear'],
                 ['zoom'],
                 8, 1,
-                18, 1
+                20, 1
             ]
         }
     },

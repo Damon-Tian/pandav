@@ -11,33 +11,32 @@ import {
 } from "./util.js";
 import ARRAOW_ICON from "./lib/returnbtn.png";
 import DEFAULT_ICON from "./lib/RESOURCE.png";
+import EVENT_ICON from "../../src/ylkj/lib/elec.png"
 const {
     createMarker
 } = window.egis;
 let markerObj = {}
-const setConfig = (data = {
-    icon: DEFAULT_ICON,
-    text: '巡护点B',
-    calback: function () { }
-}) => {
+const setConfig = (data) => {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.display = 'flex';
+    let text = ''
+    if (data.text) {
+        text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ''}</div>`
+    }
     const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
-        <div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ''}</div>
+        ${text}
         <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width:20px;height:24px;"/>
         </div>`
     el.innerHTML = iconel;
     el.addEventListener('click', () => {
         data.calback ? data.calback(data.properties) : null;
     })
-
     return el
-
-
 };
 export function addLine(map, data, option) {
     const layerId = data.id ? data.id : uuid();
+    markerObj[layerId] = [];
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
         map.getLayer('arrowline') ? map.removeLayer('arrowline') : null;
@@ -66,34 +65,71 @@ export function addLine(map, data, option) {
         }
     })
     // [103.432937,30.878296]
-    if (data.textName) {
+    //样线名称点位
+    if (data.textName || data.start || data.end) {
         try {
-            let point = [];
-            if (data.geojson.features[0].geometry.type == "LineString") {
-                point = data.geojson.features[0].geometry.coordinates[0]
-            } else {
-                point = data.geojson.features[0].geometry.coordinates[0][0]
-            }
-            // let point=data.geojson.features[0].geometry.coordinates
-            markerObj[layerId] = [];
             data.geojson.features.forEach(item => {
-                let center = [];
+                let start = [];
+                let end = [];
                 if (item.geometry.type == "MultiLineString") {
-                    center = item.geometry.coordinates[0][0]
+                    start = item.geometry.coordinates[0][0]
+                    end = item.geometry.coordinates[0][item.geometry.coordinates.length - 1]
                 } else {
-                    center = item.geometry.coordinates[0]
+                    start = item.geometry.coordinates[0]
+                    end = item.geometry.coordinates[item.geometry.coordinates.length - 1]
                 }
-                const idmarker = createMarker(center, {
-                    element: setConfig({
-                        icon: data.icon ? data.icon : DEFAULT_ICON,
-                        text: item.properties ? item.properties[data.textName] : '',
-                        properties: item.properties,
-                        calback: data.calback
-                    }),
-                    anchor: 'center',
-                    // offset: [0, -30],
-                })
-                markerObj[layerId].push(idmarker)
+                if (data.textName) {
+                    const idmarker = createMarker(start, {
+                        element: setConfig({
+                            icon: data.icon ? data.icon : DEFAULT_ICON,
+                            text: item.properties ? item.properties[data.textName] : '',
+                            properties: item.properties
+                        }),
+                        anchor: 'center',
+                        // offset: [0, -30],
+                    })
+                    markerObj[layerId].push(idmarker)
+                }
+
+                if (data.start) {
+                    const idmarker = createMarker(start, {
+                        element: setConfig({
+                            icon: data.icon ? data.icon : DEFAULT_ICON,
+                            text: item.properties ? '开始时间：' + item.properties[data.start] : '',
+                            properties: item.properties
+                        }),
+                        anchor: 'center',
+                        // offset: [0, -30],
+                    })
+                    markerObj[layerId].push(idmarker)
+                }
+                if (data.end && start.toString() !== end.toString()) {
+                    const idmarker = createMarker(end, {
+                        element: setConfig({
+                            icon: data.icon ? data.icon : DEFAULT_ICON,
+                            text: item.properties ? item.properties[data.end] ? '结束时间：' + item.properties[data.end] : '巡护中' : '',
+                            properties: item.properties
+                        }),
+                        anchor: 'center',
+                    })
+                    markerObj[layerId].push(idmarker)
+                }
+                // 巡护中的事件 业务场景
+                if (Array.isArray(item.properties?.reportDTOList)) {
+                    item.properties.reportDTOList.forEach(event => {
+                        const point = [Number(event.longitude), Number(event.latitude)]
+                        const idmarker = createMarker(point, {
+                            element: setConfig({
+                                icon: EVENT_ICON,
+                                text: event.typeName + "事件",
+                                properties: event,
+                                calback: data.calback
+                            }),
+                            anchor: 'center',
+                        })
+                        markerObj[layerId].push(idmarker)
+                    })
+                }
 
             });
         } catch (error) {
@@ -126,12 +162,13 @@ export function addLine(map, data, option) {
 }
 
 export function removeline(map, layerId) {
+    console.log(layerId);
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
         map.getLayer('arrowline') ? map.removeLayer('arrowline') : null;
         map.getSource(layerId) ? map.removeSource(layerId) : null
     }
-    else if (Array.isArray(markerObj[layerId])) {
+    if (Array.isArray(markerObj[layerId])) {
         markerObj[layerId].forEach(item => {
             item.remove()
         })

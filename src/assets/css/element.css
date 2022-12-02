@@ -1,0 +1,16 @@
+/* element 组件库样式全局修改 */
+#app .el-date-editor {
+  border-color: #035e87;
+  background: #030a1d;
+  color: #fff;
+}
+#app .el-date-editor input {
+  background-color: transparent;
+  color: #fff;
+}
+#app .el-date-editor .el-range-separator {
+  color: #fff;
+}
+#app .el-date-editor .el-input__inner {
+  border-color: #035e87;
+}

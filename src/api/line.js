@@ -3,7 +3,7 @@
 import request from '@/utils/request'
 
 /**
- * 电子围栏列表
+ * 巡护样线列表
  * @param {*} data
  * @returns
  */
@@ -70,25 +70,27 @@ export async function get_line_geojson(orgId) {
  * @returns
  */
 
-export async function get_patrol_detail_geojson(orgId) {
+export async function get_patrol_detail_geojson(orgId, query = {}) {
     const params = {}
     if (orgId) {
         params.orgIds = [orgId]
     }
-    const { records } = await get_patrol_list({ pageNum: 1, pageSize: 10 })
+    const { records } = await get_patrol_list({ pageNum: 1, pageSize: 10, ...query })
     const requsets = []
     records.forEach(item => {
         requsets.push(get_patrol_detail({ id: item.patrolId }))
     })
     const data = await Promise.allSettled(requsets)
-    console.log(data);
     const geoJson = []
     data.forEach(detail => {
         if (detail.status == "fulfilled") {
             const json = {
                 type: "Feature",
+                start: 'startTime',
+                end: 'endTime',
                 properties: {
-                    color: "#62f709"
+                    color: "#62f709",
+                    ...detail.value
                 },
                 geometry: {
                     type: "LineString",
@@ -102,6 +104,5 @@ export async function get_patrol_detail_geojson(orgId) {
         }
 
     })
-    console.log(geoJson);
     return geoJson
 }

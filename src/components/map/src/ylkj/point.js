@@ -68,7 +68,7 @@ export function addImgIcon(map, option = {
         }, option.textName ? {
             "text-field": ['get', option.textName],
             "text-padding": 10,
-            "text-offset": [0, -2],
+            "text-offset": [0, -4],
             "text-anchor": 'bottom',
             "text-font": ["Microsoft YaHei UI Semibold Regular"],
             'text-allow-overlap': true
@@ -80,7 +80,12 @@ export function addImgIcon(map, option = {
             'source': layerId, // reference the data source
             'layout': style,
             "paint": {
-                "text-color": option.color ? option.color : "#000",
+                'text-color': [
+                    'case',
+                    ['boolean', ['feature-state', 'click'], false],
+                    '#23d9fb',
+                    option.color ? option.color : "#000"
+                ]
                 // "text-halo-color": "rgba(0,0,0,0.5)",
                 // "text-halo-width": 2,
                 // "text-opacity": 0.8
