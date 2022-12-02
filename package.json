@@ -22,6 +22,7 @@
     "element-ui": "^2.15.10",
     "normalize.css": "^8.0.1",
     "reset-css": "^5.0.1",
+    "swiper": "7.4.1",
     "vue": "^2.6.11",
     "vue-count-to": "^1.0.13",
     "vue-router": "^3.5.0",
