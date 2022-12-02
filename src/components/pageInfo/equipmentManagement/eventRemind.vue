@@ -1,61 +1,40 @@
 <template>
   <info-block title="事件提醒" class="event-remind">
     <div class="info-content">
-      <div
-        v-for="(item, index) in eventRemindList"
-        :key="index"
-        class="event-remind__item"
-      >
-        <div class="event-remind__item__left">
-          XXXXX摄像头A2抓拍到XXX事件到XXX事件
-        </div>
-        <div class="event-remind__item__rihgt">2022/8/16 15:30</div>
-      </div>
+      <SwiperTable :config="config" />
     </div>
   </info-block>
 </template>
 
 <script>
 import infoBlock from "../infoBlock.vue"
+import SwiperTable from "@/components/swiperTable/index.vue"
 export default {
-  components: { infoBlock },
+  components: {
+    infoBlock,
+    SwiperTable
+  },
   data() {
     return {
-      eventRemindList: [
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        {
-          name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件",
-          time: "2022/8/16 15:30"
-        },
-        { name: "XXXXX摄像头A2抓拍到XXX事件到XXX事件", time: "2022/8/16 15:30" }
-      ]
+      config: {
+        columnWidth: [230, 156],
+        swiperHeight: 280,
+        data: [
+          ["1XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["2XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["3XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["4XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["5XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["6XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["7XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["8XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["9XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["10XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["11XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["12XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"],
+          ["13XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30"]
+        ]
+      }
     }
   }
 }
@@ -74,24 +53,8 @@ export default {
     display: none; /* Chrome Safari */
   }
 
-  &__item {
-    display: flex;
-    height: 40px;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 10px;
-    border-left: 4px solid #00aeff;
-    margin-bottom: 10px;
-    background: #082044;
-    color: #fff;
-    font-size: 14px;
-
-    &__left {
-      overflow: hidden;
-      width: 218px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+  :deep .swiper-table__data__box {
+    margin-top: 5px !important;
   }
 }
 </style>
