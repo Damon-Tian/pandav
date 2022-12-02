@@ -19,11 +19,6 @@
     <camera />
     <Infrare-camera />
     <event-remind />
-    <div style="display: none">
-      <div ref="messageBox" class="message-box">
-        <img src="../../assets/img/8461669345165_.pic.jpg" alt="" />
-      </div>
-    </div>
   </div>
 </template>
 
@@ -31,7 +26,7 @@
 import camera from "./equipmentManagement/camera.vue"
 import InfrareCamera from "./equipmentManagement/InfrareCamera.vue"
 import eventRemind from "./equipmentManagement/eventRemind.vue"
-const mapId = ["红外相机", "摄像机", "生态设备"]
+const mapId = ["红外相机", "摄像机"]
 import {
   get_infrared_camera_geojson,
   get_ecological_equipment_geojson,
@@ -72,8 +67,7 @@ export default {
     async initMap() {
       const geoData1 = await get_infrared_camera_geojson()
       const geoData2 = await get_video_camera_geojson()
-      const geoData3 = await get_ecological_equipment_geojson()
-      const datas = [geoData1, geoData2, geoData3]
+      const datas = [geoData1, geoData2]
       mapId.forEach((id, index) => {
         this.setLayer(1, id, datas[index])
       })

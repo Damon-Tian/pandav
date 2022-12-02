@@ -24,11 +24,15 @@ body {
   color: #7ecef4;
   font-weight: 500;
 }
-.mapboxgl-popup-tip {
-  display: none;
+.mapboxgl-popup-anchor-bottom {
+  max-width: unset !important;
 }
 .mapboxgl-popup-content {
+  padding: 0;
   background-color: unset;
+}
+.mapboxgl-popup-tip {
+  border-top-color: #04aeff !important;
 }
 .message-box {
   width: 300px;

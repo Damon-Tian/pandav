@@ -411,8 +411,8 @@ export default {
       }
     ) {
       this.poupobj = createPopup(data.center, data.centent, {
-        closeButton: true,
-        closeOnClick: true,
+        closeButton: false,
+        closeOnClick: false,
         anchor: "bottom"
       })
     },
