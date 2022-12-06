@@ -34,6 +34,14 @@
             {{ dataDetail.protectArea || "--" }}公顷
           </span>
         </div>
+        <div v-if="dataDetail.pic">
+          <div class="row">
+            <span class="row__label">机构图片：</span>
+          </div>
+          <div class="row">
+            <img :src="dataDetail.pic" alt="" style="width: 100%" />
+          </div>
+        </div>
       </div>
     </div>
   </div>

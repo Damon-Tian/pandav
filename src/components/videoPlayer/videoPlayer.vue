@@ -3,7 +3,7 @@
     <!-- <easy-player :video-url="videoUrl" :live="true" style="height:100px"></easy-player> -->
     <iframe
       ref="player"
-      :src="`/static/test.html?videoUrl=${videoUrl}&title=${title}`"
+      :src="`/static/test.html?videoUrl=${videoUrl}&title=${title}&autoplay=${autoplay}`"
       scrolling="”no”"
       frameborder="0"
       style="width: 100%; height: 100%"
@@ -23,6 +23,10 @@ export default {
     videoUrl: {
       type: String,
       default: ""
+    },
+    autoplay: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

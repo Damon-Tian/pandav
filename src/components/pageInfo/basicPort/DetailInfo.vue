@@ -38,6 +38,12 @@
 import SwiperTable from "@/components/swiperTable/index.vue"
 export default {
   components: { SwiperTable },
+  props: {
+    dataDetail: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       config: {

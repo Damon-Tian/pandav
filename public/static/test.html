@@ -32,8 +32,8 @@
 
 <body>
   <div style="width: 100%;height: 100vh;overflow: hidden;">
-    <easy-player id="player" muted="true" autoplay="true" video-title="" debug="false" live="true" progress="false"
-      has-audio="true" is-trans-coding="false" decode-type="auto" reconnection="true" />
+    <easy-player id="player" muted="true" video-title="" debug="false" live="true" progress="false" has-audio="true"
+      is-trans-coding="false" decode-type="auto" reconnection="true" />
   </div>
   <script>
     let vuePlayer
@@ -46,9 +46,13 @@
       for (var i = 0; i < pa.length; i++) {
         s[pa[i].split("=")[0]] = unescape(pa[i].split("=")[1]);
       }
-      const src = s.videoUrl
+      const src = pa[0].replace('videoUrl=', '')
 
       playerEle.setAttribute('video-url', src);
+      if (s.autoplay) {
+        playerEle.setAttribute('autoplay', true);
+      }
+
       playerEle.setAttribute('video-title', s.title);
 
       if (!vuePlayer) vuePlayer = playerEle.getVueInstance(); //实例化vue 对象

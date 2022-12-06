@@ -85,12 +85,12 @@ export default {
     },
     currentPosition() {
       this.removeMap()
-      this.initMap()
+      // this.initMap()
       this.initPatrolMap()
     }
   },
   mounted() {
-    this.initMap()
+    // this.initMap()
     this.initPatrolMap()
   },
   beforeDestroy() {
@@ -110,7 +110,6 @@ export default {
       this.setLayer(2, mapId1, geoData)
     },
     removeMap() {
-      this.removelayer(2, mapId)
       this.removelayer(2, mapId1)
     }
   }

@@ -14,6 +14,7 @@
         @onload="handleOnLoad"
         @markerClick="handleMarkerClick"
       />
+
       <span class="btn" @click="$refs.topNav.reset()">复位</span>
       <!-- <router-view /> -->
     </div>
@@ -41,6 +42,7 @@ import mapBox from "@/components/map/index"
 import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
 import CameraInfo from "@/components/mapPopupInfo/cameraInfo.vue"
 import PipeCareStation from "@/components/mapPopupInfo/pipeCareStation.vue"
+import patrolFind from "@/components/mapPopupInfo/patrolFind.vue"
 import HeatMap from "@/components/mapPopupInfo/heatmap.vue"
 import mapUtil from "@/mixins/mapUtil"
 export default {
@@ -54,7 +56,8 @@ export default {
     ResourcesInfo,
     CameraInfo,
     PipeCareStation,
-    HeatMap
+    HeatMap,
+    patrolFind
   },
   mixins: [mapUtil],
   data() {
@@ -98,6 +101,7 @@ export default {
     },
     //图层点击
     async handleFeature(currentFeature) {
+      console.log(currentFeature)
       //设备
       if (currentFeature.properties.equipmentType) {
         this.cameraType = currentFeature.properties.equipmentType
@@ -122,18 +126,25 @@ export default {
         this.componentId = null
       }
       if (this.componentId) {
-        this.$nextTick(() => {
-          const dom = this.$refs.messageBox.$el
-          this.showPopu({
-            center: currentFeature.geometry.coordinates,
-            centent: dom
-          })
-        })
+        this.showPopupMenu(currentFeature.geometry.coordinates)
       }
     },
     //marker点击
     async handleMarkerClick(marker) {
-      console.log(marker)
+      this.componentId = "patrolFind"
+      this.infoId = marker.id
+      setTimeout(() => {
+        this.showPopupMenu([Number(marker.longitude), Number(marker.latitude)])
+      }, 200)
+    },
+    showPopupMenu(center) {
+      this.$nextTick(() => {
+        const dom = this.$refs.messageBox.$el
+        this.showPopu({
+          center,
+          centent: dom
+        })
+      })
     },
     handleSetVideoUrl(url) {
       this.$refs.cameraRef.setVideoUrl(url)

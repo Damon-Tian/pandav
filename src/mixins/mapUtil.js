@@ -75,7 +75,7 @@ export default {
     methods: {
         //通过map方法生成图层
         async setLayer(type, id, geoData) {
-            if (!geoData && geoData[0]) {
+            if (!geoData || !geoData[0]) {
                 return;
             }
 
@@ -168,11 +168,8 @@ export default {
                 this.$store.state.app.map.mapBox.removelayer(id)
             }
         },
-        flyTo(geoData) {
-            this.$store.state.app.map.mapBox.flybound({
-                type: "FeatureCollection",
-                features: geoData
-            })
+        flyTo(view) {
+            this.$store.state.app.map.mapBox.fly(view)
         },
         reset() {
             const currentItem = this.hrefs.find((item) => item.id == this.$store.state.app.currentArea)

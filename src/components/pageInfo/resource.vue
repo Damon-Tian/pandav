@@ -2,9 +2,30 @@
   <div class="info-resource">
     <info-block title="动物多样性">
       <div slot="titleRight" class="attr">
-        <span class="attr">科：6</span>
-        <span class="attr">属：6</span>
-        <span class="attr">种：6</span>
+        <span class="attr"
+          >目：
+          <countTo
+            :start-val="0"
+            :end-val="currentAreaStatistic.animal.mu"
+            :duration="3000"
+          />
+        </span>
+        <span class="attr"
+          >科：
+          <countTo
+            :start-val="0"
+            :end-val="currentAreaStatistic.animal.ke"
+            :duration="3000"
+          />
+        </span>
+        <span class="attr"
+          >种：
+          <countTo
+            :start-val="0"
+            :end-val="currentAreaStatistic.animal.zhong"
+            :duration="3000"
+          />
+        </span>
       </div>
       <div class="info-content">
         <div class="animal-top">
@@ -19,7 +40,13 @@
                     :style="'background:' + animalConfig.color[index]"
                   ></span>
                   <span>{{ item.name }}</span>
-                  <span>{{ item.value }}种</span>
+                  <span
+                    ><countTo
+                      :start-val="0"
+                      :end-val="item.value"
+                      :duration="3000"
+                    />种</span
+                  >
                 </li>
               </div>
             </div>
@@ -30,9 +57,30 @@
 
     <info-block title="植物多样性">
       <div slot="titleRight" class="attr">
-        <span class="attr">科：6</span>
-        <span class="attr">属：6</span>
-        <span class="attr">种：6</span>
+        <span class="attr"
+          >科：
+          <countTo
+            :start-val="0"
+            :end-val="currentAreaStatistic.plant.ke"
+            :duration="3000"
+          />
+        </span>
+        <span class="attr"
+          >属：
+          <countTo
+            :start-val="0"
+            :end-val="currentAreaStatistic.plant.shu"
+            :duration="3000"
+          />
+        </span>
+        <span class="attr"
+          >种：
+          <countTo
+            :start-val="0"
+            :end-val="currentAreaStatistic.plant.zhong"
+            :duration="3000"
+          />
+        </span>
       </div>
       <div class="info-content">
         <div class="ring-chart-block">
@@ -46,7 +94,13 @@
                   :style="'background:' + plantConfig.color[index]"
                 ></span>
                 <span>{{ item.name }}</span>
-                <span>{{ item.value }}种</span>
+                <span>
+                  <countTo
+                    :start-val="0"
+                    :end-val="item.value"
+                    :duration="3000"
+                  />种</span
+                >
               </li>
             </div>
           </div>
@@ -66,15 +120,15 @@
             {{ item }}
           </span>
         </div>
-        <div class="info-content detail-content">
-          <span
-            v-for="(item, index) in animalList"
-            :key="index"
-            class="item"
-            :class="{ 'active-item': currentSelect == index }"
-            @click="currentSelect = index"
-            >{{ item }}<span class="split">|</span>
-          </span>
+        <div class="detail-box">
+          <div class="detail-content">
+            <div v-for="item in 5" :key="item" class="detail-item">
+              <img src="1" alt="" />
+              <div class="tip">
+                <span>{{ item }}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </info-block>
@@ -109,11 +163,11 @@ export default {
         data: [
           {
             name: "一级",
-            value: 16
+            value: 0
           },
           {
             name: "二级",
-            value: 72
+            value: 0
           }
         ]
       },
@@ -122,42 +176,114 @@ export default {
         data: [
           {
             name: "一级",
-            value: 20
+            value: 0
           },
           {
             name: "二级",
-            value: 80
+            value: 0
           }
         ]
       },
-      animalList: [
-        "大熊猫",
-        "牦牛",
-        "羚羊",
-        "梅花鹿",
-        "娃娃鱼",
-        "娃娃鱼",
-        "金丝猴",
-        "牦牛",
-        "羚羊",
-        "梅花鹿",
-        "娃娃鱼",
-        "娃娃鱼",
-        "金丝猴",
-        "牦牛",
-        "羚羊",
-        "梅花鹿",
-        "娃娃鱼",
-        "娃娃鱼",
-        "金丝猴",
-        "牦牛",
-        "羚羊",
-        "梅花鹿",
-        "大熊猫",
-        "娃娃鱼"
-      ],
+      animalList: [],
       currentSelect: 1,
-      currentPosition: ""
+      statistic: {
+        chengdu: {
+          plant: {
+            ke: 325,
+            shu: 1358,
+            zhong: 3629,
+            level1: 19,
+            level2: 40
+          },
+          animal: {
+            mu: 40,
+            ke: 127,
+            zhong: 551,
+            level1: 14,
+            level2: 145
+          }
+        },
+        dujiangyan: {
+          plant: {
+            ke: 250,
+            shu: 1045,
+            zhong: 2792,
+            level1: 4,
+            level2: 8
+          },
+          animal: {
+            mu: 31,
+            ke: 96,
+            zhong: 415,
+            level1: 10,
+            level2: 40
+          }
+        },
+        pengzhou: {
+          plant: {
+            ke: 166,
+            shu: 716,
+            zhong: 1760,
+            level1: 7,
+            level2: 15
+          },
+          animal: {
+            mu: 27,
+            ke: 98,
+            zhong: 424,
+            level1: 11,
+            level2: 37
+          }
+        },
+        chongzhou: {
+          plant: {
+            ke: 184,
+            shu: 623,
+            zhong: 1526,
+            level1: 3,
+            level2: 9
+          },
+          animal: {
+            mu: 26,
+            ke: 90,
+            zhong: 322,
+            level1: 9,
+            level2: 31
+          }
+        },
+        dayi: {
+          plant: {
+            ke: 230,
+            shu: 929,
+            zhong: 2063,
+            level1: 5,
+            level2: 8
+          },
+          animal: {
+            mu: 29,
+            ke: 89,
+            zhong: 367,
+            level1: 8,
+            level2: 37
+          }
+        }
+      },
+      currentAreaStatistic: {
+        plant: {
+          ke: 0,
+          shu: 0,
+          zhong: 0,
+          level1: 0,
+          level2: 0
+        },
+        animal: {
+          mu: 0,
+          ke: 0,
+          zhong: 0,
+          level1: 0,
+          level2: 0
+        }
+      }
     }
   },
   computed: {
@@ -166,23 +292,53 @@ export default {
     }
   },
   watch: {
-    currentArea() {
-      this.currentPosition = this.currentArea
-    },
-    currentPosition() {
-      this.removeMap()
-      this.initMap()
+    currentArea: {
+      handler: function () {
+        // this.removeMap()
+        // this.initMap()
+        this.getStatistic()
+      },
+      immediate: true
     }
   },
   beforeDestroy() {
     this.removeMap()
   },
   mounted() {
-    this.initMap()
+    // this.initMap()
   },
   methods: {
     changeDetail(tab) {
       this.currentDetailTab = tab
+    },
+    getStatistic() {
+      this.currentAreaStatistic = this.statistic[this.currentArea]
+      this.plantConfig = {
+        ...baseConfig,
+        data: [
+          {
+            name: "一级",
+            value: this.currentAreaStatistic.plant.level1
+          },
+          {
+            name: "二级",
+            value: this.currentAreaStatistic.plant.level2
+          }
+        ]
+      }
+      this.animalConfig = {
+        ...baseConfig,
+        data: [
+          {
+            name: "一级",
+            value: this.currentAreaStatistic.animal.level1
+          },
+          {
+            name: "二级",
+            value: this.currentAreaStatistic.animal.level2
+          }
+        ]
+      }
     },
     async initMap() {
       const geoData = await get_bio_geosjon()
@@ -198,7 +354,7 @@ export default {
 
 <style lang="less" scoped>
 .attr {
-  margin-right: 10px;
+  margin-left: 10px;
   font-size: 16px;
   font-weight: 500;
 }
@@ -332,33 +488,55 @@ export default {
     }
   }
 
-  .detail-content {
-    overflow: auto;
-    height: 150px;
-    padding-top: 10px;
-    padding-left: 10px;
-    color: #fff;
-    font-size: 16px;
+  .detail-box {
+    overflow: hidden;
+    max-height: 260px;
 
-    .item {
-      display: inline-block;
-      margin: 5px 0;
-
-      & > span {
-        color: #fff;
-      }
-
-      &:hover {
-        cursor: pointer;
-      }
+    &::-webkit-scrollbar {
+      width: 5px;
+      background-color: transparent;
     }
 
-    .active-item {
-      color: #0b90c2;
+    /* 滚动条上的滚动滑块 */
+    &::-webkit-scrollbar-thumb {
+      background: #3b60ab;
+      border-radius: 3px;
     }
 
-    .split {
-      margin: 0 5px;
+    &::-webkit-scrollbar-corner {
+      background-color: transparent;
+    }
+
+    &:hover {
+      overflow: auto;
+    }
+
+    .detail-content {
+      display: flex;
+      flex-wrap: wrap;
+
+      .detail-item {
+        position: relative;
+        width: calc(50% - 10px);
+        height: 120px;
+        margin-top: 10px;
+        margin-left: 10px;
+
+        .tip {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 30px;
+          background-color: rgba(0, 0, 0, 40%);
+          line-height: 30px;
+
+          span {
+            margin-left: 10px;
+            color: #fff;
+          }
+        }
+      }
     }
   }
 }

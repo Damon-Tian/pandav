@@ -1,17 +1,7 @@
 <template>
   <div id="map">
     <!-- <div class="map-button">
-      <button
-        type="button"
-        @click="
-          addlayer(
-            '/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'chongzhou'
-          )
-        "
-      >
-        全域
-      </button>
+      <button type="button" @click="poup()">全域</button>
       <button
         type="button"
         @click="
@@ -184,7 +174,9 @@ export default {
             if (feature.length == 1) {
               feature = feature[0]
             } else {
-              feature = features[0]
+              feature = features.filter(
+                (item) => item.source.indexOf("保护区") == -1
+              )[0]
             }
           } else {
             feature = features[0]
@@ -204,10 +196,6 @@ export default {
               { click: true }
             )
             currentId = feature.id
-          }
-
-          if (feature.layer.type == "symbol") {
-            feature.layer.paint["text-color"] = "#aaa"
           }
           this.$emit("mapclick", feature, features)
         }
@@ -406,13 +394,13 @@ export default {
     // 弹框
     poup(
       data = {
-        center: [104, 30],
+        center: [103.52022171020508, 30.792723356954568],
         centent: "<div style='width:300px'>helloword</div>"
       }
     ) {
       this.poupobj = createPopup(data.center, data.centent, {
         closeButton: false,
-        closeOnClick: false,
+        closeOnClick: true,
         anchor: "bottom"
       })
     },
@@ -477,6 +465,7 @@ export default {
       this.PlottingObj.on("point", (e) => {
         _this.$emit("draw", e)
         console.log(e)
+        alert(e.geometry.coordinates)
       })
     },
     /**

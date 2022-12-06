@@ -42,6 +42,32 @@ export function get_patrol_detail(params) {
         params
     })
 }
+/*
+ * 巡护事件
+ * @param {*} data
+ * @returns
+ */
+
+export function get_report_detail(params) {
+    return request({
+        url: '/front/report/detail',
+        method: 'get',
+        params
+    })
+}
+/*
+ * 巡护事件查询巡护记录
+ * @param {*} data
+ * @returns
+ */
+
+export function get_patrol_by_report(params) {
+    return request({
+        url: '/front/edmp/largeScreen/getPatrolInfoByReportNum',
+        method: 'get',
+        params
+    })
+}
 
 //获取geojson 接口
 
@@ -84,25 +110,29 @@ export async function get_patrol_detail_geojson(orgId, query = {}) {
     const geoJson = []
     data.forEach(detail => {
         if (detail.status == "fulfilled") {
-            const json = {
-                type: "Feature",
-                start: 'startTime',
-                end: 'endTime',
-                properties: {
-                    color: "#62f709",
-                    ...detail.value
-                },
-                geometry: {
-                    type: "LineString",
-                    coordinates: detail.value.pointList.map((item) => [
-                        Number(item.lon),
-                        Number(item.lat)
-                    ])
-                }
-            }
+            const json = get_patrol_detail_geojson_item(detail.value)
             geoJson.push(json)
         }
 
     })
     return geoJson
+}
+//获取单条巡护记录的geojson
+export function get_patrol_detail_geojson_item(detail) {
+    return {
+        type: "Feature",
+        start: 'startTime',
+        end: 'endTime',
+        properties: {
+            color: "#62f709",
+            ...detail
+        },
+        geometry: {
+            type: "LineString",
+            coordinates: detail.pointList.map((item) => [
+                Number(item.lon),
+                Number(item.lat)
+            ])
+        }
+    }
 }

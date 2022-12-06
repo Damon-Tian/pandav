@@ -2,18 +2,27 @@
 <template>
   <div class="camera-info">
     <div class="camera-info__box">
-      <div class="camera-info__box__top">{{ dataDetail.deviceName }}</div>
+      <div class="camera-info__box__top">巡护事件</div>
       <div class="camera-info__box__info">
-        <div
-          v-if="type == 'video_camera' || type == 'infrared_camera'"
-          class="row"
-        >
-          <span class="row__label">设备编号：</span>
-          <span class="row__value">{{ dataDetail.deviceSn }}</span>
+        <div class="row">
+          <span class="row__label">所属机构：</span>
+          <span class="row__value">{{ dataDetail.totalOrg }}</span>
         </div>
         <div class="row">
-          <span class="row__label">地点：</span>
-          <span class="row__value">{{ dataDetail.deviceAddress }}</span>
+          <span class="row__label">样线名称：</span>
+          <span class="row__value">{{ dataDetail.line || "--" }}</span>
+        </div>
+        <div class="row">
+          <span class="row__label">巡护编号：</span>
+          <span class="row__value">{{ dataDetail.patrolNum || "--" }}</span>
+        </div>
+        <div class="row">
+          <span class="row__label">巡护里程：</span>
+          <span class="row__value">{{ dataDetail.route || "--" }} KM</span>
+        </div>
+        <div class="row">
+          <span class="row__label">巡护时长：</span>
+          <span class="row__value">{{ dataDetail.dateSum || "--" }}</span>
         </div>
         <div class="row">
           <span class="row__label">经度：</span>
@@ -25,43 +34,39 @@
             {{ dataDetail.latitude }}
           </span>
         </div>
-        <div v-if="dataDetail.deploymentTime" class="row">
-          <span class="row__label">布设时间：</span>
-          <span class="row__value">
-            {{ dataDetail.deploymentTime }}
-          </span>
+        <div class="row">
+          <span class="row__label">海拔：</span>
+          <span class="row__value"> {{ dataDetail.height || "--" }} m </span>
         </div>
-        <div v-if="type == 'infrared_camera'" class="row">
-          <span class="row__label">剩余电量：</span>
+        <div class="row">
+          <span class="row__label">事件上传时间：</span>
           <span class="row__value">
-            {{ dataDetail.remainingElectricity }}
+            {{ dataDetail.createTime }}
           </span>
         </div>
         <div class="row">
-          <span class="row__label">状态：</span>
+          <span class="row__label">巡护人员：</span>
           <span class="row__value">
-            {{ dataDetail.deviceStatus ? "异常" : "正常" }}
+            {{ dataDetail.join }}
           </span>
         </div>
-        <div v-if="type == 'infrared_camera'" class="row">
-          <div class="row__label">
-            实时抓拍：
-            <span
-              style="color: #fff; cursor: pointer"
-              @click="goRealtimeCapture(dataDetail.deviceSn)"
-              >查看更多></span
-            >
-          </div>
+
+        <div class="row">
+          <div class="row__label">附件：</div>
           <div class="row__img">
-            <div v-for="item in capture" :key="item.id">
-              <videoPlayer
-                v-if="item.path.indexOf('.mp4') !== -1"
-                :video-url="item.path"
-                :autoplay="false"
-                class="content__box"
-              />
-              <img v-else :src="item.path" alt="" class="content__box" />
-            </div>
+            <img
+              v-for="item in dataDetail.picture"
+              :key="item.id"
+              :src="item.url"
+              class="content__box"
+            />
+            <videoPlayer
+              v-for="item in dataDetail.video"
+              :key="item.id"
+              :autoplay="false"
+              :video-url="item.url"
+              class="content__box"
+            />
           </div>
         </div>
       </div>
@@ -70,8 +75,7 @@
 </template>
 
 <script>
-import { get_device_by_id } from "@/api/device"
-import { get_real_time_shoot } from "@/api/mapPopupInfo"
+import { get_report_detail } from "@/api/line"
 import videoPlayer from "../videoPlayer/videoPlayer.vue"
 import mixins from "@/mixins"
 export default {
@@ -83,42 +87,26 @@ export default {
     id: {
       type: [String, Number],
       default: null
-    },
-    type: {
-      type: String,
-      default: "video_camera"
     }
   },
   data() {
     return {
-      dataDetail: {},
-      capture: []
+      dataDetail: {}
     }
   },
   watch: {
     id: {
       handler: function () {
         if (this.id) {
-          this.getDeviceDetail()
+          this.getDetail()
         }
       },
       immediate: true
     }
   },
   methods: {
-    async getDeviceDetail() {
-      this.dataDetail = await get_device_by_id(this.id)
-      if (this.type == "video_camera" && this.dataDetail.deviceOnlineUrl) {
-        this.$emit("onlineUrl", this.dataDetail.deviceOnlineUrl)
-      }
-      if (this.type == "infrared_camera") {
-        const { records } = await get_real_time_shoot({
-          searchParam: this.dataDetail.deviceSn,
-          pageSize: 10,
-          pageNumber: 1
-        })
-        this.capture = records
-      }
+    async getDetail() {
+      this.dataDetail = await get_report_detail({ reportId: this.id })
     }
   }
 }

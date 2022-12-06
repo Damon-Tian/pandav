@@ -36,8 +36,11 @@
             src="../../assets/img/svgIcon/报警.svg"
             alt=""
           />
-          <div class="alarm-info__title">
-            {{ item.title }}
+          <div v-if="item.source == 2" class="alarm-info__title">
+            {{ formatOrgId(item.orgId) }}-{{ item.putPerson }}上传事件
+          </div>
+          <div v-else class="alarm-info__title">
+            红外相机({{ item.deviceSn }})抓拍到事件
           </div>
         </div>
       </div>
@@ -51,7 +54,13 @@
 <script>
 import mixins from "@/mixins"
 import mapUtil from "@/mixins/mapUtil"
-import { get_patrol_detail_geojson } from "@/api/line"
+import {
+  get_patrol_by_report,
+  get_patrol_detail_geojson_item,
+  get_patrol_detail
+} from "@/api/line"
+import { get_device_by_devicesn, get_camera_geojson_item } from "@/api/device"
+import { get_real_time_shoot, get_org } from "@/api/mapPopupInfo"
 export default {
   components: {},
   mixins: [mixins, mapUtil],
@@ -70,7 +79,10 @@ export default {
       endVal: 0,
       more: false,
       timmer: null,
-      scrollIndex: 1
+      scrollIndex: 1,
+      timmer1: null,
+      orgIds: [],
+      needRemoveChecked: []
     }
   },
   computed: {
@@ -92,51 +104,37 @@ export default {
   },
   beforeDestroy() {
     this.handleStopAutoScroll()
+    this.removeAll()
   },
-  mounted() {
-    setTimeout(() => {
-      const data = [
-        {
-          title: "红外相机(346F2403E097)抓拍到事件",
-          type: "抓拍",
-          id: 1
-        },
-        {
-          title: "红外相机(346F2403E098)抓拍到事件点的",
-          type: "抓拍",
-          id: 2
-        },
-        {
-          title: "红外相机(346F2403E099)抓拍到事件反反复复",
-          type: "抓拍",
-          id: 3
-        },
-        {
-          title: "红外相机(346F2403E067)抓拍到事件",
-          type: "抓拍",
-          id: 4
-        },
-        {
-          title: "红外相机(346F2403E057)抓拍到事件",
-          type: "抓拍",
-          id: 5
-        },
-        {
-          title: "用户及时上传(346F2403E057)",
-          type: "事件",
-          id: 6
-        }
-      ]
-      data.forEach((item) => {
-        item.checked = false
-      })
-      this.alarmList = data
-      if (this.alarmList.length > 1) {
-        this.handleAutoScroll()
-      }
-    }, 2000)
+  async mounted() {
+    this.getList()
+    this.timmer1 = setInterval(() => {
+      this.getList()
+    }, 10 * 60 * 1000)
+    if (this.alarmList.length > 1) {
+      this.handleAutoScroll()
+    }
+    const { records } = await get_org({ pageNumber: 1, pageSize: 999 })
+    this.orgIds = records
   },
   methods: {
+    async getList() {
+      const { records } = await get_real_time_shoot({
+        pageNumber: 1,
+        pageSize: 10
+      })
+      records.forEach((item) => {
+        const oldItem = this.alarmList.find(
+          (alarm) => alarm.deviceSn == item.deviceSn
+        )
+        item.checked = oldItem ? oldItem.checked : false
+      })
+      this.alarmList = records
+    },
+    formatOrgId(orgId) {
+      const org = this.orgIds.find((item) => item.id == orgId)
+      return org ? org.name : ""
+    },
     loadmore() {
       this.more = !this.more
       if (this.more) {
@@ -148,6 +146,7 @@ export default {
     },
     handleStopAutoScroll() {
       clearInterval(this.timmer)
+      clearInterval(this.timmer1)
     },
     handleAutoScroll() {
       this.timmer = setInterval(() => {
@@ -167,25 +166,66 @@ export default {
         this.handleAutoScroll()
       }
     },
-    async handleClick(item) {
-      item.checked = !item.checked
-      if (item.type == "抓拍") {
-        //
-      }
-      if (item.type == "事件") {
-        //
-        if (item.checked) {
-          const geoData = await get_patrol_detail_geojson(this.orgId, {
-            pageSize: 1
-          })
-          this.setLayer(2, item.title, geoData)
-          //飞到定位点位
-          this.flyTo(geoData.slice(0, 1))
+    getNeedChecked() {
+      this.needRemoveChecked = this.alarmList.filter((item) => item.checked)
+    },
+    removeAll() {
+      this.needRemoveChecked.forEach((item) => {
+        if (item.source == 2) {
+          this.removelayer(2, item.deviceSn)
         } else {
-          this.removelayer(2, item.title)
+          this.removelayer(1, item.deviceSn)
+        }
+      })
+    },
+    async handleClick(item) {
+      //source 0,1红外相机，2事件上传
+      item.checked = !item.checked
+
+      if (item.source == 2) {
+        // 巡护记录当前事件点位
+        if (item.checked) {
+          const patrolRecord = await get_patrol_by_report({
+            reportNum: item.deviceSn
+          })
+          const patrolDetail = await get_patrol_detail({
+            id: patrolRecord.patrolId
+          })
+
+          const geoData = [get_patrol_detail_geojson_item(patrolDetail)]
+          this.setLayer(2, item.deviceSn, geoData)
+          const currentReport = patrolDetail.reportDTOList.find(
+            (report) => report.reportNum == item.deviceSn
+          )
+          const center = [currentReport.longitude, currentReport.latitude]
+          //飞到定位点位
+          this.flyTo({
+            center: center,
+            zoom: 20
+          })
+        } else {
+          this.removelayer(2, item.deviceSn)
+          this.reset()
+        }
+      } else {
+        // 绘制红外相机点位
+        if (item.checked) {
+          const cameraDetail = await get_device_by_devicesn({
+            deviceSn: item.deviceSn
+          })
+          const geoData = [get_camera_geojson_item(cameraDetail)]
+          this.setLayer(1, item.deviceSn, geoData)
+          const center = geoData[0].geometry.coordinates
+          this.flyTo({
+            center: center,
+            zoom: 20
+          })
+        } else {
+          this.removelayer(1, item.deviceSn)
           this.reset()
         }
       }
+      this.getNeedChecked()
     }
   }
 }

@@ -10,8 +10,8 @@ import {
     uuid,
 } from "./util.js";
 import ARRAOW_ICON from "./lib/returnbtn.png";
-import DEFAULT_ICON from "@/assets/img/3701669967141_.pic.jpg";
-import EVENT_ICON from "@/assets/img/3711669967141_.pic.jpg";
+import DEFAULT_ICON from "@/assets/img/巡护记录.png";
+import EVENT_ICON from "@/assets/img/巡护事件.png";
 const {
     createMarker
 } = window.egis;
@@ -20,13 +20,16 @@ const setConfig = (data) => {
     const el = document.createElement('div');
     el.className = 'marker';
     el.style.display = 'flex';
+    if (!data.imageWidth) {
+        data.imageWidth = 40
+    }
     let text = ''
     if (data.text) {
         text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ''}</div>`
     }
     const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
         ${text}
-        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width:20px;height:24px;"/>
+        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width: ${data.imageWidth}px"/>
         </div>`
     el.innerHTML = iconel;
     el.addEventListener('click', () => {
@@ -107,7 +110,7 @@ export function addLine(map, data, option) {
                     const idmarker = createMarker(end, {
                         element: setConfig({
                             icon: data.icon ? data.icon : DEFAULT_ICON,
-                            text: item.properties ? item.properties[data.end] ? '结束时间：' + item.properties[data.end] : '巡护中' : '',
+                            text: item.properties ? '结束时间：' + item.properties[data.end] : '巡护中',
                             properties: item.properties
                         }),
                         anchor: 'center',
@@ -123,6 +126,7 @@ export function addLine(map, data, option) {
                                 icon: EVENT_ICON,
                                 text: event.typeName + "事件",
                                 properties: event,
+                                imageWidth: 32,
                                 calback: data.calback
                             }),
                             anchor: 'center',

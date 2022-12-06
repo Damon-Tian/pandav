@@ -19,13 +19,18 @@
             @click="handleClick(item)"
           >
             <img
-              v-if="item.checked"
+              v-if="item.checked && !item.children"
               src="../../assets/img/selectedInfo/checked.png"
               alt=""
             />
             <img
-              v-if="!item.checked"
+              v-if="!item.checked && !item.children"
               src="../../assets/img/selectedInfo/check.png"
+              alt=""
+            />
+            <img
+              v-if="item.children"
+              src="../../assets/img/svgIcon/播放.svg"
               alt=""
             />
           </div>
@@ -175,6 +180,14 @@ export default {
           getData: get_elec_area_geojson
         },
         {
+          img: require("../../assets/img/selectedInfo/site.png"),
+          title: "基层站点",
+          checked: false,
+          type: 1,
+          id: "5",
+          getData: get_station_geojson
+        },
+        {
           img: require("../../assets/img/selectedInfo/patrol.png"),
           title: "设备管理",
           checked: false,
@@ -204,22 +217,15 @@ export default {
             }
           ]
         },
-        {
-          img: require("../../assets/img/selectedInfo/natural.png"),
-          title: "自然资源",
-          checked: false,
-          type: 1,
-          id: "4",
-          getData: get_bio_geosjon
-        },
-        {
-          img: require("../../assets/img/selectedInfo/site.png"),
-          title: "基层站点",
-          checked: false,
-          type: 1,
-          id: "5",
-          getData: get_station_geojson
-        },
+        // {
+        //   img: require("../../assets/img/selectedInfo/natural.png"),
+        //   title: "自然资源",
+        //   checked: false,
+        //   type: 1,
+        //   id: "4",
+        //   getData: get_bio_geosjon
+        // },
+
         {
           img: require("../../assets/img/selectedInfo/patrol1.png"),
           title: "巡护管理",
@@ -465,6 +471,11 @@ export default {
       }
 
       &__checkbox {
+        & img {
+          width: 20px;
+          margin-top: 15px;
+        }
+
         cursor: pointer;
       }
     }
