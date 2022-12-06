@@ -4,29 +4,29 @@
       <div class="info-content">
         <div class="env-first__top">
           <div class="top-circle">
-            <span>4</span>
+            <span>{{ totalData }}</span>
             <span>总数</span>
           </div>
           <div class="top-data">
             <p>
               <span>在线设备</span>
-              <span>4 台</span>
+              <span>{{ online }} 台</span>
             </p>
             <p>
               <span>离线设备</span>
-              <span>4 台</span>
+              <span>{{ offline }} 台</span>
             </p>
           </div>
         </div>
         <div class="env-first__bottom">
           <li
             v-for="item in positionList"
-            :key="item.name"
-            :class="currentPosition === item.orgId ? 'active' : ''"
+            :key="item.orgName"
+            :class="currentPosition === item.orgName ? 'active' : ''"
             @click="positionClick(item)"
           >
             <span></span>
-            {{ item.name }}
+            {{ item.orgName }}
           </li>
         </div>
       </div>
@@ -37,26 +37,31 @@
           <div class="label-inline">
             <span>
               <span class="label-color">名称：</span>
-              {{ labelInfo.name }}
+              {{ labelInfo.deviceName }}
             </span>
             <span>
               <span class="label-color">设备编号：</span>
-              {{ labelInfo.mark }}
+              {{ labelInfo.deviceSn }}
             </span>
           </div>
 
           <div class="label-inline">
             <span>
               <span class="label-color">保护站：</span>
-              {{ labelInfo.maintainPosition }}
+              {{ labelInfo.orgName }}
             </span>
             <span>
               <span class="label-color">运行状态：</span>
-              <span style="color: #3ac268">{{ labelInfo.status }}</span>
+              <span v-show="labelInfo.deviceStatus === 0" style="color: #3ac268"
+                >正常</span
+              >
+              <span v-show="labelInfo.deviceStatus === 1" style="color: #f82d2d"
+                >异常</span
+              >
             </span>
           </div>
 
-          <div class="label-inline">
+          <!-- <div class="label-inline">
             <span>
               <span class="label-color">维护人：</span>
               {{ labelInfo.maintainPerson }}
@@ -65,26 +70,28 @@
               <span class="label-color">电话：</span>
               {{ labelInfo.tel }}
             </span>
-          </div>
+          </div> -->
 
           <div>
             <span class="label-color">设备地点：</span>
-            {{ labelInfo.equipPosition }}
+            {{ labelInfo.deviceAddress }}
           </div>
 
           <div>
             <span class="label-color">经纬度：</span>
-            {{ labelInfo.jwd }}
+            {{ labelInfo.latitude }},{{ labelInfo.longitude }}
           </div>
 
           <!-- <div style="margin-top: 12px" class="get-more">更多信息></div> -->
         </div>
         <div class="env-second__form">
-          <div v-for="item in formInfo" :key="item.name" class="form-block">
-            <span class="form-label">
-              {{ item.label }}
-            </span>
-            <span>{{ item.content }}</span>
+          <div v-for="item in formInfo" :key="item.content">
+            <div v-if="!formRule.includes(item.label)" class="form-block">
+              <span class="form-label">
+                {{ item.label }}
+              </span>
+              <span>{{ item.content }}</span>
+            </div>
           </div>
         </div>
         <div class="env-second__chart">
@@ -106,40 +113,38 @@
 import Charts from "@jiaminghi/charts"
 import infoBlock from "./infoBlock"
 import { get_ecological_equipment_geojson } from "@/api/device"
+import { get_ecologicalequipment } from "@/api/environment"
+import { DateFormat, time_to_sec } from "@/utils/index"
+import { environmentList } from "@/utils/environment"
 const mapId = "生态环境"
 import mapUtil from "@/mixins/mapUtil"
+let list = environmentList
 export default {
   components: { infoBlock },
   mixins: [mapUtil],
   data() {
     return {
       currentPosition: "",
-      positionList: [
-        { name: "鸡冠山巴栗坪保护站", orgId: "dayi" },
-        { name: "公园外喂猴处", orgId: "chongzhou" },
-        { name: "公园内猴子坡", orgId: "dujiangyan" },
-        { name: "宝山村回龙沟猴区", orgId: "pengzhou" }
+      positionList: [],
+      labelInfo: {},
+      formInfo: [],
+      formRule: [
+        "保护站",
+        "设备地点",
+        "设备编号",
+        "设备名称",
+        "时间",
+        "经度",
+        "纬度"
       ],
-      labelInfo: {
-        name: "动环设备",
-        mark: "003123",
-        maintainPosition: "回龙沟",
-        status: "正常",
-        maintainPerson: "周于",
-        tel: 13981777981,
-        equipPosition: "宝山村回龙沟猴区",
-        jwd: "103.321323, 123.13123"
-      },
-      formInfo: [
-        { label: "温度", content: "30.6度" },
-        { label: "温度", content: "54.8%RH" },
-        { label: "风向", content: "0.23" },
-        { label: "风向", content: "0.99m/s" },
-        { label: "噪声", content: "52.1dB" },
-        { label: "噪声", content: "120.0hPa" },
-        { label: "PM2.5", content: "11.8ug/m" },
-        { label: "PM2.5", content: "13,4ug.m" }
-      ]
+      environmentInfo: [],
+      totalData: "",
+      online: "",
+      offline: "",
+      chartData: [],
+      chartX: [],
+      PM25List: [],
+      PM10List: []
     }
   },
   computed: {
@@ -160,16 +165,52 @@ export default {
     }
   },
   mounted() {
-    this.initChart()
-    this.initMap()
+    let newList = []
+    for (let j = 0; j < list.length; j++) {
+      newList.push([])
+      for (let i in list[j]) {
+        newList[j].push({
+          label: i,
+          content: list[j][i],
+          id: j.toString() + "1"
+        })
+      }
+    }
+    list = newList
+    this.getInfo()
   },
   beforeDestroy() {
     console.log(this)
     this.removeMap()
   },
   methods: {
+    async getInfo() {
+      const resData = await get_ecologicalequipment()
+      this.positionList = resData.devices
+      this.online = resData.online
+      this.offline = resData.offline
+      this.totalData = parseInt(resData.online) + parseInt(resData.offline)
+      this.positionClick(resData.devices[0])
+    },
     positionClick(item) {
-      this.currentPosition = item.orgId
+      this.currentPosition = item.orgName
+      this.labelInfo = item
+      for (let i = 0; i < list.length; i++) {
+        if (list[i][0].content === item.orgName) {
+          this.chartX.push(list[i][4].content)
+          this.PM10List.push(list[i][13].content)
+          this.PM25List.push(list[i][14].content)
+          if (
+            time_to_sec(list[i][4].content) >
+            time_to_sec(DateFormat(new Date().getTime(), "hh:mm:ss"))
+          ) {
+            this.formInfo = list[i - 1]
+            this.initChart()
+            this.initMap()
+            return
+          }
+        }
+      }
     },
     initChart() {
       const chart = document.querySelector(".env-second__chart-content")
@@ -180,6 +221,10 @@ export default {
         xAxis: {
           boundaryGap: false,
           axisLabel: {
+            formatter: function (v) {
+              let date = v.value
+              return date.substring(0, 5)
+            },
             style: {
               fill: "white"
             }
@@ -189,7 +234,7 @@ export default {
               stroke: "rgba(178, 231, 255, 1)"
             }
           },
-          data: ["11:30:00", "12:30:00", "13:30:00", "14:30:00", "15:30:00"]
+          data: this.chartX
         },
         yAxis: {
           data: "value",
@@ -226,7 +271,7 @@ export default {
         series: [
           {
             name: "PM10",
-            data: [2, 5, 4, 7, 9],
+            data: this.PM10List,
             type: "line",
             smooth: true,
             lineStyle: {
@@ -241,7 +286,7 @@ export default {
           },
           {
             name: "PM25",
-            data: [5, 4, 7, 3, 5],
+            data: this.PM25List,
             type: "line",
             smooth: true,
             lineStyle: {
