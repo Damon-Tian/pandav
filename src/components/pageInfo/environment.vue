@@ -144,7 +144,8 @@ export default {
       chartData: [],
       chartX: [],
       PM25List: [],
-      PM10List: []
+      PM10List: [],
+      clock: ""
     }
   },
   computed: {
@@ -156,9 +157,6 @@ export default {
     }
   },
   watch: {
-    currentArea() {
-      this.currentPosition = this.currentArea
-    },
     currentPosition() {
       this.removeMap()
       this.initMap()
@@ -177,10 +175,15 @@ export default {
       }
     }
     list = newList
+    this.clock && clearInterval(this.clock)
     this.getInfo()
+    this.clock = setInterval(() => {
+      this.getInfo()
+    }, 3600000)
   },
   beforeDestroy() {
     console.log(this)
+    clearInterval(this.clock)
     this.removeMap()
   },
   methods: {
@@ -201,8 +204,10 @@ export default {
           this.PM10List.push(list[i][13].content)
           this.PM25List.push(list[i][14].content)
           if (
-            time_to_sec(list[i][4].content) >
-            time_to_sec(DateFormat(new Date().getTime(), "hh:mm:ss"))
+            list[i][4].content >
+            parseInt(
+              time_to_sec(DateFormat(new Date().getTime(), "hh:mm:ss")) / 1000
+            )
           ) {
             this.formInfo = list[i - 1]
             this.initChart()
@@ -215,15 +220,27 @@ export default {
     initChart() {
       const chart = document.querySelector(".env-second__chart-content")
       const envChart = new Charts(chart)
-
+      let that = this
       const option1 = {
         title: {},
         xAxis: {
           boundaryGap: false,
           axisLabel: {
             formatter: function (v) {
-              let date = v.value
-              return date.substring(0, 5)
+              let date = parseInt(v.value * 1000)
+              if (that.chartX.length > 10) {
+                if (v.index % 2 === 0) {
+                  let time = new Date(new Date().toLocaleDateString()).getTime()
+                  let timespan = time + date
+                  return DateFormat(timespan, "hh:mm:ss").substring(0, 5)
+                } else {
+                  return ""
+                }
+              } else {
+                let time = new Date(new Date().toLocaleDateString()).getTime()
+                let timespan = time + date
+                return DateFormat(timespan, "hh:mm:ss").substring(0, 5)
+              }
             },
             style: {
               fill: "white"
@@ -418,6 +435,7 @@ export default {
     &.active {
       background: rgba(36, 218, 250, 25%);
       color: #01d4f9;
+
       /* stylelint-disable-next-line no-descending-specificity */
       span {
         background: url("../../assets/img/icon-info__position-active.png");
@@ -460,6 +478,7 @@ export default {
         background-color: rgba(0, 108, 255, 20%);
         color: #7ecef4;
       }
+
       /* stylelint-disable-next-line no-descending-specificity */
       span {
         display: inline-block;
@@ -482,6 +501,7 @@ export default {
       align-items: center;
       justify-content: space-between;
       margin-top: 22px;
+
       /* stylelint-disable-next-line no-descending-specificity */
       & > span {
         color: #fff;
@@ -502,6 +522,7 @@ export default {
           margin: 0 10px;
           content: "";
         }
+
         /* stylelint-disable-next-line no-descending-specificity */
         &:first-child {
           margin-right: 20px;
