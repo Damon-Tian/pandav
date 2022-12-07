@@ -537,7 +537,11 @@ export default {
     }
 
     & > div:nth-child(5) {
-      background: linear-gradient(#718cd4, rgba(255, 255, 255, 0%));
+      background: linear-gradient(
+        #718cd4,
+        #3294ff 99%,
+        rgba(255, 255, 255, 0%) 1%
+      );
     }
   }
 }

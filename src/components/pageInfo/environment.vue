@@ -21,8 +21,8 @@
         <div class="env-first__bottom">
           <li
             v-for="item in positionList"
-            :key="item.orgName"
-            :class="currentPosition === item.orgName ? 'active' : ''"
+            :key="item.fkOrgId"
+            :class="currentPosition === item.fkOrgId ? 'active' : ''"
             @click="positionClick(item)"
           >
             <span></span>
@@ -31,7 +31,7 @@
         </div>
       </div>
     </infoBlock>
-    <infoBlock>
+    <infoBlock v-if="labelInfo">
       <div class="env-second info-content">
         <div class="env-second__label-info">
           <div class="label-inline">
@@ -47,10 +47,6 @@
 
           <div class="label-inline">
             <span>
-              <span class="label-color">保护站：</span>
-              {{ labelInfo.orgName }}
-            </span>
-            <span>
               <span class="label-color">运行状态：</span>
               <span v-show="labelInfo.deviceStatus === 0" style="color: #3ac268"
                 >正常</span
@@ -61,17 +57,10 @@
             </span>
           </div>
 
-          <!-- <div class="label-inline">
-            <span>
-              <span class="label-color">维护人：</span>
-              {{ labelInfo.maintainPerson }}
-            </span>
-            <span>
-              <span class="label-color">电话：</span>
-              {{ labelInfo.tel }}
-            </span>
-          </div> -->
-
+          <div>
+            <span class="label-color">设备地点：</span>
+            {{ labelInfo.orgName }}
+          </div>
           <div>
             <span class="label-color">设备地点：</span>
             {{ labelInfo.deviceAddress }}
@@ -79,18 +68,20 @@
 
           <div>
             <span class="label-color">经纬度：</span>
-            {{ labelInfo.latitude }},{{ labelInfo.longitude }}
+            {{ labelInfo.latitude?.toString().slice(0, 10) }},{{
+              labelInfo.longitude?.toString().slice(0, 10)
+            }}
           </div>
 
           <!-- <div style="margin-top: 12px" class="get-more">更多信息></div> -->
         </div>
         <div class="env-second__form">
-          <div v-for="item in formInfo" :key="item.content">
-            <div v-if="!formRule.includes(item.label)" class="form-block">
+          <div v-for="item in formInfo" :key="item">
+            <div class="form-block">
               <span class="form-label">
-                {{ item.label }}
+                {{ item }}
               </span>
-              <span>{{ item.content }}</span>
+              <span>{{ currentStatisc[item] }}</span>
             </div>
           </div>
         </div>
@@ -118,7 +109,7 @@ import { DateFormat, time_to_sec } from "@/utils/index"
 import { environmentList } from "@/utils/environment"
 const mapId = "生态环境"
 import mapUtil from "@/mixins/mapUtil"
-let list = environmentList
+
 export default {
   components: { infoBlock },
   mixins: [mapUtil],
@@ -126,8 +117,18 @@ export default {
     return {
       currentPosition: "",
       positionList: [],
-      labelInfo: {},
-      formInfo: [],
+      labelInfo: null,
+      formInfo: [
+        "温度",
+        "湿度",
+        "气压",
+        "噪声",
+        "风速",
+        "风向",
+        "pm2.5",
+        "pm10"
+      ],
+      currentStatisc: {},
       formRule: [
         "保护站",
         "设备地点",
@@ -145,7 +146,8 @@ export default {
       chartX: [],
       PM25List: [],
       PM10List: [],
-      clock: ""
+      clock: "",
+      envChart: null
     }
   },
   computed: {
@@ -153,37 +155,30 @@ export default {
       return this.$store.state.app.currentArea
     },
     detail() {
-      return this.$store.state.app.feature
+      return this.$store.state.app.map.feature
+    },
+    currentOrgId() {
+      return this.$store.getters["app/GET_AREA_ID"]
     }
   },
   watch: {
     currentPosition() {
-      this.removeMap()
-      this.initMap()
+      // this.removeMap()
+      // this.initMap()
+    },
+    detail() {
+      if (this.detail.properties?.id) {
+        const currentDevice = this.positionList.find(
+          (item) => item.fkOrgId == this.detail.properties.orgId
+        )
+        this.positionClick(currentDevice)
+      }
     }
   },
   mounted() {
-    let newList = []
-    for (let j = 0; j < list.length; j++) {
-      newList.push([])
-      for (let i in list[j]) {
-        newList[j].push({
-          label: i,
-          content: list[j][i],
-          id: j.toString() + "1"
-        })
-      }
-    }
-    list = newList
-    this.clock && clearInterval(this.clock)
     this.getInfo()
-    this.clock = setInterval(() => {
-      this.getInfo()
-    }, 3600000)
   },
   beforeDestroy() {
-    console.log(this)
-    clearInterval(this.clock)
     this.removeMap()
   },
   methods: {
@@ -193,33 +188,57 @@ export default {
       this.online = resData.online
       this.offline = resData.offline
       this.totalData = parseInt(resData.online) + parseInt(resData.offline)
-      this.positionClick(resData.devices[0])
-    },
-    positionClick(item) {
-      this.currentPosition = item.orgName
-      this.labelInfo = item
-      for (let i = 0; i < list.length; i++) {
-        if (list[i][0].content === item.orgName) {
-          this.chartX.push(list[i][4].content)
-          this.PM10List.push(list[i][13].content)
-          this.PM25List.push(list[i][14].content)
-          if (
-            list[i][4].content >
-            parseInt(
-              time_to_sec(DateFormat(new Date().getTime(), "hh:mm:ss")) / 1000
-            )
-          ) {
-            this.formInfo = list[i - 1]
-            this.initChart()
-            this.initMap()
-            return
-          }
-        }
+
+      const defaultDevice = this.positionList.find(
+        (item) => item.fkOrgId == this.currentOrgId
+      )
+      if (defaultDevice) {
+        this.positionClick(defaultDevice)
+      } else {
+        this.initMap()
       }
     },
+    positionClick(item) {
+      if (item.fkOrgId !== this.currentPosition) {
+        this.currentPosition = item.fkOrgId
+        this.labelInfo = item
+        this.getCurrentStatisc()
+      } else {
+        this.currentPosition = ""
+        this.labelInfo = null
+        this.envChart = null
+      }
+      this.initMap()
+    },
+
+    getCurrentStatisc() {
+      const h = new Date().getHours() * 60 * 60
+      const lastIndex = environmentList.findLastIndex(
+        (item) => item["保护站"] == this.labelInfo.orgName && item["时间"] == h
+      )
+      const statisc = environmentList[lastIndex]
+      this.currentStatisc = statisc
+      const chartX = [],
+        PM10List = [],
+        PM25List = []
+      for (let i = lastIndex - 23; i < lastIndex + 1; i++) {
+        const item = environmentList[i]
+        chartX.push(item["时间"])
+        PM10List.push(item["pm2.5"])
+        PM25List.push(item["pm10"])
+      }
+      this.chartX = chartX
+      this.PM10List = PM10List
+      this.PM25List = PM25List
+      this.$nextTick(() => {
+        this.initChart()
+      })
+    },
     initChart() {
-      const chart = document.querySelector(".env-second__chart-content")
-      const envChart = new Charts(chart)
+      if (!this.envChart) {
+        const chart = document.querySelector(".env-second__chart-content")
+        this.envChart = new Charts(chart)
+      }
       let that = this
       const option1 = {
         title: {},
@@ -272,19 +291,6 @@ export default {
           }
         },
         color: ["#22FFCC", "#0066D2"],
-        // legend: {
-        //   top: "20%",
-        //   right: 0,
-        //   data: ["PM10", "PM25"],
-        //   textStyle: {
-        //     fill: "white"
-        //   },
-        //   icon: "rect",
-        //   iconWidth: 10,
-        //   iconStyle: {
-        //     borderRadius: 0
-        //   }
-        // },
         series: [
           {
             name: "PM10",
@@ -318,10 +324,16 @@ export default {
           }
         ]
       }
-      envChart.setOption(option1)
+      this.envChart.setOption(option1)
     },
     async initMap() {
-      const geoData = await get_ecological_equipment_geojson()
+      this.removelayer(1, mapId)
+      let geoData = await get_ecological_equipment_geojson()
+      if (this.currentPosition) {
+        geoData = geoData.filter(
+          (item) => item.properties.orgId == this.currentPosition
+        )
+      }
       this.setLayer(1, mapId, geoData)
     },
     removeMap() {
@@ -445,7 +457,7 @@ export default {
 }
 
 .env-second {
-  padding: 22px 20px;
+  padding: 12px 10px;
 
   &__label-info {
     letter-spacing: 2px;
@@ -475,8 +487,10 @@ export default {
     .form-block {
       .form-label {
         width: 78px;
+        align-items: center;
         background-color: rgba(0, 108, 255, 20%);
         color: #7ecef4;
+        line-height: 32px;
       }
 
       /* stylelint-disable-next-line no-descending-specificity */

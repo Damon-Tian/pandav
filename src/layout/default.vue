@@ -101,9 +101,8 @@ export default {
     },
     //图层点击
     async handleFeature(currentFeature) {
-      console.log(currentFeature)
       //设备
-      if (currentFeature.properties.equipmentType) {
+      if (currentFeature.properties.equipmentType && this.currentTab == 1) {
         this.cameraType = currentFeature.properties.equipmentType
         this.componentId = "CameraInfo"
         this.infoId = currentFeature.properties.equipmentId

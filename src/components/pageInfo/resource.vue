@@ -122,10 +122,14 @@
         </div>
         <div class="detail-box">
           <div class="detail-content">
-            <div v-for="item in 5" :key="item" class="detail-item">
-              <img src="1" alt="" />
+            <div
+              v-for="item in currentBioList"
+              :key="item.id"
+              class="detail-item"
+            >
+              <img :src="item.picUrl" alt="" />
               <div class="tip">
-                <span>{{ item }}</span>
+                <span>{{ item.name }}</span>
               </div>
             </div>
           </div>
@@ -136,8 +140,9 @@
 </template>
 
 <script>
-import { get_bio_geosjon } from "@/api/animal"
+import { get_bio_list } from "@/api/animal"
 import mapUtil from "@/mixins/mapUtil"
+import { getImageUrl } from "@/utils"
 const mapId = "自然资源"
 const baseConfig = {
   radius: "40",
@@ -184,7 +189,7 @@ export default {
           }
         ]
       },
-      animalList: [],
+      bioList: [],
       currentSelect: 1,
       statistic: {
         chengdu: {
@@ -289,6 +294,11 @@ export default {
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    currentBioList() {
+      return this.currentDetailTab == "动物多样性"
+        ? this.bioList.filter((item) => item.kingdom == 0)
+        : this.bioList.filter((item) => item.kingdom == 1)
     }
   },
   watch: {
@@ -304,8 +314,10 @@ export default {
   beforeDestroy() {
     this.removeMap()
   },
-  mounted() {
+  async mounted() {
     // this.initMap()
+    const { records } = await get_bio_list({ pageNumber: 1, pageSize: 999 })
+    this.bioList = records
   },
   methods: {
     changeDetail(tab) {
@@ -341,9 +353,9 @@ export default {
       }
     },
     async initMap() {
-      const geoData = await get_bio_geosjon()
-      console.log(geoData)
-      this.setLayer(1, mapId, geoData)
+      // const geoData = await get_bio_geosjon()
+      // console.log(geoData)
+      // this.setLayer(1, mapId, geoData)
     },
     removeMap() {
       this.removelayer(1, mapId)
@@ -490,7 +502,7 @@ export default {
 
   .detail-box {
     overflow: hidden;
-    max-height: 260px;
+    max-height: 345px;
 
     &::-webkit-scrollbar {
       width: 5px;
@@ -508,7 +520,7 @@ export default {
     }
 
     &:hover {
-      overflow: auto;
+      overflow-y: auto;
     }
 
     .detail-content {
@@ -520,7 +532,12 @@ export default {
         width: calc(50% - 10px);
         height: 120px;
         margin-top: 10px;
-        margin-left: 10px;
+        background-color: rgba(0, 0, 0, 60%);
+
+        img {
+          height: 100%;
+          object-fit: contain;
+        }
 
         .tip {
           position: absolute;
@@ -536,6 +553,10 @@ export default {
             color: #fff;
           }
         }
+      }
+
+      & .detail-item:nth-child(2n) {
+        margin-left: 15px;
       }
     }
   }

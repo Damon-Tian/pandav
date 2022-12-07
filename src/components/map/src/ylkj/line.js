@@ -177,7 +177,7 @@ export function removeline(map, layerId) {
             item.remove()
         })
     } else {
-        markerObj[layerId].remove()
+        markerObj[layerId] && markerObj[layerId].remove()
     }
     // Array.isArray(markerObj[layerId])? markerObj[layerId].remove() : markerObj[layerId].remove();
 }
