@@ -8,7 +8,7 @@
           <div class="stations-btn">
             <countTo
               :start-val="0"
-              :end-val="getPersons"
+              :end-val="totalData.personNum"
               :duration="3000"
             />人次
           </div>
@@ -16,7 +16,11 @@
         <div>
           里程
           <div class="stations-btn">
-            <countTo :start-val="0" :end-val="getKm" :duration="3000" />km
+            <countTo
+              :start-val="0"
+              :end-val="Number(totalData.mileage)"
+              :duration="3000"
+            />km
           </div>
         </div>
       </div>
@@ -41,89 +45,125 @@
                     class="legend-item"
                     :style="'background:' + colorList[i]"
                   ></span>
-                  {{ item.station }}
+                  {{ item.areaName }}
                 </div>
               </td>
               <td align="right">
                 <countTo
                   :start-val="0"
-                  :end-val="item.person"
+                  :end-val="item.personNum"
                   :duration="3000"
                 />
               </td>
               <td align="right">
-                <countTo :start-val="0" :end-val="item.km" :duration="3000" />
+                <countTo
+                  :start-val="0"
+                  :end-val="Number(item.mileage)"
+                  :duration="3000"
+                />
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
-    <patrolList class="bg" style="padding: 0 10px" />
+    <div class="bg" style="padding: 10px; margin-top: 10px">
+      <SwiperTable
+        v-if="alarmList.length"
+        :config="config"
+        :data="alarmList"
+        @swiperItemClick="swiperItemClick"
+      />
+    </div>
+
+    <!-- <patrolList class="bg" style="padding: 0 10px" /> -->
   </div>
 </template>
 
 <script>
-import patrolList from "./patrolList"
+// import patrolList from "./patrolList"
 import Charts from "@jiaminghi/charts"
+import SwiperTable from "@/components/swiperTable/index.vue"
+import { get_patrol_detail, get_patrol_detail_geojson_item } from "@/api/line"
+import mapUtil from "@/mixins/mapUtil"
 let colorList = ["#71ED93", "#02FCFF", "#FFF960", "#33AEFF"]
 export default {
   components: {
-    patrolList
+    SwiperTable
+    // patrolList
   },
+  mixins: [mapUtil],
   props: {
+    alarmList: {
+      type: Array,
+      default: () => []
+    },
     data: {
       type: Array,
-      default: () => [
-        {
-          person: 12,
-          km: 675,
-          station: "崇州站"
-        },
-        {
-          person: 6,
-          km: 487,
-          station: "大邑站"
-        },
-        {
-          person: 3,
-          km: 353,
-          station: "彭州站"
-        },
-        {
-          person: 2,
-          km: 232,
-          station: "都江堰站"
-        }
-      ]
+      default: () => []
     },
     colorList: {
       type: Array,
       default: () => colorList
+    },
+    totalData: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  data() {
+    return {
+      myCharts: null,
+      option: {},
+      isShowCharts: false,
+      config: {
+        header: ["巡护记录", "巡护类型", "巡护人"],
+        headerHeight: 32,
+        columnWidth: [155, 155, 98],
+        swiperHeight: 470,
+        headerBGC: "rgba(0, 108, 255, 0.2)",
+        headerBorder: "none",
+        slidesPerView: 9
+      }
     }
   },
   computed: {
-    getPersons() {
-      return this.data.reduce((a, b) => a + b.person, 0)
-    },
-    getKm() {
-      return this.data.reduce((a, b) => a + b.km, 0)
+    // getPersons() {
+    //   return this.data.reduce((a, b) => a + b.person, 0)
+    // },
+    // getKm() {
+    //   return this.data.reduce((a, b) => a + b.km, 0)
+    // }
+  },
+  watch: {
+    data: {
+      handler() {
+        this.isShowCharts = !this.data.every((item) => {
+          return !item.personNum
+        })
+        if (this.isShowCharts) {
+          this.initPie()
+        }
+      },
+      deep: true,
+      immediate: true
     }
   },
-  mounted() {
-    this.initPie()
-  },
+  mounted() {},
   methods: {
     initPie() {
       //初始化pie 丁格尔图
-      const option = {
+      if (!this.myCharts) {
+        this.myCharts = new Charts(this.$refs.stationPie)
+      }
+      this.option = {
         color: colorList,
         series: [
           {
             type: "pie",
             data: this.data.map((item) => ({
-              name: item.station,
-              value: item.person
+              name: item.areaName,
+              value: item.personNum ? item.personNum : 0
             })),
             outsideLabel: {
               show: false
@@ -133,8 +173,18 @@ export default {
           }
         ]
       }
-      const myCharts = new Charts(this.$refs.stationPie)
-      myCharts.setOption(option)
+      this.myCharts.setOption(this.option)
+    },
+
+    async swiperItemClick(item) {
+      const data = await get_patrol_detail({ id: item.id })
+      const geoData = [get_patrol_detail_geojson_item(data)]
+      this.setLayer(2, item.id, geoData)
+      console.log(geoData)
+      this.flyTo({
+        center: [Number(data.startLon), Number(data.startLat)],
+        zoom: 20
+      })
     }
   }
 }
@@ -142,7 +192,27 @@ export default {
 <style scoped lang="less">
 .bg {
   padding: 10px;
-  background: rgb(0, 0, 0);
+  background: rgba(0, 0, 0, 60%);
+}
+
+:deep .swiper-table .swiper-container {
+  height: 470px;
+}
+
+:deep .swiper-table__data__td:nth-child(1) .swiper-table__data__box {
+  border-left: none;
+}
+
+:deep .swiper-table__header {
+  color: #7ecef4;
+}
+
+:deep .swiper-table .is-active {
+  color: #fff;
+
+  .swiper-table__data__box {
+    background-color: #0b90c2;
+  }
 }
 
 .stations-btns {

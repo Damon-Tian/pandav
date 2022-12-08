@@ -1,7 +1,6 @@
-
 // 设备 api
 
-import request from '@/utils/request'
+import request from "@/utils/request"
 import { getImageUrl } from "@/utils"
 /*
  * 设备点位
@@ -9,16 +8,19 @@ import { getImageUrl } from "@/utils"
  * @returns
  */
 
-export function get_device_list(data, params = {
+export function get_device_list(
+  data,
+  params = {
     pageNumber: 1,
     pageSize: 999
-}) {
-    return request({
-        url: '/front/ePoint/getEPList',
-        method: 'post',
-        data,
-        params
-    })
+  }
+) {
+  return request({
+    url: "/front/ePoint/getEPList",
+    method: "post",
+    data,
+    params
+  })
 }
 /*
  * 设备点位详情
@@ -27,23 +29,76 @@ export function get_device_list(data, params = {
  */
 
 export function get_device_detail(params) {
-    return request({
-        url: '/front/edmp/device/getDetails',
-        method: 'get',
-        params
-    })
+  return request({
+    url: "/front/edmp/device/getDetails",
+    method: "get",
+    params
+  })
 }
 /*
  * 通过设备id获取设备详情
  * @param {*} id
  * @returns
  */
-
 export function get_device_by_id(id) {
-    return request({
-        url: '/front/edmp/device/getDetails/' + id,
-        method: 'get'
-    })
+  return request({
+    url: "/front/edmp/device/getDetails/" + id,
+    method: "get"
+  })
+}
+
+/*
+ * 大屏获取红外相机信息
+ * @param {*}
+ * @returns
+ */
+export function get_infrared_camera() {
+  return request({
+    url: "/front/edmp/largeScreen/getInfraredCamera",
+    method: "get"
+  })
+}
+
+/*
+ * 大屏根据机构ID获取摄像机信息
+ * @param {*} params
+ * @returns
+ */
+
+export function get_vidicon(params) {
+  return request({
+    url: "/front/edmp/largeScreen/getVidicon",
+    method: "get",
+    params
+  })
+}
+
+/*
+ * 大屏根据机构id获取抓拍和巡护事件
+ * @param {*} params
+ * @returns
+ */
+
+export function get_event_by_orgId(params) {
+  return request({
+    url: "/front/edmp/largeScreen/getEventByOrgId",
+    method: "get",
+    params
+  })
+}
+
+/*
+ * 大屏根据设备编号获取抓拍
+ * @param {*} params
+ * @returns
+ */
+
+export function get_event_by_device_sn(params) {
+  return request({
+    url: "/front/edmp/largeScreen/getEventByDeviceSn",
+    method: "get",
+    params
+  })
 }
 
 /*
@@ -53,31 +108,28 @@ export function get_device_by_id(id) {
  */
 
 export function get_device_by_devicesn(params) {
-    return request({
-        url: '/front/edmp/largeScreen/getEquipmentPointBySn',
-        method: 'get',
-        params
-    })
+  return request({
+    url: "/front/edmp/largeScreen/getEquipmentPointBySn",
+    method: "get",
+    params
+  })
 }
 
 //获取设备 geojson
 
-
 export function get_camera_geojson_item(detail) {
-    return {
-        type: "Feature",
-        img: getImageUrl(detail.icon),
-        // circle: true,
-        properties: {
-            ...detail
-        }, //其中必须包含id字段，用于高亮点钟图标
-        geometry: {
-            type: "Point",
-            coordinates: JSON.parse(
-                detail.geoJson
-            ).geometry.coordinates.flat()
-        }
+  return {
+    type: "Feature",
+    img: getImageUrl(detail.icon),
+    // circle: true,
+    properties: {
+      ...detail
+    }, //其中必须包含id字段，用于高亮点钟图标
+    geometry: {
+      type: "Point",
+      coordinates: JSON.parse(detail.geoJson).geometry.coordinates.flat()
     }
+  }
 }
 
 /*
@@ -87,21 +139,20 @@ export function get_camera_geojson_item(detail) {
  */
 
 export async function get_infrared_camera_geojson(orgId) {
-    const params = {
-    }
-    if (orgId) {
-        params.orgIds = [orgId]
-    }
-    const { rows } = await get_device_list({
-        equipmentType: ["infrared_camera"],
-        ...params
-    })
-    const geoJson = []
-    rows.forEach((item) => {
-        const json = get_camera_geojson_item(item)
-        geoJson.push(json)
-    })
-    return geoJson
+  const params = {}
+  if (orgId) {
+    params.orgIds = [orgId]
+  }
+  const { rows } = await get_device_list({
+    equipmentType: ["infrared_camera"],
+    ...params
+  })
+  const geoJson = []
+  rows.forEach((item) => {
+    const json = get_camera_geojson_item(item)
+    geoJson.push(json)
+  })
+  return geoJson
 }
 /*
  * 获取摄像机相机geojson
@@ -110,23 +161,23 @@ export async function get_infrared_camera_geojson(orgId) {
  */
 
 export async function get_video_camera_geojson(orgId) {
-    const params = {
-        pageNumber: 1,
-        pageSize: 999
-    }
-    if (orgId) {
-        params.orgIds = [orgId]
-    }
-    const { rows } = await get_device_list({
-        equipmentType: ["video_camera"],
-        ...params
-    })
-    const geoJson = []
-    rows.forEach((item) => {
-        const json = get_camera_geojson_item(item)
-        geoJson.push(json)
-    })
-    return geoJson
+  const params = {
+    pageNumber: 1,
+    pageSize: 999
+  }
+  if (orgId) {
+    params.orgIds = [orgId]
+  }
+  const { rows } = await get_device_list({
+    equipmentType: ["video_camera"],
+    ...params
+  })
+  const geoJson = []
+  rows.forEach((item) => {
+    const json = get_camera_geojson_item(item)
+    geoJson.push(json)
+  })
+  return geoJson
 }
 
 /*
@@ -136,21 +187,21 @@ export async function get_video_camera_geojson(orgId) {
  */
 
 export async function get_ecological_equipment_geojson(orgId) {
-    const params = {
-        pageNumber: 1,
-        pageSize: 999
-    }
-    if (orgId) {
-        params.orgIds = [orgId]
-    }
-    const { rows } = await get_device_list({
-        equipmentType: ["ecological_equipment"],
-        ...params
-    })
-    const geoJson = []
-    rows.forEach((item) => {
-        const json = get_camera_geojson_item(item)
-        geoJson.push(json)
-    })
-    return geoJson
+  const params = {
+    pageNumber: 1,
+    pageSize: 999
+  }
+  if (orgId) {
+    params.orgIds = [orgId]
+  }
+  const { rows } = await get_device_list({
+    equipmentType: ["ecological_equipment"],
+    ...params
+  })
+  const geoJson = []
+  rows.forEach((item) => {
+    const json = get_camera_geojson_item(item)
+    geoJson.push(json)
+  })
+  return geoJson
 }

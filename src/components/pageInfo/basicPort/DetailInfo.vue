@@ -29,44 +29,98 @@
         <span>站点位置是否在大熊猫公园内： </span>
         <span>是</span>
       </div>
-      <SwiperTable :config="config" />
+      <SwiperTable
+        v-if="alarmList.length"
+        :config="config"
+        :data="alarmList"
+        @swiperItemClick="swiperItemClick"
+      />
     </div>
   </info-block>
 </template>
 
 <script>
 import SwiperTable from "@/components/swiperTable/index.vue"
+import {
+  get_patrol_by_report,
+  get_patrol_detail_geojson_item,
+  get_patrol_detail
+} from "@/api/line"
+import { get_device_by_devicesn, get_camera_geojson_item } from "@/api/device"
+import mapUtil from "@/mixins/mapUtil"
 export default {
   components: { SwiperTable },
+  mixins: [mapUtil],
   props: {
     dataDetail: {
       type: Object,
       default: () => {}
+    },
+    alarmList: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
       config: {
-        header: ["事件名称", "时间", "成效"],
+        header: ["事件名称", "时间"],
         headerHeight: 32,
-        columnWidth: [156, 156, 83],
-        headerBGC: "rgba(0, 108, 255, 0.2)",
-        data: [
-          ["1XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["2XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["3XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["4XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["5XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["6XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["7XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["8XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["9XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["10XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["11XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["12XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"],
-          ["13XXXXX摄像头A2抓拍到XXX事件到XXX事件", "2022/8/16 15:30", "完成"]
-        ]
+        columnWidth: [230, 156],
+        headerBGC: "rgba(0, 108, 255, 0.2)"
+      },
+      needRemoveChecked: []
+    }
+  },
+  methods: {
+    getNeedChecked() {
+      this.needRemoveChecked = this.alarmList.filter((item) => item.checked)
+    },
+    async swiperItemClick(item) {
+      if (item.source == 2) {
+        // 巡护记录当前事件点位
+        if (item.checked) {
+          const patrolRecord = await get_patrol_by_report({
+            reportNum: item.deviceSn
+          })
+          const patrolDetail = await get_patrol_detail({
+            id: patrolRecord.patrolId
+          })
+
+          const geoData = [get_patrol_detail_geojson_item(patrolDetail)]
+          this.setLayer(2, item.deviceSn, geoData)
+          const currentReport = patrolDetail.reportDTOList.find(
+            (report) => report.reportNum == item.deviceSn
+          )
+          const center = [currentReport.longitude, currentReport.latitude]
+          //飞到定位点位
+          this.flyTo({
+            center: center,
+            zoom: 20
+          })
+        } else {
+          this.removelayer(2, item.deviceSn)
+          this.reset()
+        }
+      } else {
+        // // 绘制红外相机点位
+        if (item.checked) {
+          const cameraDetail = await get_device_by_devicesn({
+            deviceSn: item.deviceSn
+          })
+          const geoData = [get_camera_geojson_item(cameraDetail)]
+          this.setLayer(1, item.deviceSn, geoData)
+          const center = geoData[0].geometry.coordinates
+          this.flyTo({
+            center: center,
+            zoom: 18
+          })
+        } else {
+          this.removelayer(1, item.deviceSn)
+          this.reset()
+        }
       }
+      this.getNeedChecked()
     }
   }
 }

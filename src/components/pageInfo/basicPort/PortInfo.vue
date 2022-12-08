@@ -2,18 +2,18 @@
   <div>
     <info-block title="站点信息">
       <div class="info-content info-port">
-        <div v-for="item in portList" :key="item.portList" class="port-block">
+        <div v-for="(item, index) in portData" :key="index" class="port-block">
           <p class="port-name">
-            {{ item.position }}
+            {{ item.areaName }}
           </p>
           <div class="port-content">
             <p class="port-content__position">
               <span>保护站</span>
-              <span>{{ item.numPosition }}</span>
+              <span>{{ item.belayStationNum }}</span>
             </p>
             <p class="port-content__num">
               <span>人员</span>
-              <span>{{ item.numPerson }}</span>
+              <span>{{ item.personNum }}</span>
             </p>
           </div>
         </div>
@@ -24,31 +24,14 @@
 
 <script>
 export default {
-  data() {
-    return {
-      portList: [
-        {
-          position: "崇州站",
-          numPosition: 5,
-          numPerson: 19
-        },
-        {
-          position: "大邑站",
-          numPosition: 45,
-          numPerson: 49
-        },
-        {
-          position: "彭州站",
-          numPosition: 15,
-          numPerson: 139
-        },
-        {
-          position: "都江堰站",
-          numPosition: 25,
-          numPerson: 59
-        }
-      ]
+  props: {
+    portData: {
+      type: Array,
+      default: () => []
     }
+  },
+  data() {
+    return {}
   }
 }
 </script>

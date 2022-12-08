@@ -14,19 +14,19 @@
           color: '#D8D8D8'
         }"
       >
-        <el-table-column prop="name" width="80"> </el-table-column>
-        <el-table-column prop="color,width">
+        <el-table-column prop="areaName" width="80"> </el-table-column>
+        <el-table-column prop="color">
           <template slot-scope="scope">
             <div
               :style="[
                 { background: scope.row.color },
-                { width: scope.row.width }
+                { width: `${(scope.row.cameraCount / statisc.total) * 100}%` }
               ]"
               class="table-progress-bar"
             ></div>
           </template>
         </el-table-column>
-        <el-table-column prop="equipment" label="设备数" width="70">
+        <el-table-column prop="cameraCount" label="设备数" width="70">
           <template slot-scope="scope">
             <span
               style="
@@ -37,13 +37,13 @@
             >
               <countTo
                 :start-val="0"
-                :end-val="scope.row.equipment"
+                :end-val="scope.row.cameraCount"
                 :duration="3000"
               />
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="newEquipment" label="新设备" width="70">
+        <el-table-column prop="newNum" label="新设备" width="70">
           <template slot-scope="scope">
             <span
               style="
@@ -54,12 +54,12 @@
             >
               <countTo
                 :start-val="0"
-                :end-val="scope.row.newEquipment"
+                :end-val="scope.row.newNum"
                 :duration="3000"
             /></span>
           </template>
         </el-table-column>
-        <el-table-column prop="oldEquipment" label="旧设备" width="70">
+        <el-table-column prop="oldNum" label="旧设备" width="70">
           <template slot-scope="scope">
             <span
               style="
@@ -70,7 +70,7 @@
             >
               <countTo
                 :start-val="0"
-                :end-val="scope.row.oldEquipment"
+                :end-val="scope.row.oldNum"
                 :duration="3000"
             /></span>
           </template>
@@ -82,43 +82,18 @@
 
 <script>
 import infoBlock from "../infoBlock.vue"
+import { get_infrared_camera } from "@/api/device"
+
 export default {
   components: { infoBlock },
   data() {
     return {
-      tableData: [
-        {
-          name: "崇州站",
-          color: "linear-gradient(90deg, #FF1B1B 2%, #FF8989 100%)",
-          equipment: 156,
-          newEquipment: 28,
-          oldEquipment: 128,
-          width: "100%"
-        },
-        {
-          name: "大邑站",
-          color: "linear-gradient(90deg, #FFCC00 0%, #FFEA96 100%)",
-          equipment: 74,
-          newEquipment: 22,
-          oldEquipment: 52,
-          width: "60%"
-        },
-        {
-          name: "彭州站",
-          color: "linear-gradient(90deg, #317AFF 0%, #88C6FF 100%)",
-          equipment: 94,
-          newEquipment: 12,
-          oldEquipment: 82,
-          width: "40%"
-        },
-        {
-          name: "都江堰站",
-          color: "linear-gradient(90deg, #23DE69 0%, #93FFBB 100%)",
-          equipment: 71,
-          newEquipment: 7,
-          oldEquipment: 64,
-          width: "20%"
-        }
+      tableData: [],
+      color: [
+        "linear-gradient(90deg, #FF1B1B 2%, #FF8989 100%)",
+        "linear-gradient(90deg, #FFCC00 0%, #FFEA96 100%)",
+        "linear-gradient(90deg, #317AFF 0%, #88C6FF 100%)",
+        "linear-gradient(90deg, #23DE69 0%, #93FFBB 100%)"
       ],
       statisc: {
         total: 0
@@ -126,8 +101,23 @@ export default {
     }
   },
   mounted() {
-    this.statisc = {
-      total: 376
+    this.getInfraredCamera()
+  },
+  methods: {
+    async getInfraredCamera() {
+      const data = await get_infrared_camera()
+      this.tableData = data
+      this.statisc.total = this.tableData[0].cameraCount
+      this.tableData = this.tableData.filter((item, index) => {
+        return index !== 0
+      })
+      this.tableData.map((item, index) => {
+        this.color.map((i, ind) => {
+          if (index === ind) {
+            item.color = i
+          }
+        })
+      })
     }
   }
 }
@@ -158,8 +148,10 @@ export default {
       background-color: transparent;
     }
 
-    :deep(.el-table--enable-row-transition .el-table__body td, .el-table
-        .cell) {
+    :deep(
+        .el-table--enable-row-transition .el-table__body td,
+        .el-table .cell
+      ) {
       padding: 0;
       padding-bottom: 9.5px;
       border: none;
