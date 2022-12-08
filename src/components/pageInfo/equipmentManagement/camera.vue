@@ -1,10 +1,11 @@
 <template>
   <info-block title="摄像机" class="camera" line>
     <div slot="titleRight" class="title-right">
-      <countTo :start-val="0" :end-val="statisc.total" :duration="3000" /><span
-        class="title-right__unit"
-        >个</span
-      >
+      <countTo
+        :start-val="0"
+        :end-val="vidiconData.count"
+        :duration="3000"
+      /><span class="title-right__unit">个</span>
     </div>
     <div class="info-content">
       <div class="info-content__state" style="margin-right: 52px">
@@ -24,7 +25,7 @@
             <div class="info-content__state__info__rectangularimg__text">
               <countTo
                 :start-val="0"
-                :end-val="statisc.normal"
+                :end-val="vidiconData.normalNum"
                 :duration="3000"
               />个
             </div>
@@ -51,7 +52,7 @@
             <div class="info-content__state__info__rectangularimg__text">
               <countTo
                 :start-val="0"
-                :end-val="statisc.error"
+                :end-val="vidiconData.unusualNum"
                 :duration="3000"
               />个
             </div>
@@ -66,21 +67,27 @@
 import infoBlock from "../infoBlock.vue"
 export default {
   components: { infoBlock },
+  props: {
+    vidiconData: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
-      statisc: {
-        normal: 0,
-        error: 0,
-        total: 0
-      }
+      // statisc: {
+      //   normal: 0,
+      //   error: 0,
+      //   total: 0
+      // }
     }
   },
   mounted() {
-    this.statisc = {
-      normal: 1725,
-      error: 134,
-      total: 1859
-    }
+    // this.statisc = {
+    //   normal: 1725,
+    //   error: 134,
+    //   total: 1859
+    // }
   }
 }
 </script>
