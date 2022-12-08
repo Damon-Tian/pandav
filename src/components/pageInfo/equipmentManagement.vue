@@ -63,7 +63,7 @@ export default {
     },
     currentPosition() {
       this.removeMap()
-      // this.initMap()
+      this.initMap()
     },
     orgId() {
       this.getVidicon()
@@ -74,21 +74,21 @@ export default {
     this.removeMap()
   },
   async mounted() {
-    // this.initMap()
+    this.initMap()
     this.getVidicon()
     this.getEventByOrgId()
     const { records } = await get_org({ pageNumber: 1, pageSize: 999 })
     this.orgIds = records
   },
   methods: {
-    // async initMap() {
-    //   const geoData1 = await get_infrared_camera_geojson()
-    //   const geoData2 = await get_video_camera_geojson()
-    //   const datas = [geoData1, geoData2]
-    //   mapId.forEach((id, index) => {
-    //     this.setLayer(1, id, datas[index])
-    //   })
-    // },
+    async initMap() {
+      const geoData1 = await get_infrared_camera_geojson()
+      const geoData2 = await get_video_camera_geojson()
+      const datas = [geoData1, geoData2]
+      mapId.forEach((id, index) => {
+        this.setLayer(1, id, datas[index])
+      })
+    },
     formatOrgId(orgId) {
       const org = this.orgIds.find((item) => item.id == orgId)
       return org ? org.name : ""
@@ -114,7 +114,6 @@ export default {
         }
         i.data[1] = i.getTime
       })
-      console.log(this.alarmList, "this.alarmList")
     },
     removeMap() {
       mapId.forEach((id) => {

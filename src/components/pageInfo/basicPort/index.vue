@@ -68,7 +68,7 @@ export default {
     },
     async initMap() {
       const geoData = await get_station_geojson()
-      this.setLayer(1, mapId, geoData)
+      this.setLayer(3, mapId, geoData)
     },
     async getPersonInfo() {
       const data = await get_person_info()
@@ -96,7 +96,7 @@ export default {
       })
     },
     removeMap() {
-      this.removelayer(1, mapId)
+      this.removelayer(3, mapId)
     }
   }
 }

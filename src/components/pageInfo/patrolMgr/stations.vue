@@ -18,7 +18,7 @@
           <div class="stations-btn">
             <countTo
               :start-val="0"
-              :end-val="Number(totalData.mileage)"
+              :end-val="Number(totalData.mileage / 1000)"
               :duration="3000"
             />km
           </div>
@@ -108,7 +108,7 @@ export default {
     },
     totalData: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     }
   },
   data() {

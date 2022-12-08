@@ -59,8 +59,8 @@ const mapId = "巡护样线"
 const mapId1 = "巡护路线"
 const tabs = [
   { value: "", label: "全部" },
-  { value: "DAILY", label: "样线巡护" },
-  { value: "TRANSECT", label: "日常巡护" }
+  { value: "TRANSECT", label: "样线巡护" },
+  { value: "DAILY", label: "日常巡护" }
 ]
 export default {
   components: {
@@ -70,10 +70,7 @@ export default {
   mixins: [mapUtil],
   data() {
     return {
-      dateRange: [
-        `${DateFormat(new Date(), "yyyy-MM-dd")} 00:00:00`,
-        `${DateFormat(new Date(), "yyyy-MM-dd")} 23:59:59`
-      ],
+      dateRange: [],
       tabs,
       activeName: "",
       statistic: {
@@ -81,7 +78,10 @@ export default {
       },
       orgIds: [],
       stationsData: [],
-      totalData: {},
+      totalData: {
+        personNum: 0,
+        mileage: 0
+      },
       alarmList: [],
       patrolTypeList: [
         { value: "DAILY", label: "日常巡护" },
@@ -161,10 +161,10 @@ export default {
       const params = {
         patrolType: this.activeName
       }
-      // if (this.dateRange && this.dateRange.length) {
-      //   params.startTime = this.dateRange[0]
-      //   params.endTime = this.dateRange[1]
-      // }
+      if (this.dateRange && this.dateRange.length) {
+        params.startTime = this.dateRange[0]
+        params.endTime = this.dateRange[1]
+      }
       this.getPatrolInfo(params)
       this.getPatrolByOrgid({
         endTime: params?.startTime,

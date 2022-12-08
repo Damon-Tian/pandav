@@ -161,13 +161,13 @@ export default {
       }
       //基层站点
       if (marker.stationName) {
-        if (this.currentTab != 1) {
-          return
-        }
         this.componentId = "PipeCareStation"
         this.$store.commit("app/SET_MAPFEATURE", {
           properties: marker
         })
+        if (this.currentTab != 1) {
+          return
+        }
         center = marker.coordinates
       }
 
