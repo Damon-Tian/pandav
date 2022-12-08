@@ -73,8 +73,6 @@ export function addHeatMap(map, data) {
                 'rgba(33,102,172,0)',
                 0.01,
                 '#3294FF',
-                0.2,
-                '#718CD4',
                 0.4,
                 '#41DFE9',
                 0.6,

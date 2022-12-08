@@ -150,14 +150,16 @@ export default {
     },
     handleAutoScroll() {
       this.timmer = setInterval(() => {
-        if (this.alarmList.length + 1 === this.scrollIndex) {
-          this.scrollIndex = 1
-          this.$nextTick(() => {
-            this.$refs.alarmBox.style.transition = "none"
-          })
-        } else {
-          this.$refs.alarmBox.style.transition = "all 0.5s"
-          this.scrollIndex++
+        if (!this.needRemoveChecked.length) {
+          if (this.alarmList.length + 1 === this.scrollIndex) {
+            this.scrollIndex = 1
+            this.$nextTick(() => {
+              this.$refs.alarmBox.style.transition = "none"
+            })
+          } else {
+            this.$refs.alarmBox.style.transition = "all 0.5s"
+            this.scrollIndex++
+          }
         }
       }, 5000)
     },
@@ -193,7 +195,9 @@ export default {
           })
 
           const geoData = [get_patrol_detail_geojson_item(patrolDetail)]
-          this.setLayer(2, item.deviceSn, geoData)
+          if (!this.hasLayer("巡护路线")) {
+            this.setLayer(2, item.deviceSn, geoData)
+          }
           const currentReport = patrolDetail.reportDTOList.find(
             (report) => report.reportNum == item.deviceSn
           )
@@ -201,7 +205,7 @@ export default {
           //飞到定位点位
           this.flyTo({
             center: center,
-            zoom: 20
+            zoom: 18
           })
         } else {
           this.removelayer(2, item.deviceSn)
@@ -214,7 +218,9 @@ export default {
             deviceSn: item.deviceSn
           })
           const geoData = [get_camera_geojson_item(cameraDetail)]
-          this.setLayer(1, item.deviceSn, geoData)
+          if (!this.hasLayer("红外相机")) {
+            this.setLayer(1, item.deviceSn, geoData)
+          }
           const center = geoData[0].geometry.coordinates
           this.flyTo({
             center: center,

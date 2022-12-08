@@ -38,14 +38,14 @@ export function addPolygon(map, data) {
     const setConfig = (data = {
         icon: DEFAULT_ICON,
         text: '巡护点B',
-        calback: function () {}
+        calback: function () { }
     }) => {
         const el = document.createElement('div');
         el.className = 'marker';
         el.style.display = 'flex';
         const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
-            <div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text?data.text:''}</div>
-            <image src="${data.icon?data.icon:DEFAULT_ICON}" style="width:20px;height:24px;"/>
+            <div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ''}</div>
+            <image src="${data.icon ? data.icon : DEFAULT_ICON}" />
             </div>`
         el.innerHTML = iconel;
         el.addEventListener('click', () => {
@@ -85,12 +85,11 @@ export function addPolygon(map, data) {
     if (data.textName) {
         markerObj[layerId] = []
         poygon.features.forEach(item => {
-            const center = centerOfMass(item).geometry.coordinates;
+            const center = item.properties.coordinates;
             try {
-                console.log('面积', center, poygon)
                 const idmarker = createMarker(center, {
                     element: setConfig({
-                        icon: data.icon ? data.icon : DEFAULT_ICON,
+                        icon: data.img,
                         text: item.properties ? item.properties[data.textName] : '',
                         properties: item.properties,
                         calback: data.calback

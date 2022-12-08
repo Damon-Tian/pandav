@@ -137,6 +137,12 @@ export default {
                         features: geoData
                     }
                 }
+                if (geoData[0].textName) {
+                    data.textName = geoData[0].textName
+                }
+                if (geoData[0].img) {
+                    data.img = geoData[0].img
+                }
                 this.$store.state.app.map.mapBox.Polygon(data)
             }
             if (type == 4) {
@@ -188,6 +194,9 @@ export default {
         },
         showPopu(data) {
             this.$store.state.app.map.mapBox.poup(data)
+        },
+        hasLayer(layerId) {
+            return this.$store.state.app.map.mapBox.getLayer(layerId)
         }
     }
 

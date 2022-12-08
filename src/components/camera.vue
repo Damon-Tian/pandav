@@ -26,7 +26,7 @@
         v-for="(item, index) in list"
         :key="item"
         style="width: 100%; flex: 1"
-        :video-url="item"
+        :video-url="formatUrl(item)"
         :class="{ 'camera-space': index === 1 }"
       />
     </div>
@@ -104,6 +104,10 @@ export default {
     },
     setVideoUrl(url) {
       this.$set(this.list, 0, url)
+    },
+    formatUrl(url) {
+      if (!url) return
+      return url.replace(/^\s+|\s+$/g, "")
     }
   }
 }

@@ -96,3 +96,23 @@ export function time_to_sec(time) {
     return s * 1000
   }
 }
+
+
+export const chngeTime = (seconds) => {
+  if (!seconds) return;
+  let d = Math.floor(seconds / (3600000 * 24))
+  let h = Math.floor((seconds % (3600000 * 24)) / 3600000)
+  let m = Math.floor((seconds % 3600000) / 60000)
+  let s = Math.floor(seconds % 60000) + ""
+  return d + "天" + h + "时" + m + "分" + s.substring(0, 2) + "秒"
+}
+export const getRandom = (m, n) => {
+  return Math.floor((n + 1 - m) * Math.random() + m)
+}
+
+export const getRandomRgb = () => {
+  const r = getRandom(50, 255)
+  const g = getRandom(35, 255)
+  const b = getRandom(0, 232)
+  return `rgb(${r},${g},${b})`
+}

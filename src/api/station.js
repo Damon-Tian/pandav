@@ -27,6 +27,13 @@ export async function get_station_geojson(orgId) {
     const { records } = await get_station_list(params)
     const geoJson = []
     records.filter(item => item.lot && item.lat).forEach(item => {
+        let geo = {
+            "type": "Polygon", "coordinates": [[Number(item.lot), Number(item.lat)]]
+        }
+        console.log(item);
+        if (item.protectMap) {
+            geo = JSON.parse(item.protectMap).geometry
+        }
         const json = {
             id: item.id,
             type: "Feature",
@@ -34,15 +41,19 @@ export async function get_station_geojson(orgId) {
             textName: 'name',
             properties: {
                 stationName: item.name,
-                ...item
+                ...item,
+                coordinates: [Number(item.lot), Number(item.lat)],
+                protectMap: null
             },
             geometry: {
-                type: "Point",
-                coordinates: [Number(item.lot), Number(item.lat)]
-
+                ...geo
             }
         }
         geoJson.push(json)
     })
+    geoJson[0].properties.lineColor = "#F7C10E"
+    geoJson[0].properties.fillColor = "rgba(247,193,14,0.4)"
+    geoJson[0].textName = "stationName"
+    console.log(geoJson);
     return geoJson
 }

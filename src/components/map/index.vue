@@ -288,6 +288,9 @@ export default {
       // this.removePolygon()
       // this.poupobj?.isOpen() ? this.poupobj.remove() : null
     },
+    getLayer(layerId) {
+      return this.map.getLayer(layerId)
+    },
     //添加地形
     addterrian(url, id) {
       // console.log("地形", this.map.setTerrain)
@@ -343,6 +346,9 @@ export default {
         textName: "name"
       }
     ) {
+      data.calback = (data) => {
+        this.handleMarkClick(data)
+      }
       addPolygon(this.map, data)
       // this.flybound(data.polygon)
     },

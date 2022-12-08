@@ -11,8 +11,8 @@ module.exports = {
   devServer: {
     proxy: {
       "/front": {
-        // target: "http://172.16.23.108:9011/",
-        target: "http://182.151.56.201:9011/",
+        target: "http://172.16.23.108:9012/",
+        // target: "http://182.151.56.201:9012/",
         changeOrigin: true,
         pathRewrite: {
           "^/front": ""

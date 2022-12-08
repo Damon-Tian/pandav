@@ -59,14 +59,31 @@ export function addLine(map, data, option) {
 
         },
         'paint': {
-            'line-color': (option && option.lineColor) ? option.lineColor : '#f00',
+            'line-color': data.geojson.features[0].properties.color ? ["get", 'color']
+                : (option && option.lineColor) ? option.lineColor : '#f00',
             'line-width': (option && option.lineWidth) ? option.lineWidth : 2,
             'line-opacity': (option && option.opacity) ? option.opacity : 1,
             // 'line-color': '#f00',
             // 'line-width': 2,
-
         }
     })
+    console.log({
+        'id': layerId,
+        'type': 'line',
+        'source': layerId,
+        'layout': {
+            'line-cap': 'round',
+
+        },
+        'paint': {
+            'line-color': data.geojson.features[0].properties.color ? ["get", 'color']
+                : (option && option.lineColor) ? option.lineColor : '#f00',
+            'line-width': (option && option.lineWidth) ? option.lineWidth : 2,
+            'line-opacity': (option && option.opacity) ? option.opacity : 1,
+            // 'line-color': '#f00',
+            // 'line-width': 2,
+        }
+    }, data.geojson.features)
     // [103.432937,30.878296]
     //样线名称点位
     if (data.textName || data.start || data.end) {
@@ -99,7 +116,13 @@ export function addLine(map, data, option) {
                         element: setConfig({
                             icon: data.icon ? data.icon : DEFAULT_ICON,
                             text: item.properties ? '开始时间：' + item.properties[data.start] : '',
-                            properties: item.properties
+                            properties: {
+                                ...item.properties,
+                                line: true,
+                                longitude: start[0],
+                                latitude: start[1]
+                            },
+                            calback: data.calback
                         }),
                         anchor: 'center',
                         // offset: [0, -30],
@@ -110,8 +133,14 @@ export function addLine(map, data, option) {
                     const idmarker = createMarker(end, {
                         element: setConfig({
                             icon: data.icon ? data.icon : DEFAULT_ICON,
-                            text: item.properties ? '结束时间：' + item.properties[data.end] : '巡护中',
-                            properties: item.properties
+                            text: item.properties[data.end] ? '结束时间：' + item.properties[data.end] : '巡护中',
+                            properties: {
+                                ...item.properties,
+                                line: true,
+                                longitude: end[0],
+                                latitude: end[1]
+                            },
+                            calback: data.calback
                         }),
                         anchor: 'center',
                     })
@@ -125,7 +154,10 @@ export function addLine(map, data, option) {
                             element: setConfig({
                                 icon: EVENT_ICON,
                                 text: event.typeName + "事件",
-                                properties: event,
+                                properties: {
+                                    ...event,
+                                    event: true
+                                },
                                 imageWidth: 32,
                                 calback: data.calback
                             }),
@@ -166,7 +198,6 @@ export function addLine(map, data, option) {
 }
 
 export function removeline(map, layerId) {
-    console.log(layerId);
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
         map.getLayer('arrowline') ? map.removeLayer('arrowline') : null;

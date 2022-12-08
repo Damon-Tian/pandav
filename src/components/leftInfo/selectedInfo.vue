@@ -175,7 +175,7 @@ export default {
           img: require("@/assets/img/p-leftbar-electron.png"),
           title: "电子围栏范围",
           checked: false,
-          type: 3,
+          type: 2,
           id: "16",
           getData: get_elec_area_geojson
         },
@@ -183,7 +183,7 @@ export default {
           img: require("../../assets/img/selectedInfo/site.png"),
           title: "基层站点",
           checked: false,
-          type: 1,
+          type: 3,
           id: "5",
           getData: get_station_geojson
         },
@@ -533,15 +533,11 @@ export default {
     }
 
     & > div:nth-child(4) {
-      background: linear-gradient(#41dfe9, #718cd4);
+      background: linear-gradient(#41dfe9, #3294ff);
     }
 
     & > div:nth-child(5) {
-      background: linear-gradient(
-        #718cd4,
-        #3294ff 99%,
-        rgba(255, 255, 255, 0%) 1%
-      );
+      background: linear-gradient(#3294ff 99%, rgba(255, 255, 255, 0%) 1%);
     }
   }
 }

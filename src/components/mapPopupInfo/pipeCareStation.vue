@@ -68,8 +68,9 @@ export default {
 
 <style lang="less" scoped>
 .pipe-care-station {
+  overflow: auto;
   width: 300px;
-  height: 260px;
+  max-height: 260px;
   padding: 12px;
   border: 1px solid #00aeff;
   background: rgba(0, 29, 155, 60%);

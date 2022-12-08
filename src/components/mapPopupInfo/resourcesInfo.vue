@@ -63,6 +63,7 @@ export default {
 
 <style lang="less" scoped>
 .resources-info {
+  overflow: auto;
   width: 300px;
   max-height: 300px;
   padding: 12px;

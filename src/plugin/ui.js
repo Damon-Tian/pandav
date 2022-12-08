@@ -10,7 +10,12 @@ import {
   Table,
   TableColumn,
   Icon,
-  Slider
+  Slider,
+  Form,
+  FormItem,
+  Input,
+  Checkbox,
+  Button
 } from "element-ui"
 import InfoBlock from "@/components/pageInfo/infoBlock.vue"
 Vue.component("InfoBlock", InfoBlock)
@@ -22,6 +27,11 @@ Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Image)
 Vue.use(DatePicker)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Checkbox)
+Vue.use(Input)
+Vue.use(Button)
 Vue.use(Slider)
 Vue.use(Scrollbar)
 Vue.use(dataV)

@@ -42,7 +42,8 @@ import mapBox from "@/components/map/index"
 import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
 import CameraInfo from "@/components/mapPopupInfo/cameraInfo.vue"
 import PipeCareStation from "@/components/mapPopupInfo/pipeCareStation.vue"
-import patrolFind from "@/components/mapPopupInfo/patrolFind.vue"
+import patrolEvent from "@/components/mapPopupInfo/patrolEvent.vue"
+import patrolDetail from "@/components/mapPopupInfo/patrolDetail"
 import HeatMap from "@/components/mapPopupInfo/heatmap.vue"
 import mapUtil from "@/mixins/mapUtil"
 export default {
@@ -57,7 +58,8 @@ export default {
     CameraInfo,
     PipeCareStation,
     HeatMap,
-    patrolFind
+    patrolEvent,
+    patrolDetail
   },
   mixins: [mapUtil],
   data() {
@@ -102,7 +104,14 @@ export default {
     //图层点击
     async handleFeature(currentFeature) {
       //设备
-      if (currentFeature.properties.equipmentType && this.currentTab == 1) {
+      if (currentFeature.properties.equipmentType) {
+        if (
+          currentFeature.properties.equipmentType == "ecological_equipment" &&
+          this.currentTab !== 1
+        ) {
+          this.componentId = null
+          return
+        }
         this.cameraType = currentFeature.properties.equipmentType
         this.componentId = "CameraInfo"
         this.infoId = currentFeature.properties.equipmentId
@@ -125,15 +134,45 @@ export default {
         this.componentId = null
       }
       if (this.componentId) {
-        this.showPopupMenu(currentFeature.geometry.coordinates)
+        // 对管护站center单独处理
+        const stationCenter = currentFeature.properties.coordinates
+
+        this.showPopupMenu(
+          stationCenter
+            ? JSON.parse(stationCenter)
+            : currentFeature.geometry.coordinates
+        )
       }
     },
     //marker点击
     async handleMarkerClick(marker) {
-      this.componentId = "patrolFind"
-      this.infoId = marker.id
+      //巡护事件
+      let center = []
+      if (marker.event) {
+        this.componentId = "patrolEvent"
+        this.infoId = marker.id
+        center = [Number(marker.longitude), Number(marker.latitude)]
+      }
+      //巡护记录
+      if (marker.line) {
+        this.componentId = "patrolDetail"
+        this.infoId = marker.patrolId
+        center = [Number(marker.longitude), Number(marker.latitude)]
+      }
+      //基层站点
+      if (marker.stationName) {
+        if (this.currentTab != 1) {
+          return
+        }
+        this.componentId = "PipeCareStation"
+        this.$store.commit("app/SET_MAPFEATURE", {
+          properties: marker
+        })
+        center = marker.coordinates
+      }
+
       setTimeout(() => {
-        this.showPopupMenu([Number(marker.longitude), Number(marker.latitude)])
+        this.showPopupMenu(center)
       }, 200)
     },
     showPopupMenu(center) {
