@@ -149,6 +149,14 @@ export default {
       immediate: true
     }
   },
+  destroyed() {
+    this.alarmList.forEach((item) => {
+      if (item.checked) {
+        this.removelayer(2, item.patrolNum)
+      }
+    })
+    this.reset()
+  },
   mounted() {},
   methods: {
     initPie() {
@@ -177,14 +185,18 @@ export default {
     },
 
     async swiperItemClick(item) {
-      const data = await get_patrol_detail({ id: item.id })
-      const geoData = [get_patrol_detail_geojson_item(data)]
-      this.setLayer(2, item.id, geoData)
-      console.log(geoData)
-      this.flyTo({
-        center: [Number(data.startLon), Number(data.startLat)],
-        zoom: 20
-      })
+      if (item.checked) {
+        const data = await get_patrol_detail({ id: item.id })
+        const geoData = [get_patrol_detail_geojson_item(data)]
+        this.setLayer(2, item.patrolNum, geoData)
+        this.flyTo({
+          center: [Number(data.startLon), Number(data.startLat)],
+          zoom: 20
+        })
+      } else {
+        this.removelayer(2, item.patrolNum)
+        this.reset()
+      }
     }
   }
 }

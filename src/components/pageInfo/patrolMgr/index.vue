@@ -115,11 +115,10 @@ export default {
     // this.initMap()
     this.initPatrolMap()
     this.getInit()
-    const { records } = await get_org({ pageNumber: 1, pageSize: 999 })
-    this.orgIds = records
+    this.getOrgIds()
   },
   beforeDestroy() {
-    this.removeMap()
+    // this.removeMap()
   },
   methods: {
     formatOrgId(orgId) {
@@ -157,6 +156,10 @@ export default {
         return index !== 0
       })
     },
+    async getOrgIds() {
+      const { records } = await get_org({ pageNumber: 1, pageSize: 999 })
+      this.orgIds = records
+    },
     getInit() {
       const params = {
         patrolType: this.activeName
@@ -187,7 +190,7 @@ export default {
       })
     },
     removeMap() {
-      this.removelayer(2, mapId1)
+      // this.removelayer(2, mapId1)
     }
   }
 }

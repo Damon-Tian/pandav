@@ -88,7 +88,32 @@ export default {
   components: { infoBlock },
   data() {
     return {
-      tableData: [],
+      tableData: [
+        {
+          areaName: "大邑",
+          cameraCount: 0,
+          newNum: 0,
+          oldNum: 0
+        },
+        {
+          areaName: "都江堰",
+          cameraCount: 0,
+          newNum: 0,
+          oldNum: 0
+        },
+        {
+          areaName: "彭州",
+          cameraCount: 0,
+          newNum: 0,
+          oldNum: 0
+        },
+        {
+          areaName: "崇州",
+          cameraCount: 0,
+          newNum: 0,
+          oldNum: 0
+        }
+      ],
       color: [
         "linear-gradient(90deg, #FF1B1B 2%, #FF8989 100%)",
         "linear-gradient(90deg, #FFCC00 0%, #FFEA96 100%)",
@@ -148,10 +173,8 @@ export default {
       background-color: transparent;
     }
 
-    :deep(
-        .el-table--enable-row-transition .el-table__body td,
-        .el-table .cell
-      ) {
+    :deep(.el-table--enable-row-transition .el-table__body td, .el-table
+        .cell) {
       padding: 0;
       padding-bottom: 9.5px;
       border: none;
@@ -187,9 +210,10 @@ export default {
     }
 
     .table-progress-bar {
-      width: 100%;
+      width: 0%;
       height: 6px;
       border-radius: 2px;
+      transition: all 1s linear;
     }
   }
 }

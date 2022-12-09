@@ -50,14 +50,12 @@ export default {
           deviceSn: item.deviceSn
         })
         const geoData = [get_camera_geojson_item(cameraDetail)]
-        this.setLayer(1, item.deviceSn, geoData)
         const center = geoData[0].geometry.coordinates
         this.flyTo({
           center: center,
           zoom: 19
         })
       } else {
-        this.removelayer(1, item.deviceSn)
         this.reset()
       }
     }

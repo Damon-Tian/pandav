@@ -107,7 +107,7 @@ import { flyBounds, getView, flyTo, setCircle } from "./src/ylkj/fly.js"
 import CHOUZHOUJSON from "./src/ylkj/lib/chongzhou.json"
 import LINE_GEOJSON from "./src/ylkj/lib/testline.json"
 import REGION_GEOJSON from "./src/ylkj/lib/regionborder.json"
-import { addImgIcon } from "./src/ylkj/point.js"
+import { addImgIcon, removeMarker } from "./src/ylkj/point.js"
 import { addLine, removeline } from "./src/ylkj/line.js"
 import ELEC_ICON from "./src/ylkj/lib/elec.png"
 import C1 from "./src/ylkj/lib/C1toline.json"
@@ -168,7 +168,8 @@ export default {
             feature = features.filter(
               (item) =>
                 item.source.indexOf("保护区") == -1 &&
-                item.source.indexOf("热力图") == -1
+                item.source.indexOf("热力图") == -1 &&
+                item.source.indexOf("基层站点") == -1
             )
 
             if (feature.length == 1) {
@@ -181,7 +182,9 @@ export default {
           } else {
             feature = features[0]
           }
-
+          if (feature.source == "基层站点") {
+            return
+          }
           // 基层站点点击图层高亮
 
           if (feature.properties.stationName) {
@@ -284,6 +287,9 @@ export default {
         return
       }
       this.Map2d.removelayer(id)
+      if (id == "电子围栏范围") {
+        removeMarker()
+      }
       // this.rmline("lines")
       // this.removePolygon()
       // this.poupobj?.isOpen() ? this.poupobj.remove() : null

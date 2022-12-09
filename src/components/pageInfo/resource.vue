@@ -197,15 +197,15 @@ export default {
             ke: 325,
             shu: 1358,
             zhong: 3629,
-            level1: 19,
-            level2: 40
+            level1: 9,
+            level2: 23
           },
           animal: {
             mu: 40,
             ke: 127,
             zhong: 551,
             level1: 14,
-            level2: 145
+            level2: 64
           }
         },
         dujiangyan: {

@@ -122,10 +122,10 @@ export default {
         this.infoId = currentFeature.properties.bioId
       }
 
-      //保护站 ,只在首页地图显示卡片
-      else if (currentFeature.properties.stationName && this.currentTab === 1) {
-        this.componentId = "PipeCareStation"
-      }
+      // //保护站 ,只在首页地图显示卡片
+      // else if (currentFeature.properties.stationName && this.currentTab === 1) {
+      //   this.componentId = "PipeCareStation"
+      // }
 
       // 热力图
       else if (currentFeature.properties.mag) {

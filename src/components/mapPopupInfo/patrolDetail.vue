@@ -23,7 +23,7 @@
         <div class="row">
           <span class="row__label">巡护时长：</span>
           <span class="row__value">{{
-            dataDetail.dateSum ? chngeTime(dataDetail.dateSum) : "--"
+            dataDetail.whenTime ? chngeTime(dataDetail.whenTime) : "--"
           }}</span>
         </div>
         <div class="row">

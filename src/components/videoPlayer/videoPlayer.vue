@@ -53,6 +53,12 @@ export default {
         setTimeout(() => {
           console.log(player.document)
           const playerEle = player.document.getElementById("player")
+          console.log(playerEle.querySelector(".easy-video-player-inner"))
+          playerEle
+            .querySelector(".easy-video-player-inner")
+            .addeventListener("fullscreenchange", () => {
+              console.log("全屏")
+            })
           playerEle.oncontextmenu = () => {
             playerEle.querySelector(".easy-player-right-menu").style.display =
               "none"

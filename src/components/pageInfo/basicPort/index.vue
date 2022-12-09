@@ -20,7 +20,28 @@ export default {
   data() {
     return {
       detail: null,
-      portData: [],
+      portData: [
+        {
+          areaName: "大邑",
+          belayStationNum: 0,
+          personNum: 0
+        },
+        {
+          areaName: "都江堰",
+          belayStationNum: 0,
+          personNum: 0
+        },
+        {
+          areaName: "彭州",
+          belayStationNum: 0,
+          personNum: 0
+        },
+        {
+          areaName: "崇州",
+          belayStationNum: 0,
+          personNum: 0
+        }
+      ],
       alarmList: [],
       orgIds: []
     }

@@ -47,13 +47,13 @@
               <img :src="codeInfo.img" @click="getVeriCode" />
             </div>
           </el-form-item>
-          <el-form-item prop="">
+          <!-- <el-form-item prop="">
             <div class="logo-form-item">
               <el-checkbox v-model="param.savePassword" class="checkbox">
                 记住密码
               </el-checkbox>
             </div>
-          </el-form-item>
+          </el-form-item> -->
           <div class="login-btn">
             <el-button type="primary" :loading="btnLoading" @click="submitForm">
               登录
@@ -116,6 +116,7 @@ export default {
             })
             .catch((e) => {
               Message.error(e.msg)
+              this.getVeriCode()
             })
             .finally(() => {
               this.btnLoading = false

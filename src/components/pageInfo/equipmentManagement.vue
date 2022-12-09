@@ -72,6 +72,7 @@ export default {
   },
   beforeDestroy() {
     this.removeMap()
+    this.reset()
   },
   async mounted() {
     this.initMap()

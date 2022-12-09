@@ -55,13 +55,14 @@
           <div class="row__label">附件：</div>
           <div class="row__img">
             <img
-              v-for="item in dataDetail.picture"
+              v-for="item in dataDetail.picture &&
+              dataDetail.picture.slice(0, 2)"
               :key="item.id"
               :src="item.url"
               class="content__box"
             />
             <videoPlayer
-              v-for="item in dataDetail.video"
+              v-for="item in dataDetail.video && dataDetail.video.slice(0, 2)"
               :key="item.id"
               :autoplay="false"
               :video-url="item.url"

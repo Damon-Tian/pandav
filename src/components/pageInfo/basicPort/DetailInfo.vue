@@ -72,6 +72,13 @@ export default {
       needRemoveChecked: []
     }
   },
+  beforeDestroy() {
+    console.log(this.needRemoveChecked)
+    this.needRemoveChecked.forEach((item) => {
+      this.removelayer(item.source == 2 ? 2 : 1, item.deviceSn)
+    })
+    this.reset()
+  },
   methods: {
     getNeedChecked() {
       this.needRemoveChecked = this.alarmList.filter((item) => item.checked)

@@ -9,11 +9,21 @@
           <div class="port-content">
             <p class="port-content__position">
               <span>保护站</span>
-              <span>{{ item.belayStationNum }}</span>
+              <span>
+                <countTo
+                  :start-val="0"
+                  :end-val="item.belayStationNum"
+                  :duration="3000"
+              /></span>
             </p>
             <p class="port-content__num">
               <span>人员</span>
-              <span>{{ item.personNum }}</span>
+              <span
+                ><countTo
+                  :start-val="0"
+                  :end-val="item.personNum"
+                  :duration="3000"
+              /></span>
             </p>
           </div>
         </div>

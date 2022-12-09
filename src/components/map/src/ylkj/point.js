@@ -6,9 +6,28 @@
  * @FilePath: \pandav\src\components\map\src\ylkj\point.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-import {
-    fontSize
-} from "./util.js"
+const {
+    createMarker
+} = window.egis;
+let markerObj = {}
+let layerId
+const setConfig = (data) => {
+    const el = document.createElement('div');
+    el.className = 'marker';
+    el.style.display = 'flex';
+    let text = ''
+    if (data.text) {
+        text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ''}</div>`
+    }
+    const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
+        ${text}
+        </div>`
+    el.innerHTML = iconel;
+    el.addEventListener('click', () => {
+        data.calback ? data.calback(data.properties) : null;
+    })
+    return el
+};
 export function addImgIcon(map, option = {
     imgUrl: "",
     id: "points",
@@ -29,28 +48,24 @@ export function addImgIcon(map, option = {
         }
     }
 }) {
-    let layerId = option.id ? option.id : 'points'
+
+    layerId = option.id ? option.id : 'points'
+    markerObj[layerId] = []
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
         map.removeSource(layerId)
     }
-    // let features=[];
-    // if(option.pointArray && option.pointArray.length>0){
-    //     for (const item of option.pointArray) {
-    //         features.push(
-    //             {
-    //             'id':item.id,
-    //             'type': 'Feature',
-    //             "properties":item, //其中必须包含id字段，用于高亮点钟图标
-    //             'geometry': {
-    //                  'type': 'Point',
-
-    //                 'coordinates':item.point
-    //                 }
-    //             })
-    //     }
-    // }
-
+    if (option.tip) {
+        const center = option.pointArray.features[parseInt(option.pointArray.features.length / 2)].geometry.coordinates.slice(0, 2)
+        const idmarker = createMarker(center, {
+            element: setConfig({
+                text: option.tip
+            }),
+            anchor: 'center',
+            // offset: [0, -30],
+        })
+        markerObj[layerId].push(idmarker)
+    }
     map.loadImage(option.imgUrl, (error, image) => {
         if (error) throw error;
         if (!map.hasImage(layerId)) {
@@ -73,7 +88,6 @@ export function addImgIcon(map, option = {
             "text-font": ["Microsoft YaHei UI Semibold Regular"],
             'text-allow-overlap': true
         } : {})
-        console.log(style);
         map.addLayer({
             'id': layerId,
             'type': 'symbol',
@@ -90,10 +104,16 @@ export function addImgIcon(map, option = {
                 // "text-halo-width": 2,
                 // "text-opacity": 0.8
             }
-        });
-
-
+        })
     })
+}
 
-
+export function removeMarker() {
+    if (Array.isArray(markerObj[layerId])) {
+        markerObj[layerId].forEach(item => {
+            item.remove()
+        })
+    } else {
+        markerObj[layerId] && markerObj[layerId].remove()
+    }
 }

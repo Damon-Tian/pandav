@@ -69,7 +69,7 @@ export default {
     this.getList()
     setInterval(() => {
       this.getList()
-    }, 5 * 60 * 1000)
+    }, 20 * 60 * 1000)
   },
   methods: {
     narrowClick() {

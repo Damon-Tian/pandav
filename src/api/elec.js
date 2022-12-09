@@ -1,5 +1,5 @@
 // 电子围栏 api
-
+const img = require("@/assets/img/3931670557158_.pic.jpg")
 import request from '@/utils/request'
 import area from "@/assets/stationdata/line01.json"
 import { getRandomRgb } from '@/utils'
@@ -175,13 +175,9 @@ export async function get_elec_person_geojson(orgId) {
 }
 
 export async function get_elec_area_geojson() {
-    console.log(area)
     const geoJson = area.features
-    geoJson.forEach(item => {
-        item.properties = {
-            color: '#cd2f31'
-        }
-    })
+    geoJson[0].img = img
+    geoJson[0].tip = '总长度：221.6KM'
     return geoJson
 }
 

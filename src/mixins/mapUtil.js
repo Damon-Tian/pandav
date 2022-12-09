@@ -92,6 +92,9 @@ export default {
                 if (geoData[0].textName) {
                     data.textName = geoData[0].textName;
                 }
+                if (geoData[0].tip) {
+                    data.tip = geoData[0].tip;
+                }
                 this.$store.state.app.map.mapBox.point(data)
                 // 是否需要绘制 以某个点位为中心的圆圈
                 if (geoData[0].circle) {

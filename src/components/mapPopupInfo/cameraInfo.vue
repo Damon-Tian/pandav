@@ -47,10 +47,12 @@
           <div class="row__label">
             实时抓拍：
             <span
+              v-if="capture && capture.length"
               style="color: #fff; cursor: pointer"
               @click="goRealtimeCapture(dataDetail.deviceSn)"
               >查看更多></span
             >
+            <span v-else style="color: #fff"> 暂无</span>
           </div>
           <div class="row__img">
             <div v-for="item in capture" :key="item.id">
@@ -113,8 +115,8 @@ export default {
       }
       if (this.type == "infrared_camera") {
         const { records } = await get_real_time_shoot({
-          searchParam: this.dataDetail.deviceSn,
-          pageSize: 10,
+          deviceSn: this.dataDetail.deviceSn,
+          pageSize: 2,
           pageNumber: 1
         })
         this.capture = records

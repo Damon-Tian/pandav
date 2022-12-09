@@ -175,7 +175,7 @@ export default {
           img: require("@/assets/img/p-leftbar-electron.png"),
           title: "电子围栏范围",
           checked: false,
-          type: 2,
+          type: 1,
           id: "16",
           getData: get_elec_area_geojson
         },
@@ -373,12 +373,10 @@ export default {
     },
     //初始化图层 核心保护区和一般保护区 热力图 人员轨迹图
     async initLayer() {
-      this.selectedInfoList1
-        .slice(0, this.currentTab === 1 ? 4 : 2)
-        .forEach((item) => {
-          item.checked = false
-          this.handleClick(item)
-        })
+      this.selectedInfoList1.slice(0, 2).forEach((item) => {
+        item.checked = false
+        this.handleClick(item)
+      })
     },
 
     //热力图滑块相关
