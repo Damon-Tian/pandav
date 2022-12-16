@@ -1,6 +1,6 @@
 <template>
   <div class="electron">
-    <info-block title="电子围栏" line>
+    <info-block title="电子围栏">
       <div slot="titleRight" style="font-size: 12px">
         数据采集时间：{{ collectTime }}
       </div>
@@ -43,7 +43,7 @@
           </div>
         </div>
         <div class="electron__row">
-          <div class="electron__row__title">一般</div>
+          <div class="electron__row__title">一般区域</div>
           <div
             class="electron__row__info"
             style="
@@ -88,6 +88,58 @@
         </div>
       </div>
     </info-block>
+    <info-block title="统计">
+      <div class="info-content">
+        <el-date-picker
+          v-model="timerange"
+          size="small"
+          format="yyyy/MM/dd"
+          value-format="yyyyMMdd"
+          type="daterange"
+          style="width: 100%; margin-bottom: 20px"
+          @change="getPersonHis"
+        />
+        <div class="statistic">
+          <div class="electron__row">
+            <div class="electron__row__title">核心区域</div>
+            <div class="electron__row__info">
+              <div class="electron-area">
+                <div class="area-title">累计人数</div>
+                <div class="area-number">
+                  <countTo
+                    :start-val="0"
+                    :end-val="statistic.coreNum"
+                    :duration="3000"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="electron__row">
+            <div class="electron__row__title">一般区域</div>
+            <div
+              class="electron__row__info"
+              style="
+                border: 1px solid #1286b1;
+                background: rgba(0, 29, 155, 40%);
+                box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
+              "
+            >
+              <div class="electron-area">
+                <div class="area-title">累计人数</div>
+                <div class="area-number">
+                  <countTo
+                    :start-val="0"
+                    :end-val="statistic.generalNum"
+                    :duration="3000"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </info-block>
   </div>
 </template>
 
@@ -96,9 +148,10 @@ import {
   get_electronic_fence_count,
   get_targeted_sms_data,
   get_elec_heatmap_geojson,
-  get_elec_person_geojson
+  get_elec_person_geojson,
+  get_electronic_person_his
 } from "@/api/elec"
-import { formatTime } from "@/utils"
+import { formatTime, DateFormat } from "@/utils"
 const mapId = "人员热力图"
 const mapId1 = "人员轨迹"
 import mapUtil from "@/mixins/mapUtil"
@@ -120,6 +173,14 @@ export default {
           generalNum: 0,
           coreNum: 0
         }
+      },
+      timerange: [
+        DateFormat(new Date(), "yyyy") + "0101",
+        DateFormat(new Date(), "yyyyMMdd")
+      ],
+      statistic: {
+        coreNum: 0,
+        generalNum: 0
       }
     }
   },
@@ -140,6 +201,7 @@ export default {
     this.getTargetedSmsData()
     this.initHeatMap()
     this.initPersonMap()
+    this.getPersonHis()
   },
   methods: {
     //热力图接口
@@ -164,6 +226,18 @@ export default {
       const geoData = await get_elec_person_geojson()
       this.setLayer(2, mapId1, geoData)
     },
+    async getPersonHis() {
+      const params = {}
+      if (this.timerange && this.timerange.length) {
+        params.startTime = this.timerange[0]
+        params.endTime = this.timerange[1]
+      }
+      const data = await get_electronic_person_his(params)
+      const core = data.find((item) => item.areaType == "core")
+      const general = data.find((item) => item.areaType == "general")
+      this.statistic.coreNum = core && core.count
+      this.statistic.generalNum = general && general.count
+    },
     removeMap() {
       this.removelayer(4, mapId)
       this.removelayer(2, mapId1)
@@ -176,6 +250,25 @@ export default {
 .electron {
   .info-content {
     padding: 18px 20px;
+  }
+
+  .statistic {
+    display: flex;
+
+    & > div {
+      flex: 1;
+      text-align: center;
+    }
+
+    & > div:last-child {
+      margin-left: 20px;
+    }
+
+    & .electron__row__info {
+      .electron-area {
+        width: 100%;
+      }
+    }
   }
 
   &__row {

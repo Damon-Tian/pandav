@@ -55,6 +55,18 @@ export function get_electronic_fence_count(params) {
         params
     })
 }
+/**
+ * 热力图人数统计
+ * @param {*} params
+ * @returns
+ */
+export function get_electronic_person_his(params) {
+    return request({
+        url: "/front/edmp/largeScreen/getPersonCountHistoryData",
+        method: "get",
+        params
+    })
+}
 
 /**
  * 获取靶向短信统计数据

@@ -1,7 +1,7 @@
 // 基层站点 api
 
 import request from "@/utils/request"
-const stationImg = require("../assets/img/selectedInfo/基层站点.png")
+const stationImg = require("../assets/img/selectedInfo/station.png")
 /**
  * 基层站点列表
  * @param {*} params

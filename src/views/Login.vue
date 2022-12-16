@@ -138,7 +138,7 @@ export default {
   display: flex;
   height: 100vh;
   flex-direction: column;
-  background: url("../assets/img/登录背景.png") no-repeat;
+  background: url("../assets/img/login_bg.png") no-repeat;
   background-color: #fff;
   background-size: cover;
 
