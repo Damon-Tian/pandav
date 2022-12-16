@@ -1,7 +1,7 @@
 /* 巡护管理页面 */
 <template>
   <div>
-    <info-block title="手持终端" line>
+    <info-block title="巡护终端" line>
       <div slot="titleRight" class="title">
         <span class="count">
           <countTo :start-val="0" :end-val="statistic.count" :duration="3000" />
@@ -20,6 +20,7 @@
           end-placeholder="结束日期"
           :default-time="['00:00:00', '23:59:59']"
           style="width: 100%"
+          :picker-options="pickerOptions"
           @change="getInit"
         />
       </div>
@@ -60,8 +61,10 @@ const mapId1 = "巡护路线"
 const tabs = [
   { value: "", label: "全部" },
   { value: "TRANSECT", label: "样线巡护" },
-  { value: "DAILY", label: "日常巡护" }
+  { value: "DAILY", label: "日常巡护" },
+  { value: "OTHER", label: "其他巡护" }
 ]
+let pickerMinDate = ""
 export default {
   components: {
     infoBlock,
@@ -70,7 +73,14 @@ export default {
   mixins: [mapUtil],
   data() {
     return {
-      dateRange: [],
+      dateRange: [
+        DateFormat(
+          new Date(new Date().getFullYear() + "-01-01 00:00:00").getTime()
+        ),
+        DateFormat(
+          new Date(new Date().getFullYear() + "-12-31 23:59:59").getTime()
+        )
+      ],
       tabs,
       activeName: "",
       statistic: {
@@ -80,14 +90,35 @@ export default {
       stationsData: [],
       totalData: {
         personNum: 0,
-        mileage: 0
+        mileage: 0,
+        patrolNum: 0
       },
       alarmList: [],
       patrolTypeList: [
         { value: "DAILY", label: "日常巡护" },
         { value: "TRANSECT", label: "样线巡护" },
         { value: "OTHER", label: "其它" }
-      ]
+      ],
+      pickerOptions: {
+        onPick: ({ maxDate, minDate }) => {
+          pickerMinDate = minDate.getTime()
+          if (maxDate) {
+            pickerMinDate = ""
+          }
+        },
+        disabledDate(time) {
+          // var year = new Date().getFullYear()
+          if (pickerMinDate) {
+            let year = new Date(pickerMinDate).getFullYear()
+            return (
+              time.getTime() > new Date(year + "-12-31").getTime() ||
+              time.getTime() < new Date(year - 1 + "-12-31").getTime()
+            )
+          } else {
+            return false
+          }
+        }
+      }
     }
   },
   computed: {
@@ -113,9 +144,9 @@ export default {
   },
   async mounted() {
     // this.initMap()
+    await this.getOrgIds()
     this.initPatrolMap()
     this.getInit()
-    this.getOrgIds()
   },
   beforeDestroy() {
     // this.removeMap()
@@ -164,17 +195,18 @@ export default {
       const params = {
         patrolType: this.activeName
       }
+      console.log(this.dateRange)
       if (this.dateRange && this.dateRange.length) {
         params.startTime = this.dateRange[0]
         params.endTime = this.dateRange[1]
       }
       this.getPatrolInfo(params)
       this.getPatrolByOrgid({
-        endTime: params?.startTime,
+        endTime: params?.endTime,
         orgId: this.orgId,
         pageSize: 100,
         patrolType: params.patrolType,
-        startTime: params?.endTime
+        startTime: params?.startTime
       })
     },
     async getPatrolByOrgid(params) {
@@ -186,7 +218,7 @@ export default {
         i.data = []
         i.data[0] = i.patrolNum
         i.data[1] = this.formatPatrolType(i.type)
-        i.data[2] = i.people
+        i.data[2] = this.formatOrgId(i.totalOrgId).replace("大熊猫国家公园", "")
       })
     },
     removeMap() {

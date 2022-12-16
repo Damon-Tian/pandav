@@ -14,6 +14,16 @@
           </div>
         </div>
         <div>
+          巡护次数
+          <div class="stations-btn">
+            <countTo
+              :start-val="0"
+              :end-val="totalData.patrolNum"
+              :duration="3000"
+            />次
+          </div>
+        </div>
+        <div>
           里程
           <div class="stations-btn">
             <countTo
@@ -117,9 +127,9 @@ export default {
       option: {},
       isShowCharts: false,
       config: {
-        header: ["巡护记录", "巡护类型", "巡护人"],
+        header: ["巡护记录", "巡护类型", "巡护机构"],
         headerHeight: 32,
-        columnWidth: [155, 155, 98],
+        columnWidth: [155, 135, 118],
         swiperHeight: 470,
         headerBGC: "rgba(0, 108, 255, 0.2)",
         headerBorder: "none",
@@ -236,7 +246,7 @@ export default {
   font-weight: 500;
 
   .stations-btn {
-    width: 198px;
+    width: 130px;
     height: 36px;
     border: 1px solid #1aa1fd;
     margin-top: 10px;
