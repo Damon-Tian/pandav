@@ -37,6 +37,7 @@
       </div>
       <stations
         :data="stationsData"
+        :active-name="activeName"
         :total-data="totalData"
         :alarm-list="alarmList"
       />
@@ -195,7 +196,6 @@ export default {
       const params = {
         patrolType: this.activeName
       }
-      console.log(this.dateRange)
       if (this.dateRange && this.dateRange.length) {
         params.startTime = this.dateRange[0]
         params.endTime = this.dateRange[1]

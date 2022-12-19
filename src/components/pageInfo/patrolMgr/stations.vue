@@ -14,7 +14,7 @@
           </div>
         </div>
         <div>
-          巡护次数
+          {{ activeName == "TRANSECT" ? "覆盖率" : "巡护次数" }}
           <div class="stations-btn">
             <countTo
               :start-val="0"
@@ -119,6 +119,10 @@ export default {
     totalData: {
       type: Object,
       default: () => ({})
+    },
+    activeName: {
+      type: String,
+      default: ""
     }
   },
   data() {
@@ -127,7 +131,7 @@ export default {
       option: {},
       isShowCharts: false,
       config: {
-        header: ["巡护记录", "巡护类型", "巡护机构"],
+        header: ["巡护记录", "巡护类型", "巡护总站"],
         headerHeight: 32,
         columnWidth: [155, 135, 118],
         swiperHeight: 470,
