@@ -185,27 +185,39 @@ export default {
           if (feature.source == "基层站点") {
             return
           }
-          // 基层站点点击图层高亮
-
-          if (feature.properties.stationName) {
-            if (currentId && currentId !== feature.id) {
-              this.map.setFeatureState(
-                { source: feature.layer.id, id: currentId },
-                { click: false }
-              )
-            }
-            this.map.setFeatureState(
-              { source: feature.layer.id, id: feature.id },
-              { click: true }
-            )
-            currentId = feature.id
-          }
           this.$emit("mapclick", feature, features)
         }
         // this.poup({
         //   center: [103.37310679593571, 30.53780732123583],
         //   centent: "<div style='width:300px'>helloword</div>"
         // })
+      })
+      this.map.on("mouseover", "人员轨迹图", (e) => {
+        // 基层站点点击图层高亮
+        const feature = e.features[0]
+        if (feature) {
+          if (currentId && currentId !== feature.id) {
+            this.map.setFeatureState(
+              { source: feature.layer.id, id: currentId },
+              { hover: false }
+            )
+          }
+          this.map.setFeatureState(
+            { source: feature.layer.id, id: feature.id },
+            { hover: true }
+          )
+          currentId = feature.id
+        }
+      })
+      this.map.on("mouseleave", "人员轨迹图", (e) => {
+        // 基层站点点击图层高亮
+        if (currentId !== null) {
+          this.map.setFeatureState(
+            { source: "人员轨迹图", id: currentId },
+            { hover: false }
+          )
+        }
+        currentId = null
       })
       try {
         this.PlottingObj = new Plotting(this.map) //测量图标

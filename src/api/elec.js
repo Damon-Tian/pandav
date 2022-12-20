@@ -180,9 +180,11 @@ export async function get_elec_person_geojson(orgId) {
         params.areaCodes = getArea(orgId)
     }
     const geoJson = await get_elec_person(params)
-    geoJson.forEach(item => {
+    geoJson.forEach((item, index) => {
         item.properties.color = getRandomRgb()
+        item.id = (index + 1)
     })
+    console.log(geoJson);
     return geoJson
 }
 

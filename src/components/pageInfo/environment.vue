@@ -104,9 +104,11 @@
 import Charts from "@jiaminghi/charts"
 import infoBlock from "./infoBlock"
 import { get_ecological_equipment_geojson } from "@/api/device"
-import { get_ecologicalequipment } from "@/api/environment"
-import { DateFormat, time_to_sec } from "@/utils/index"
-import { environmentList } from "@/utils/environment"
+import {
+  get_ecologicalequipment,
+  get_env_detail,
+  get_env_trend
+} from "@/api/environment"
 const mapId = "生态环境"
 import mapUtil from "@/mixins/mapUtil"
 
@@ -210,26 +212,45 @@ export default {
       }
       this.initMap()
     },
-
-    getCurrentStatisc() {
-      const h = new Date().getHours() * 60 * 60
-      const lastIndex = environmentList.findLastIndex(
-        (item) => item["保护站"] == this.labelInfo.orgName && item["时间"] == h
-      )
-      const statisc = environmentList[lastIndex]
-      this.currentStatisc = statisc
-      const chartX = [],
-        PM10List = [],
-        PM25List = []
-      for (let i = lastIndex - 23; i < lastIndex + 1; i++) {
-        const item = environmentList[i]
-        chartX.push(item["时间"])
-        PM10List.push(item["pm2.5"])
-        PM25List.push(item["pm10"])
+    async getEnvDetail() {
+      const params = {
+        pageNumber: 1,
+        pageSize: 1
       }
-      this.chartX = chartX
-      this.PM10List = PM10List
-      this.PM25List = PM25List
+      params.orgIds = [this.labelInfo.fkOrgId]
+      const { records } = await get_env_detail(params)
+      const {
+        temperature,
+        humidity,
+        pressure,
+        noise,
+        windSpeed,
+        windDirection,
+        pm25,
+        pm10
+      } = records[0]
+      this.currentStatisc = {
+        温度: temperature,
+        湿度: humidity,
+        气压: pressure,
+        噪声: noise,
+        风速: windSpeed,
+        风向: windDirection,
+        "pm2.5": pm25,
+        pm10: pm10
+      }
+    },
+    async getCurrentStatisc() {
+      this.getEnvDetail()
+      const trends = await get_env_trend({
+        orgId: this.labelInfo.fkOrgId
+      })
+      const PM10 = trends.find((item) => item.type == "PM10")
+      const PM25 = trends.find((item) => item.type == "空气指数")
+      if (!PM10) return
+      this.chartX = PM10.trendInfoVOS.map((item) => item.time + ":00")
+      this.PM10List = PM10.trendInfoVOS.map((item) => Number(item.value))
+      this.PM25List = PM25.trendInfoVOS.map((item) => Number(item.value))
       this.$nextTick(() => {
         this.initChart()
       })
@@ -246,19 +267,14 @@ export default {
           boundaryGap: false,
           axisLabel: {
             formatter: function (v) {
-              let date = parseInt(v.value * 1000)
               if (that.chartX.length > 10) {
                 if (v.index % 2 === 0) {
-                  let time = new Date(new Date().toLocaleDateString()).getTime()
-                  let timespan = time + date
-                  return DateFormat(timespan, "hh:mm:ss").substring(0, 5)
+                  return v.value
                 } else {
                   return ""
                 }
               } else {
-                let time = new Date(new Date().toLocaleDateString()).getTime()
-                let timespan = time + date
-                return DateFormat(timespan, "hh:mm:ss").substring(0, 5)
+                return v.value
               }
             },
             style: {

@@ -28,6 +28,7 @@
         style="width: 100%; flex: 1"
         :video-url="formatUrl(item)"
         :class="{ 'camera-space': index === 1 }"
+        @fullscreen="handleFullscreen"
       />
     </div>
   </div>
@@ -62,14 +63,13 @@ export default {
       ],
       startIndex: 0,
       list: [],
-      step: 3
+      step: 3,
+      timer: null
     }
   },
   mounted() {
     this.getList()
-    setInterval(() => {
-      this.getList()
-    }, 20 * 60 * 1000)
+    this.handleAutoPlay()
   },
   methods: {
     narrowClick() {
@@ -108,6 +108,18 @@ export default {
     formatUrl(url) {
       if (!url) return
       return url.replace(/^\s+|\s+$/g, "")
+    },
+    handleAutoPlay() {
+      this.timer = setInterval(() => {
+        this.getList()
+      }, 5 * 60 * 1000)
+    },
+    handleFullscreen(isFullscreen) {
+      if (isFullscreen) {
+        clearInterval(this.timer)
+      } else {
+        this.handleAutoPlay()
+      }
     }
   }
 }

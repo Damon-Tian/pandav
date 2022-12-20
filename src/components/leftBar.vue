@@ -17,6 +17,16 @@
           </div>
           <span slot="title">{{ item.name }}</span>
         </el-menu-item>
+        <el-menu-item
+          class="nav-item"
+          @mouseenter.native="showDownload = true"
+          @mouseleave.native="showDownload = false"
+        >
+          <div class="img-wrap">
+            <img src="../assets/img/logo.jpg" alt="" />
+          </div>
+          <span slot="title">下载熊猫巡护</span>
+        </el-menu-item>
       </el-menu>
       <!-- :style="{
           right: isCollapse ? '104px' : '-27px'
@@ -36,6 +46,12 @@
       <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
     </span>
     <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
+    <img
+      v-if="showDownload"
+      :style="isCollapse && 'left:140px'"
+      src="http://182.151.56.201:9011/edmp/largeScreen/downloadPatrolAPP"
+      class="download-img"
+    />
   </div>
 </template>
 
@@ -104,7 +120,8 @@ export default {
           icon: require("@/assets/img/p-leftbar-basic-equip.png"),
           iconActive: require("@/assets/img/p-leftbar-basic-equip.png")
         }
-      ]
+      ],
+      showDownload: false
     }
   },
   methods: {
@@ -227,5 +244,21 @@ export default {
     background-color: #23d9fb57;
     color: #23d9fb;
   }
+}
+
+.download {
+  position: absolute;
+  bottom: 20px;
+  width: 100%;
+  color: #fff;
+  font-size: 20px;
+  text-align: center;
+}
+
+.download-img {
+  position: absolute;
+  bottom: 0;
+  left: 270px;
+  width: 180px;
 }
 </style>
