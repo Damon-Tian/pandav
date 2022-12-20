@@ -18,12 +18,12 @@
           <div class="stations-btn">
             <countTo
               :start-val="0"
-              :end-val="totalData.patrolNum.split('-')[0]"
+              :end-val="Number(totalData.patrolNum.split('-')[0])"
               :duration="3000"
             />次 -
             <countTo
               :start-val="0"
-              :end-val="totalData.patrolNum.split('-')[1]"
+              :end-val="Number(totalData.patrolNum.split('-')[1])"
               :duration="3000"
             />次
           </div>
@@ -33,7 +33,7 @@
           <div class="stations-btn">
             <countTo
               :start-val="0"
-              :end-val="totalData.patrolNum"
+              :end-val="Number(totalData.patrolNum)"
               :duration="3000"
             />次
           </div>
