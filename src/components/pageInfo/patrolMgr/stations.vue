@@ -131,7 +131,7 @@ export default {
       option: {},
       isShowCharts: false,
       config: {
-        header: ["巡护记录", "巡护类型", "巡护总站"],
+        header: ["巡护记录", "巡护类型", "巡护机构"],
         headerHeight: 32,
         columnWidth: [155, 135, 118],
         swiperHeight: 470,
