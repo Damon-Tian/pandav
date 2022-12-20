@@ -13,8 +13,23 @@
             />人次
           </div>
         </div>
-        <div>
-          {{ activeName == "TRANSECT" ? "覆盖率" : "巡护次数" }}
+        <div v-if="activeName == 'TRANSECT'">
+          覆盖率
+          <div class="stations-btn">
+            <countTo
+              :start-val="0"
+              :end-val="totalData.patrolNum.split('-')[0]"
+              :duration="3000"
+            />次 -
+            <countTo
+              :start-val="0"
+              :end-val="totalData.patrolNum.split('-')[1]"
+              :duration="3000"
+            />次
+          </div>
+        </div>
+        <div v-else>
+          巡护次数
           <div class="stations-btn">
             <countTo
               :start-val="0"
