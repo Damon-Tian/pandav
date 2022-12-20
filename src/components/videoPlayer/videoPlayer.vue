@@ -31,7 +31,8 @@ export default {
   },
   data() {
     return {
-      title: ""
+      title: "",
+      player: null
     }
   },
   watch: {
@@ -44,6 +45,9 @@ export default {
     this.getVideoList()
     this.cancelContentMenu()
   },
+  beforeDestroy() {
+    this.player.removeEventListener("fullscreenchange", () => {})
+  },
   methods: {
     async getVideoList() {},
     cancelContentMenu() {
@@ -51,20 +55,26 @@ export default {
         this.$refs.player.contentWindow || this.$refs.player.contentDocument
       this.$nextTick(() => {
         setTimeout(() => {
-          console.log(player.document)
           const playerEle = player.document.getElementById("player")
-          console.log(playerEle.querySelector(".easy-video-player-inner"))
-          playerEle
-            .querySelector(".easy-video-player-inner")
-            .addeventListener("fullscreenchange", () => {
-              console.log("全屏")
-            })
+          this.handleFullScreenChange(player)
+          this.player = player
           playerEle.oncontextmenu = () => {
             playerEle.querySelector(".easy-player-right-menu").style.display =
               "none"
           }
         }, 2000)
       })
+    },
+    //视频是否进入全屏
+    handleFullScreenChange(player) {
+      player.addEventListener(
+        "fullscreenchange",
+        () => {
+          const isFullScreen = player.document.fullscreenElement ? true : false
+          this.$emit("fullscreen", isFullScreen)
+        },
+        false
+      )
     }
   }
 }

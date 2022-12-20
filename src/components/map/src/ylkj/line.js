@@ -21,15 +21,13 @@ const setConfig = (data) => {
   }
   let text = ""
   if (data.text) {
-    text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${
-      data.text ? data.text : ""
-    }</div>`
+    text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ""
+      }</div>`
   }
   const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
         ${text}
-        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width: ${
-    data.imageWidth
-  }px"/>
+        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width: ${data.imageWidth
+    }px"/>
         </div>`
   el.innerHTML = iconel
   el.addEventListener("click", () => {
@@ -58,39 +56,27 @@ export function addLine(map, data, option) {
       "line-cap": "round"
     },
     paint: {
-      "line-color": data.geojson.features[0].properties.color
-        ? ["get", "color"]
-        : option && option.lineColor
-        ? option.lineColor
-        : "#f00",
+      // "line-color": data.geojson.features[0].properties.color
+      //   ? ["get", "color"]
+      //   : option && option.lineColor
+      //     ? option.lineColor
+      //     : "#f00",
       "line-width": option && option.lineWidth ? option.lineWidth : 2,
+      "line-color": [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        '#00b4ff',
+        data.geojson.features[0].properties.color
+          ? ["get", "color"]
+          : option && option.lineColor
+            ? option.lineColor
+            : "#f00"
+      ],
       "line-opacity": option && option.opacity ? option.opacity : 1
       // 'line-color': '#f00',
       // 'line-width': 2,
     }
   })
-  console.log(
-    {
-      id: layerId,
-      type: "line",
-      source: layerId,
-      layout: {
-        "line-cap": "round"
-      },
-      paint: {
-        "line-color": data.geojson.features[0].properties.color
-          ? ["get", "color"]
-          : option && option.lineColor
-          ? option.lineColor
-          : "#f00",
-        "line-width": option && option.lineWidth ? option.lineWidth : 2,
-        "line-opacity": option && option.opacity ? option.opacity : 1
-        // 'line-color': '#f00',
-        // 'line-width': 2,
-      }
-    },
-    data.geojson.features
-  )
   // [103.432937,30.878296]
   //样线名称点位
   if (data.textName || data.start || data.end) {
@@ -186,21 +172,21 @@ export function addLine(map, data, option) {
 
   option.arrow
     ? map.loadImage(ARRAOW_ICON, (error, image) => {
-        if (!map.hasImage(layerId)) {
-          map.addImage(layerId, image)
+      if (!map.hasImage(layerId)) {
+        map.addImage(layerId, image)
+      }
+      map.addLayer({
+        id: "arrowline",
+        type: "symbol",
+        source: layerId,
+        layout: {
+          "symbol-placement": "line",
+          "symbol-spacing": 50, // 图标间隔，默认为250
+          "icon-image": layerId, //箭头图标
+          "icon-size": option.arrow.size ? option.arrow.size : 1
         }
-        map.addLayer({
-          id: "arrowline",
-          type: "symbol",
-          source: layerId,
-          layout: {
-            "symbol-placement": "line",
-            "symbol-spacing": 50, // 图标间隔，默认为250
-            "icon-image": layerId, //箭头图标
-            "icon-size": option.arrow.size ? option.arrow.size : 1
-          }
-        })
       })
+    })
     : null
 }
 
