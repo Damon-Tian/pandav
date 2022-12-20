@@ -177,6 +177,11 @@ export default {
     },
     tabsClick(tab) {
       this.activeName = tab.value
+      this.totalData = {
+        personNum: 0,
+        mileage: 0,
+        patrolNum: this.activeName == "TRANSECT" ? "0-0" : 0
+      }
       this.getInit()
     },
     //巡护统计信息接口
