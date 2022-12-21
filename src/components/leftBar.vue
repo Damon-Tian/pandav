@@ -23,7 +23,7 @@
           @mouseleave.native="showDownload = false"
         >
           <div class="img-wrap">
-            <img src="../assets/img/logo.jpg" alt="" />
+            <img src="../assets/icons/熊猫.svg" alt="" style="width: 30px" />
           </div>
           <span slot="title">下载熊猫巡护</span>
         </el-menu-item>
@@ -46,12 +46,17 @@
       <!-- <img v-else src="@/assets/img/p-leftbar-expand.png" alt="" /> -->
     </span>
     <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
-    <img
+    <div
       v-if="showDownload"
       :style="isCollapse && 'left:140px'"
-      src="http://182.151.56.201:9011/edmp/largeScreen/downloadPatrolAPP"
       class="download-img"
-    />
+    >
+      <img
+        src="http://182.151.56.201:9011/edmp/largeScreen/downloadPatrolAPP"
+      />
+      <img src="../assets/img/logo.png" alt="" />
+      <!-- <div>扫码下载巡护APP</div> -->
+    </div>
   </div>
 </template>
 
@@ -259,6 +264,16 @@ export default {
   position: absolute;
   bottom: 0;
   left: 270px;
-  width: 180px;
+
+  & img:first-child {
+    width: 180px;
+  }
+
+  & img:last-child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
 }
 </style>
