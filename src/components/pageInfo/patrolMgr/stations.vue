@@ -3,49 +3,49 @@
   <div>
     <div class="bg">
       <div class="stations-btns">
-        <div>
+        <div style="text-align: center">
           人次
           <div class="stations-btn">
             <countTo
               :start-val="0"
               :end-val="totalData.personNum"
               :duration="3000"
-            />人次
+            />
           </div>
         </div>
-        <div v-if="activeName == 'TRANSECT'">
-          覆盖率
+        <div v-if="activeName == 'TRANSECT'" style="text-align: center">
+          覆盖率(已巡/总数)
           <div class="stations-btn">
             <countTo
               :start-val="0"
               :end-val="Number(totalData.patrolNum.split('-')[0])"
               :duration="3000"
-            />次 -
-            <countTo
+            />/<countTo
               :start-val="0"
               :end-val="Number(totalData.patrolNum.split('-')[1])"
               :duration="3000"
-            />次
+            />
           </div>
         </div>
-        <div v-else>
-          巡护次数
+        <div v-else style="text-align: center">
+          巡护次数(次)
           <div class="stations-btn">
             <countTo
               :start-val="0"
               :end-val="Number(totalData.patrolNum)"
               :duration="3000"
-            />次
+            />
           </div>
         </div>
-        <div>
-          里程
+        <div style="text-align: center">
+          里程(km)
           <div class="stations-btn">
             <countTo
               :start-val="0"
               :end-val="Number(totalData.mileage / 1000)"
+              :decimals="2"
               :duration="3000"
-            />km
+            />
           </div>
         </div>
       </div>
@@ -57,7 +57,10 @@
         <table>
           <tr>
             <th width="10"></th>
-            <th align="left" style="width: 130px">站点</th>
+            <th align="left" style="width: 60px">站点</th>
+            <th align="right" style="width: 60px">
+              {{ activeName == "TRANSECT" ? "覆盖率" : "次数" }}
+            </th>
             <th align="right" style="width: 50px">人次</th>
             <th align="right">里程</th>
           </tr>
@@ -73,6 +76,24 @@
                   {{ item.areaName }}
                 </div>
               </td>
+              <td v-if="activeName == 'TRANSECT'" align="right">
+                <countTo
+                  :start-val="0"
+                  :end-val="Number(item.patrolNum.split('-')[0])"
+                  :duration="3000"
+                />/<countTo
+                  :start-val="0"
+                  :end-val="Number(item.patrolNum.split('-')[1])"
+                  :duration="3000"
+                />
+              </td>
+              <td v-else align="right">
+                <countTo
+                  :start-val="0"
+                  :end-val="Number(item.patrolNum)"
+                  :duration="3000"
+                />
+              </td>
               <td align="right">
                 <countTo
                   :start-val="0"
@@ -83,7 +104,8 @@
               <td align="right">
                 <countTo
                   :start-val="0"
-                  :end-val="Number(item.mileage)"
+                  :end-val="Number(item.mileage / 1000)"
+                  :decimals="2"
                   :duration="3000"
                 />
               </td>
@@ -148,7 +170,7 @@ export default {
       config: {
         header: ["巡护记录", "巡护类型", "巡护机构"],
         headerHeight: 32,
-        columnWidth: [155, 135, 118],
+        columnWidth: [155, 115, 138],
         swiperHeight: 470,
         headerBGC: "rgba(0, 108, 255, 0.2)",
         headerBorder: "none",
@@ -244,8 +266,22 @@ export default {
   border-left: none;
 }
 
+:deep .swiper-table__data {
+  .swiper-table__data__td {
+    .swiper-table__data__box {
+      text-align: center;
+    }
+  }
+}
+
 :deep .swiper-table__header {
   color: #7ecef4;
+
+  th {
+    .swiper-table__header__box {
+      text-align: center;
+    }
+  }
 }
 
 :deep .swiper-table .is-active {

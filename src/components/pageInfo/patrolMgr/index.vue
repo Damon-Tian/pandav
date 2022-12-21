@@ -182,6 +182,9 @@ export default {
         mileage: 0,
         patrolNum: this.activeName == "TRANSECT" ? "0-0" : 0
       }
+      this.stationsData.map((item) => {
+        item.patrolNum = this.activeName == "TRANSECT" ? "0-0" : 0
+      })
       this.getInit()
     },
     //巡护统计信息接口

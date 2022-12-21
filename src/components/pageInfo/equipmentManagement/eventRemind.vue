@@ -69,6 +69,7 @@ export default {
     overflow: scroll;
     height: 320px;
     padding: 20px;
+    font-size: 13px;
     overflow-x: hidden;
   }
 

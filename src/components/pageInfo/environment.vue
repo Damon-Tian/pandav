@@ -26,7 +26,7 @@
             @click="positionClick(item)"
           >
             <span></span>
-            {{ item.orgName }}
+            {{ item.orgName.replace("大熊猫国家公园", "") }}
           </li>
         </div>
       </div>
