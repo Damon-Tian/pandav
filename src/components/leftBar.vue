@@ -47,13 +47,11 @@
     </span>
     <selectedInfo ref="selectedInfo" :is-collapse="isCollapse" />
     <div
-      v-if="showDownload"
+      v-show="showDownload"
       :style="isCollapse && 'left:140px'"
       class="download-img"
     >
-      <img
-        src="http://182.151.56.201:9011/edmp/largeScreen/downloadPatrolAPP"
-      />
+      <img src="/front/edmp/largeScreen/downloadPatrolAPP" />
       <img src="../assets/img/logo.png" alt="" />
       <!-- <div>扫码下载巡护APP</div> -->
     </div>

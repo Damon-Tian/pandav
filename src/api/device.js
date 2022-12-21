@@ -114,6 +114,20 @@ export function get_device_by_devicesn(params) {
     params
   })
 }
+/*
+ * 获取摄像机直播地址
+ * @param {*} deviceSn
+ * @returns
+ */
+
+export function get_video_list() {
+  return request({
+    url: "/front/edmp/largeScreen/getLiveVideo",
+    method: "get"
+  })
+}
+
+
 
 //获取设备 geojson
 

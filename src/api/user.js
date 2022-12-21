@@ -39,3 +39,18 @@ export function user_logout(params) {
         params
     })
 }
+/**
+ * 登出
+ * @param {*} params
+ * @returns
+ */
+export function get_weather(params = {
+    lon: 104.065735,
+    lat: 30.659462
+}) {
+    return request({
+        url: "/front/weather",
+        method: "get",
+        params
+    })
+}

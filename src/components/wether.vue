@@ -3,8 +3,10 @@
     <div class="weather-time">
       <div class="weather-time__timeinfo">{{ time }} {{ week }}</div>
       <div class="weather-time__weatherinfo">
-        <img src="../assets/img/weather-cloudy.png" alt="" />
-        <span class="weather-time__weatherinfo__text">多云 18℃</span>
+        <!-- <img src="../assets/img/weather-cloudy.png" alt="" /> -->
+        <span v-if="weather" class="weather-time__weatherinfo__text"
+          >{{ weather.text }} {{ weather.temp }}℃</span
+        >
       </div>
     </div>
     <div class="version">天地图数据22年（大屏）</div>
@@ -13,11 +15,13 @@
 
 <script>
 import { DateFormat } from "@/utils"
+import { get_weather } from "@/api/user"
 export default {
   data() {
     return {
       time: "",
-      week: ""
+      week: "",
+      weather: null
     }
   },
   mounted() {
@@ -25,6 +29,9 @@ export default {
     setInterval(() => {
       this.getDate()
     }, 1000 * 60)
+  },
+  async created() {
+    this.weather = await get_weather()
   },
   methods: {
     getDate() {

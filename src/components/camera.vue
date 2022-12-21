@@ -36,6 +36,7 @@
 
 <script>
 import videoPlayer from "@/components/videoPlayer/videoPlayer"
+import { get_video_list } from "@/api/device"
 export default {
   components: {
     videoPlayer
@@ -43,24 +44,7 @@ export default {
   data() {
     return {
       isCollapse: false,
-      videoList: [
-        "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN1009F_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7D0BA59PAN47B6F_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L01618PAJ31A78_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L01618PAJBE31A_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L01618PAJD5702_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L01618PAJF96DB_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_1_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_2_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_3_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_4_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0A177RAJFCB21_5_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0AB41PAN9BADE_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0AB41PANF3685_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0B6C8PAN41CA4_0_0/hls.m3u8",
-        "http://110.185.102.112:8888/live/liveStream_7L0D2E2FAC1A847_0_0/hls.m3u8"
-      ],
+      videoList: [],
       startIndex: 0,
       list: [],
       step: 3,
@@ -68,8 +52,7 @@ export default {
     }
   },
   mounted() {
-    this.getList()
-    this.handleAutoPlay()
+    this.getVideoList()
   },
   methods: {
     narrowClick() {
@@ -80,6 +63,11 @@ export default {
           this.$store.state.app.map.mapBox.resize()
         }, 500)
       })
+    },
+    async getVideoList() {
+      this.videoList = await get_video_list()
+      this.getList()
+      this.handleAutoPlay()
     },
     getList() {
       let urls = []
