@@ -173,8 +173,10 @@ export default {
       background-color: transparent;
     }
 
-    :deep(.el-table--enable-row-transition .el-table__body td, .el-table
-        .cell) {
+    :deep(
+        .el-table--enable-row-transition .el-table__body td,
+        .el-table .cell
+      ) {
       padding: 0;
       padding-bottom: 9.5px;
       border: none;
