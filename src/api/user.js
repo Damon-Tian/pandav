@@ -54,3 +54,15 @@ export function get_weather(params = {
         params
     })
 }
+
+/**
+ * 获取登陆视频地址
+ * @param {*} username
+ * @returns
+ */
+export function get_login_bg() {
+    return request({
+        url: `/front/edmp/largeScreen/getLoginBack`,
+        method: "get"
+    })
+}
