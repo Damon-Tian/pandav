@@ -58,6 +58,20 @@ export function get_patrol_list(params) {
     params
   })
 }
+
+/*
+ * 巡护管理-大屏获取手持终端个数
+ * @param {*} data
+ * @returns
+ */
+
+export function get_device_handheld_terminal_count() {
+  return request({
+    url: "/front/edmp/largeScreen/getDeviceHandheldTerminalCount",
+    method: "get"
+  })
+}
+
 /*
  * 巡护路线
  * @param {*} data
