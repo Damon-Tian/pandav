@@ -153,7 +153,7 @@ import {
 } from "@/api/elec"
 import { formatTime, DateFormat } from "@/utils"
 const mapId = "人员热力图"
-const mapId1 = "人员轨迹"
+const mapId1 = "人员轨迹图"
 import mapUtil from "@/mixins/mapUtil"
 export default {
   components: {},
