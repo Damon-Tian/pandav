@@ -52,7 +52,8 @@ import {
   get_line_geojson,
   get_patrol_detail_geojson,
   get_patrol_info,
-  get_patrol_by_orgid
+  get_patrol_by_orgid,
+  get_device_handheld_terminal_count
 } from "@/api/line"
 import mapUtil from "@/mixins/mapUtil"
 import { get_org } from "@/api/mapPopupInfo"
@@ -85,7 +86,7 @@ export default {
       tabs,
       activeName: "",
       statistic: {
-        count: 123
+        count: 0
       },
       orgIds: [],
       stationsData: [],
@@ -147,12 +148,17 @@ export default {
     // this.initMap()
     await this.getOrgIds()
     this.initPatrolMap()
+    this.getDeviceHandheldTerminalCount()
     this.getInit()
   },
   beforeDestroy() {
     // this.removeMap()
   },
   methods: {
+    async getDeviceHandheldTerminalCount() {
+      const data = await get_device_handheld_terminal_count()
+      this.statistic.count = data
+    },
     formatOrgId(orgId) {
       const org = this.orgIds.find((item) => item.id == orgId)
       return org ? org.name : ""
