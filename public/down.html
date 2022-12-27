@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./favicon.ico">
+    <title>熊猫巡护APP下载</title>
+</head>
+
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        font-size: 12px;
+        color: #000000;
+        line-height: 16.5px;
+    }
+
+    .main-content {
+        max-width: 750px;
+        height: 100vh;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+
+    }
+
+    .panda {
+        margin-bottom: 20px;
+        width: 100px;
+        height: 76px;
+    }
+
+    .download {
+        max-width: 250px;
+        height: 52px;
+        background: #275bff;
+        font-size: 16px;
+        text-align: center;
+        color: #ffffff;
+        line-height: 52px;
+        padding: 0 20px;
+        width: 80%;
+        margin-top: 60px;
+    }
+
+    .mask {
+        height: 100vh;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        position: fixed;
+        top: 0;
+        z-index: 1;
+        display: none;
+    }
+
+    .other {
+        width: 224px;
+        height: 224px;
+        position: absolute;
+        right: 20px;
+    }
+
+    .tip {
+        position: absolute;
+        width: 100vw;
+        text-align: center;
+        top: 250px;
+        font-size: 16px;
+        color: #ffffff;
+        line-height: 22.5px;
+    }
+</style>
+
+<body>
+    <div class="main-content">
+        <img src="./panda.svg" class="panda">
+        <div>熊猫巡护APP</div>
+        <div class="download">下载熊猫巡护APP</div>
+    </div>
+    <div class="mask">
+        <img src="./other.svg" class="other">
+        <div class="tip">当前页面无法下载 <br />请点击“更多”图标，选择“用浏览器打开“</div>
+    </div>
+</body>
+<script>
+    //是否在微信浏览器
+    const ua = navigator.userAgent.toLowerCase();
+    const isWexin = ua.indexOf('micromessenger') != -1
+    if (isWexin) {
+        const mask = document.querySelector('.mask')
+        mask.style.display = 'block'
+    }
+
+    //绑定下载事件
+    const download = document.querySelector('.download')
+    const downloadMethod = (url) => {
+        const a = document.createElement('a')
+        a.href = url
+        a.click()
+    }
+    download.onclick = () => {
+        fetch(`/front/downloadPatrolAPPUrl`).then(resp => {
+            console.log(resp);
+            if (resp.status === 200 && resp.data) {
+                downloadMethod(resp.data.data)
+            }
+        })
+    }
+
+</script>
+
+</html>

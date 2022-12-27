@@ -1,65 +1,6 @@
 <template>
   <div id="map">
     <!-- <div class="map-button">
-      <button type="button" @click="poup()">全域</button>
-      <button
-        type="button"
-        @click="
-          addlayer(
-            'http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'chongzhou'
-          )
-        "
-      >
-        崇州地图
-      </button>
-
-      <button
-        type="button"
-        @click="
-          addlayer(
-            'http://3888z2k945.wicp.vip:6150/file/xiongmao/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'dayi'
-          )
-        "
-      >
-        大邑地图
-      </button>
-      <button
-        type="button"
-        @click="
-          addlayer(
-            'http://3888z2k945.wicp.vip:6150/file/xiongmao/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'dujiangyan'
-          )
-        "
-      >
-        都江堰地图
-      </button>
-      <button
-        type="button"
-        @click="
-          addlayer(
-            'http://3888z2k945.wicp.vip:6150/file/xiongmao/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png',
-            'pengzhou'
-          )
-        "
-      >
-        彭州地图
-      </button>
-      <button
-        ref="textbutton"
-        type="button"
-        @click="
-          addHeatmap({
-            id: 'heatmap',
-            magName: 'mag',
-            url: 'https://docs.mapbox.com/mapbox-gl-js/assets/earthquakes.geojson'
-          })
-        "
-      >
-        添加热力图
-      </button>
       <button type="button" @click="Polygon()">添加面</button>
       <button type="button" @click="point()">添加点位</button>
       <button type="button" @click="line()">添加线</button>
@@ -128,22 +69,9 @@ export default {
     }
   },
   mounted() {
-    this.Map2d = new CreatMap(
-      "map"
-      // "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png"
-    )
+    this.Map2d = new CreatMap("map")
 
     this.map = this.Map2d.getMap()
-    const settimoutobj = setTimeout(() => {
-      // this.Map2d.addlayer(
-      //   "http://3888z2k945.wicp.vip:6150/file/xiongmao/arcgis/tuceng/_alllayers/{z}/{y}/{x}.png"
-      // )
-      // this.Map2d.addterrian(
-      //   // "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png"
-      //   "/profile/xiongmao_dem/chongzhou_dem/{z}/{x}/{y}.png"
-      // )
-      // clearTimeout(settimoutobj)
-    }, 1000)
 
     this.map.on("load", () => {
       this.background("rgba(8,25,64,0.5)")
@@ -152,13 +80,6 @@ export default {
         "terrian"
       )
       this.$emit("onload")
-      // 初始加载成都地图
-      // this.layers.push(
-      //   this.Map2d.addlayer(
-      //     "http://3888z2k945.wicp.vip:6150/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
-      //     "chengdu2"
-      //   )
-      // )
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
         // this.Map2d.addVector()
@@ -187,10 +108,6 @@ export default {
           }
           this.$emit("mapclick", feature, features)
         }
-        // this.poup({
-        //   center: [103.37310679593571, 30.53780732123583],
-        //   centent: "<div style='width:300px'>helloword</div>"
-        // })
       })
       this.map.on("mouseover", "人员轨迹图", (e) => {
         // 基层站点点击图层高亮
@@ -224,11 +141,6 @@ export default {
       } catch (error) {
         console.error(error)
       }
-      // this.Map2d.addlayer(
-      //   "http://3888z2k945.wicp.vip:6309/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
-      //   "pbf"
-      // )
-      // http://3888z2k945.wicp.vip:6150/file/arcgis/tuceng/_alllayers/10/417/806.png
     })
   },
   methods: {

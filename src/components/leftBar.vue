@@ -51,8 +51,10 @@
       :style="isCollapse && 'left:140px'"
       class="download-img"
     >
-      <img src="/front/edmp/largeScreen/downloadPatrolAPP" />
-      <img src="../assets/img/logo.png" alt="" />
+      <!-- <img src="../assets/img/logo.png" alt="" /> -->
+
+      <vue-qr :logo-src="logoSrc" :text="downloadUrl" :size="180"></vue-qr>
+
       <!-- <div>扫码下载巡护APP</div> -->
     </div>
   </div>
@@ -61,8 +63,9 @@
 <script>
 import selectedInfo from "./leftInfo/selectedInfo.vue"
 import alarmInfo from "./leftInfo/alarmInfo.vue"
+import vueQr from "vue-qr"
 export default {
-  components: { selectedInfo, alarmInfo },
+  components: { selectedInfo, alarmInfo, vueQr },
   data() {
     return {
       isCollapse: false,
@@ -124,7 +127,9 @@ export default {
           iconActive: require("@/assets/img/p-leftbar-basic-equip.png")
         }
       ],
-      showDownload: false
+      showDownload: false,
+      logoSrc: require("../assets/img/logo.png"),
+      downloadUrl: window.location.origin + "/download"
     }
   },
   methods: {
@@ -265,13 +270,6 @@ export default {
 
   & img:first-child {
     width: 180px;
-  }
-
-  & img:last-child {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
   }
 }
 </style>
