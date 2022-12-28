@@ -18,11 +18,11 @@ module.exports = {
           "^/front": ""
         }
       },
-      "/profile": {
-        target: "http://3888z2k945.wicp.vip:6309/profile",
+      "/map": {
+        target: "http://182.151.51.158:8999/map",
         changeOrigin: true,
         pathRewrite: {
-          "^/profile": ""
+          "^/map": ""
         }
       },
       "/group1": {

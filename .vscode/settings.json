@@ -16,5 +16,6 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "vetur.format.defaultFormatter.js": "prettier-eslint",
 
-  "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"]
+  "stylelint.validate": ["css", "less", "postcss", "scss", "vue", "sass"],
+  "vue3snippets.enable-compile-vue-file-on-did-save-code": false
 }

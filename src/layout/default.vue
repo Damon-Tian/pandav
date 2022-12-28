@@ -96,7 +96,7 @@ export default {
       this.setBorder()
       this.reset()
       this.$refs.mapBox.addlayer(
-        "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+        "/map/xiongmao/ArcGis/_alllayers/{z}/{y}/{x}.png",
         "chengdu"
       )
       this.$refs.leftBar.init()

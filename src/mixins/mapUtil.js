@@ -12,7 +12,7 @@ export default {
                 {
                     name: "综合概况",
                     id: "chengdu",
-                    url: "/profile/tuceng/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    url: "/map/xiongmao/ArcGis/_alllayers/{z}/{y}/{x}.png",
                     view: {
                         center: [103.3440669299489, 30.675952923426294],
                         zoom: 10.019816714374489,
@@ -24,7 +24,7 @@ export default {
                 {
                     name: "崇州站",
                     id: "chongzhou",
-                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    url: "/map/xiongmao_fq/chongzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
                     view: {
                         bearing: 0,
                         center: [103.45711202800089, 30.522769602585484],
@@ -36,7 +36,7 @@ export default {
                 {
                     name: "大邑站",
                     id: "dayi",
-                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    url: "/map/xiongmao_fq/dayi/ArcGis/_alllayers/{z}/{y}/{x}.png",
                     view: {
                         bearing: 0,
                         center: [103.42625254689449, 30.492047976346925],
@@ -48,7 +48,7 @@ export default {
                 {
                     name: "彭州站",
                     id: "pengzhou",
-                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    url: "/map/xiongmao_fq/pengzhou/ArcGis/_alllayers/{z}/{y}/{x}.png",
                     view: {
                         bearing: 0,
                         center: [103.8764645196427, 31.03717774580734],
@@ -57,10 +57,11 @@ export default {
                         zoom: 10.39665090798298
                     }
                 },
+
                 {
                     name: "都江堰站",
                     id: "dujiangyan",
-                    url: "http://3888z2k945.wicp.vip:6150/file/xiongmao/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png",
+                    url: "/map/xiongmao_fq/dujiangyan/ArcGis/_alllayers/{z}/{y}/{x}.png",
                     view: {
                         bearing: 0,
                         center: [103.60124114271571, 30.925828475655365],

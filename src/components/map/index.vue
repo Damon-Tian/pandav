@@ -75,10 +75,7 @@ export default {
 
     this.map.on("load", () => {
       this.background("rgba(8,25,64,0.5)")
-      this.addterrian(
-        "http://3888z2k945.wicp.vip:6150/file/xiongmao_dem/{z}/{x}/{y}.png",
-        "terrian"
-      )
+      this.addterrian("/map/xiongmao_dem/{z}/{x}/{y}.png", "terrian")
       this.$emit("onload")
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
