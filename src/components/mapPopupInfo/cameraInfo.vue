@@ -119,7 +119,7 @@ export default {
           pageSize: 2,
           pageNumber: 1
         })
-        this.capture = records
+        this.capture = records.map((item) => item.realtimeShoots[0])
       }
     }
   }

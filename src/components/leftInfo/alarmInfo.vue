@@ -119,10 +119,11 @@ export default {
   },
   methods: {
     async getList() {
-      const { records } = await get_real_time_shoot({
+      let { records } = await get_real_time_shoot({
         pageNumber: 1,
         pageSize: 10
       })
+      records = records.map((item) => item.realtimeShoots[0])
       records.forEach((item) => {
         const oldItem = this.alarmList.find(
           (alarm) => alarm.deviceSn == item.deviceSn
