@@ -1,6 +1,19 @@
 <template>
-  <info-block title="事件提醒" class="event-remind">
-    <div class="info-content">
+  <info-block class="event-remind">
+    <div slot="title">
+      <div class="tabs">
+        <div
+          v-for="item in tabs"
+          :key="item"
+          class="tab"
+          :class="{ 'active-tab': item === currentTab }"
+          @click="currentTab = item"
+        >
+          {{ item }}
+        </div>
+      </div>
+    </div>
+    <div v-if="currentTab == '事件列表'" class="info-content">
       <SwiperTable
         v-if="alarmList.length"
         :config="config"
@@ -8,23 +21,23 @@
         @swiperItemClick="swiperItemClick"
       />
     </div>
+    <div v-if="currentTab == '设备列表'" class="info-content">
+      <device-list />
+    </div>
   </info-block>
 </template>
 
 <script>
 import infoBlock from "../infoBlock.vue"
 import SwiperTable from "@/components/swiperTable/index.vue"
-import {
-  get_patrol_by_report,
-  get_patrol_detail_geojson_item,
-  get_patrol_detail
-} from "@/api/line"
+import deviceList from "./deviceList.vue"
 import { get_device_by_devicesn, get_camera_geojson_item } from "@/api/device"
 import mapUtil from "@/mixins/mapUtil"
 export default {
   components: {
     infoBlock,
-    SwiperTable
+    SwiperTable,
+    deviceList
   },
   mixins: [mapUtil],
   props: {
@@ -39,7 +52,9 @@ export default {
         columnWidth: [230, 156],
         swiperHeight: 280
       },
-      needRemoveChecked: []
+      needRemoveChecked: [],
+      tabs: ["事件列表", "设备列表"],
+      currentTab: "事件列表"
     }
   },
   methods: {
@@ -79,6 +94,27 @@ export default {
 
   :deep .swiper-table__data__box {
     margin-top: 5px !important;
+  }
+
+  .tabs {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .tab {
+    padding-bottom: 5px;
+    color: #d6d5d5;
+    cursor: pointer;
+    font-size: 18px;
+
+    & + .tab {
+      margin-left: 20px;
+    }
+  }
+
+  .active-tab {
+    border-bottom: 1px solid #00aeff;
+    color: #fff;
   }
 }
 </style>

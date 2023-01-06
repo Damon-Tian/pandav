@@ -78,6 +78,7 @@ export default {
   z-index: 2;
   top: 90px;
   right: 20px;
+  min-width: 460px;
 
   .weather-time {
     display: flex;

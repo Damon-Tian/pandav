@@ -55,6 +55,9 @@ export function addImgIcon(map, option = {
         map.removeLayer(layerId);
         map.removeSource(layerId)
     }
+    if (map.hasImage(layerId)) {
+        map.removeImage(layerId);
+    }
     if (option.tip) {
         const center = option.pointArray.features[parseInt(option.pointArray.features.length / 2)].geometry.coordinates.slice(0, 2)
         const idmarker = createMarker(center, {

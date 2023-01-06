@@ -29,12 +29,11 @@ import eventRemind from "./equipmentManagement/eventRemind.vue"
 const mapId = ["红外相机", "摄像机"]
 import {
   get_infrared_camera_geojson,
-  get_ecological_equipment_geojson,
   get_video_camera_geojson,
   get_vidicon,
   get_event_by_orgId
 } from "@/api/device"
-import { get_org } from "@/api/mapPopupInfo"
+import { get_org } from "@/api/station"
 import mapUtil from "@/mixins/mapUtil"
 const tabs = ["设备管理", "生态设备"]
 export default {
@@ -50,22 +49,14 @@ export default {
     }
   },
   computed: {
-    currentArea() {
-      return this.$store.state.app.currentArea
-    },
     orgId() {
       return this.$store.getters["app/GET_AREA_ID"]
     }
   },
   watch: {
-    currentArea() {
-      this.currentPosition = this.currentArea
-    },
-    currentPosition() {
+    orgId() {
       this.removeMap()
       this.initMap()
-    },
-    orgId() {
       this.getVidicon()
       this.getEventByOrgId()
     }
@@ -83,8 +74,8 @@ export default {
   },
   methods: {
     async initMap() {
-      const geoData1 = await get_infrared_camera_geojson()
-      const geoData2 = await get_video_camera_geojson()
+      const geoData1 = await get_infrared_camera_geojson(this.orgId)
+      const geoData2 = await get_video_camera_geojson(this.orgId)
       const datas = [geoData1, geoData2]
       mapId.forEach((id, index) => {
         this.setLayer(1, id, datas[index])

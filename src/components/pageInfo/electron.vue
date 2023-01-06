@@ -89,6 +89,10 @@
       </div>
     </info-block>
     <info-block title="统计">
+      <div slot="titleRight" class="icon" @click="exportUserCount">
+        <img src="../../assets/icons/export.svg" />
+      </div>
+
       <div class="info-content">
         <el-date-picker
           v-model="timerange"
@@ -149,9 +153,10 @@ import {
   get_targeted_sms_data,
   get_elec_heatmap_geojson,
   get_elec_person_geojson,
-  get_electronic_person_his
+  get_electronic_person_his,
+  export_Area_user_count
 } from "@/api/elec"
-import { formatTime, DateFormat } from "@/utils"
+import { formatTime, DateFormat, downloadBlob } from "@/utils"
 const mapId = "人员热力图"
 const mapId1 = "人员轨迹图"
 import mapUtil from "@/mixins/mapUtil"
@@ -204,6 +209,15 @@ export default {
     this.getPersonHis()
   },
   methods: {
+    async exportUserCount() {
+      const params = {}
+      if (this.timerange && this.timerange.length) {
+        params.startTime = this.timerange[0]
+        params.endTime = this.timerange[1]
+      }
+      const data = await export_Area_user_count(params)
+      downloadBlob(data)
+    },
     //热力图接口
     async getElectronicFenceCount() {
       const data = await get_electronic_fence_count()
@@ -308,6 +322,25 @@ export default {
         height: 26px;
         background: #666;
       }
+    }
+  }
+}
+
+.icon {
+  overflow: hidden;
+  width: 26px;
+  height: 26px;
+
+  img {
+    position: relative;
+    width: 26px;
+    height: 26px;
+  }
+
+  &:hover {
+    img {
+      left: -26px;
+      filter: drop-shadow(#00eaff 26px 0);
     }
   }
 }

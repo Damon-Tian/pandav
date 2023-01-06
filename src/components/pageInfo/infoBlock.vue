@@ -4,6 +4,7 @@
       <div class="info-block__title__left">{{ title }}</div>
       <slot class="info-block__title__right" name="titleRight"></slot>
     </div>
+    <slot v-else name="title" class="info-block__title" />
     <div v-if="line" class="info-block__line"></div>
     <slot />
   </div>

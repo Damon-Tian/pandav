@@ -15,6 +15,19 @@ export function get_station_list(params) {
     params
   })
 }
+/**
+ * 获取机构
+ * @param {*} params
+ * @returns
+ */
+
+export function get_org(params) {
+  return request({
+    url: "/front/org/page",
+    method: "get",
+    params
+  })
+}
 
 /**
  * 大屏获取四个区域人员信息
@@ -35,7 +48,7 @@ export async function get_station_geojson(orgId) {
     pageSize: 999
   }
   if (orgId) {
-    params.orgIds = [orgId]
+    params.orgId = orgId
   }
   const { records } = await get_station_list(params)
   const geoJson = []
@@ -43,7 +56,6 @@ export async function get_station_geojson(orgId) {
     let geo = {
       "type": "Polygon", "coordinates": [[Number(item.lot), Number(item.lat)]]
     }
-    console.log(item);
     if (item.protectMap) {
       geo = JSON.parse(item.protectMap).geometry
     }

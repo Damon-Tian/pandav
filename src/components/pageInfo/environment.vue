@@ -164,9 +164,9 @@ export default {
     }
   },
   watch: {
-    currentPosition() {
-      // this.removeMap()
-      // this.initMap()
+    currentOrgId() {
+      this.removeMap()
+      this.initMap()
     },
     detail() {
       if (this.detail.properties?.id) {
@@ -344,12 +344,7 @@ export default {
     },
     async initMap() {
       this.removelayer(1, mapId)
-      let geoData = await get_ecological_equipment_geojson()
-      if (this.currentPosition) {
-        geoData = geoData.filter(
-          (item) => item.properties.orgId == this.currentPosition
-        )
-      }
+      let geoData = await get_ecological_equipment_geojson(this.currentOrgId)
       this.setLayer(1, mapId, geoData)
     },
     removeMap() {

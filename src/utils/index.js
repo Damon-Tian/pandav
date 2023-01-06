@@ -116,3 +116,70 @@ export const getRandomRgb = () => {
   const b = getRandom(0, 232)
   return `rgb(${r},${g},${b})`
 }
+
+export const downloadBlob = (response) => {
+  const disposition = response.headers['content-disposition']
+  let fileName = disposition.substring(disposition.indexOf('filename=') + 9, disposition.length)
+  // iso8859-1的字符转换成中文
+  fileName = decodeURIComponent(fileName)
+  // 去掉双引号
+  fileName = fileName.replace(/\\"/g, '')
+  const content = response.data
+  console.info('rep:', disposition)
+  console.info('fileName:', fileName)
+  // 创建a标签并点击， 即触发下载
+  let url = window.URL.createObjectURL(new Blob([content]))
+  let link = document.createElement('a')
+  link.style.display = 'none'
+  link.href = url
+  link.setAttribute('download', fileName)
+  //link.download = "测试下载文件.xls"
+  // 模拟
+  document.body.appendChild(link)
+  link.click()
+  // 释放URL 对象
+  window.URL.revokeObjectURL(link.href)
+  document.body.removeChild(link)
+}
+
+export const formatOrgName = (name) => {
+  if (name.indexOf('成都') !== -1) {
+    return '成都分局'
+  }
+  else if (name.indexOf('崇州') !== -1) {
+    return '崇州总站'
+  }
+  else if (name.indexOf('大邑') !== -1) {
+    return '大邑总站'
+  }
+  else if (name.indexOf('彭州') !== -1) {
+    return '彭州总站'
+  }
+  else if (name.indexOf('都江堰') !== -1) {
+    return '都江堰总站'
+  }
+  else {
+    return name
+  }
+}
+//扁平化数组转树形
+export const transListToTreeData = (list, parentId) => {
+  // 1. 创建一个数组存放结果
+  const res = []
+  // 2. 遍历源数据, parentId === 传入参数的对象放入结果数组
+  list.forEach((element) => {
+    if (element.parentId === parentId) {
+      // 递归开始, 每次找到一个符合条件的部门
+      // 继续用这个部门的 id 作为下一层的 parentId
+      const children = transListToTreeData(list, element.id)
+      // 如果找到结果, 应该将结果放入当前 element.children 当中
+      if (children.length > 0) {
+        element.children = children
+      }
+      res.push(element)
+    }
+  })
+
+  // 3. 返回结果数组
+  return res
+}

@@ -12,7 +12,7 @@ export function get_device_list(
   data,
   params = {
     pageNumber: 1,
-    pageSize: 999
+    pageSize: 9999
   }
 ) {
   return request({
@@ -20,6 +20,21 @@ export function get_device_list(
     method: "post",
     data,
     params
+  })
+}
+/*
+ * 设备列表
+ * @param {*} data
+ * @returns
+ */
+
+export function get_device_list_item(
+  data
+) {
+  return request({
+    url: "/front/edmp/device/list",
+    method: "post",
+    data
   })
 }
 /*

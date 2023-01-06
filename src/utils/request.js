@@ -27,6 +27,9 @@ service.interceptors.request.use(
 // 响应拦截器
 service.interceptors.response.use(
     (response) => {
+        if (response.request.responseType === "blob") {
+            return response
+        }
         if (response.data.code !== 200) {
             if (response.data.code === 102) {
                 store.dispatch("user/logout")

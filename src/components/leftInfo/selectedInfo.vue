@@ -304,8 +304,11 @@ export default {
       }
     },
     currentArea() {
-      console.log(this.needRemoveChecked)
-      this.handleNeedReomvedCheck()
+      this.$nextTick(() => {
+        setTimeout(() => {
+          this.handleNeedReomvedCheck()
+        }, 2000)
+      })
       //切换图层再重新请求数据再添加图层
       this.initLayer()
     },
@@ -360,22 +363,39 @@ export default {
       const subNeedRemoveChecked = this.selectList.filter(
         (item) => item.checked
       )
-      this.needRemoveChecked.concat(subNeedRemoveChecked).forEach((item) => {
-        //首页加载之前勾选的，离开首页删除勾选的图层
-        if (this.currentTab === 1) {
-          item.checked = false
-          this.handleClick(item)
-        } else {
-          this.removelayer(item.type, item.title)
+      let subNeedRemoveCheckedFilter = []
+
+      subNeedRemoveChecked.forEach((item) => {
+        if (!this.needRemoveChecked.some((sub) => sub.title == item.title)) {
+          subNeedRemoveCheckedFilter.push(item)
         }
       })
+      this.needRemoveChecked
+        .concat(subNeedRemoveCheckedFilter)
+        .forEach((item, index) => {
+          this.removelayer(item.type, item.title)
+          //首页加载之前勾选的，离开首页删除勾选的图层
+          if (this.currentTab === 1) {
+            item.checked = false
+            this.$nextTick(() => {
+              setTimeout(() => {
+                this.handleClick(item)
+              }, index * 500)
+            })
+          }
+        })
       this.currentHeatMapRange = ""
     },
     //初始化图层 核心保护区和一般保护区 热力图 人员轨迹图
     async initLayer() {
       this.selectedInfoList1.slice(0, 2).forEach((item) => {
+        if (item.checked) {
+          this.removelayer(item.type, item.title)
+        }
         item.checked = false
-        this.handleClick(item)
+        this.$nextTick(() => {
+          this.handleClick(item)
+        })
       })
     },
 

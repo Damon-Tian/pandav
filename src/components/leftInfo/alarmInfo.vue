@@ -60,7 +60,8 @@ import {
   get_patrol_detail
 } from "@/api/line"
 import { get_device_by_devicesn, get_camera_geojson_item } from "@/api/device"
-import { get_real_time_shoot, get_org } from "@/api/mapPopupInfo"
+import { get_real_time_shoot } from "@/api/mapPopupInfo"
+import { get_org } from "@/api/station"
 export default {
   components: {},
   mixins: [mixins, mapUtil],

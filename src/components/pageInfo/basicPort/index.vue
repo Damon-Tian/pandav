@@ -11,7 +11,7 @@ import DetailInfo from "./DetailInfo.vue"
 const mapId = "基层站点"
 import { get_event_by_orgId } from "@/api/device"
 import { get_station_geojson } from "@/api/station"
-import { get_org } from "@/api/mapPopupInfo"
+import { get_org } from "@/api/station"
 import mapUtil from "@/mixins/mapUtil"
 import { get_person_info } from "@/api/station"
 export default {
@@ -68,9 +68,6 @@ export default {
         this.detail = { ...this.currentFeature.properties }
         this.getEventByOrgId()
       }
-    },
-    orgId() {
-      this.getEventByOrgId()
     }
   },
   async mounted() {
@@ -88,7 +85,7 @@ export default {
       return org ? org.name : ""
     },
     async initMap() {
-      const geoData = await get_station_geojson()
+      const geoData = await get_station_geojson(this.orgId)
       this.setLayer(3, mapId, geoData)
     },
     async getPersonInfo() {
@@ -99,8 +96,9 @@ export default {
       })
     },
     async getEventByOrgId() {
+      console.log(this.detail)
       const data = await get_event_by_orgId({
-        orgId: this.orgId,
+        orgId: this.detail.id,
         pageSize: 100,
         includePatrol: 0
       })

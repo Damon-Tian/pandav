@@ -76,6 +76,7 @@ export default {
     methods: {
         //通过map方法生成图层
         async setLayer(type, id, geoData) {
+            this.removelayer(type, id)
             if (!geoData || !geoData[0]) {
                 return;
             }

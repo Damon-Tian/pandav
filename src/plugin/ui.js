@@ -15,7 +15,11 @@ import {
   FormItem,
   Input,
   Checkbox,
-  Button
+  CheckboxGroup,
+  Button,
+  Link,
+  Popover,
+  Tree
 } from "element-ui"
 import InfoBlock from "@/components/pageInfo/infoBlock.vue"
 Vue.component("InfoBlock", InfoBlock)
@@ -29,10 +33,14 @@ Vue.use(Image)
 Vue.use(DatePicker)
 Vue.use(Form)
 Vue.use(FormItem)
+Vue.use(CheckboxGroup)
 Vue.use(Checkbox)
 Vue.use(Input)
 Vue.use(Button)
+Vue.use(Link)
 Vue.use(Slider)
+Vue.use(Popover)
 Vue.use(Scrollbar)
 Vue.use(dataV)
 Vue.use(Icon)
+Vue.use(Tree)

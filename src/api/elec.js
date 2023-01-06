@@ -81,6 +81,20 @@ export function get_targeted_sms_data(params) {
     })
 }
 
+/**
+ * 导出历史统计人数
+ * @param {*} params
+ * @returns
+ */
+export function export_Area_user_count(params) {
+    return request({
+        url: "/front/edmp/largeScreen/exportAreaUserCount",
+        method: "get",
+        params,
+        responseType: 'blob'
+    })
+}
+
 
 
 // 到处每个接口可拼装好的geojson
