@@ -1,6 +1,6 @@
 <template>
   <div>
-    <infoBlock>
+    <infoBlock v-if="!currentOrgId">
       <div class="info-content">
         <div class="env-first__top">
           <div class="top-circle">
@@ -104,6 +104,7 @@
 import Charts from "@jiaminghi/charts"
 import infoBlock from "./infoBlock"
 import { get_ecological_equipment_geojson } from "@/api/device"
+import { get_org } from "@/api/station"
 import {
   get_ecologicalequipment,
   get_env_detail,
@@ -149,7 +150,8 @@ export default {
       PM25List: [],
       PM10List: [],
       clock: "",
-      envChart: null
+      envChart: null,
+      orgIds: []
     }
   },
   computed: {
@@ -167,6 +169,16 @@ export default {
     currentOrgId() {
       this.removeMap()
       this.initMap()
+      if (this.currentOrgId) {
+        const currentDevice = this.positionList.find((item) =>
+          this.isChild(item.fkOrgId)
+        )
+        this.positionClick(currentDevice)
+      } else {
+        this.currentPosition = ""
+        this.labelInfo = null
+        this.envChart = null
+      }
     },
     detail() {
       if (this.detail.properties?.id) {
@@ -179,18 +191,27 @@ export default {
   },
   mounted() {
     this.getInfo()
+    get_org({ pageNumber: 1, pageSize: 999 }).then((resp) => {
+      this.orgIds = resp.records
+    })
   },
   beforeDestroy() {
     this.removeMap()
   },
   methods: {
+    isChild(childId) {
+      const tree = this.orgIds.filter((item) => item.id == this.currentOrgId)[0]
+      tree.children = this.orgIds.filter((item) => item.parentId == tree.id)
+      return (
+        tree.id == childId || tree.children.some((item) => item.id == childId)
+      )
+    },
     async getInfo() {
       const resData = await get_ecologicalequipment()
       this.positionList = resData.devices
       this.online = resData.online
       this.offline = resData.offline
       this.totalData = parseInt(resData.online) + parseInt(resData.offline)
-
       const defaultDevice = this.positionList.find(
         (item) => item.fkOrgId == this.currentOrgId
       )
@@ -201,7 +222,8 @@ export default {
       }
     },
     positionClick(item) {
-      if (item.fkOrgId !== this.currentPosition) {
+      console.log(item)
+      if (item && item.fkOrgId !== this.currentPosition) {
         this.currentPosition = item.fkOrgId
         this.labelInfo = item
         this.getCurrentStatisc()
@@ -265,22 +287,22 @@ export default {
         title: {},
         xAxis: {
           boundaryGap: false,
-          axisLabel: {
-            formatter: function (v) {
-              if (that.chartX.length > 10) {
-                if (v.index % 2 === 0) {
-                  return v.value
-                } else {
-                  return ""
-                }
-              } else {
-                return v.value
-              }
-            },
-            style: {
-              fill: "white"
-            }
-          },
+          // axisLabel: {
+          //   formatter: function (v) {
+          //     if (that.chartX.length > 10) {
+          //       if (v.index % 2 === 0) {
+          //         return v.value
+          //       } else {
+          //         return ""
+          //       }
+          //     } else {
+          //       return v.value
+          //     }
+          //   },
+          //   style: {
+          //     fill: "white"
+          //   }
+          // },
           axisLine: {
             style: {
               stroke: "rgba(178, 231, 255, 1)"
@@ -345,7 +367,17 @@ export default {
     async initMap() {
       this.removelayer(1, mapId)
       let geoData = await get_ecological_equipment_geojson(this.currentOrgId)
-      this.setLayer(1, mapId, geoData)
+      this.setLayer(
+        1,
+        mapId,
+        this.currentPosition
+          ? [
+              geoData.find(
+                (item) => item.properties.orgId == this.currentPosition
+              )
+            ]
+          : geoData
+      )
     },
     removeMap() {
       this.removelayer(1, mapId)

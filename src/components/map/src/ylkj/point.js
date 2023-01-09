@@ -55,9 +55,6 @@ export function addImgIcon(map, option = {
         map.removeLayer(layerId);
         map.removeSource(layerId)
     }
-    if (map.hasImage(layerId)) {
-        map.removeImage(layerId);
-    }
     if (option.tip) {
         const center = option.pointArray.features[parseInt(option.pointArray.features.length / 2)].geometry.coordinates.slice(0, 2)
         const idmarker = createMarker(center, {
@@ -69,11 +66,7 @@ export function addImgIcon(map, option = {
         })
         markerObj[layerId].push(idmarker)
     }
-    map.loadImage(option.imgUrl, (error, image) => {
-        if (error) throw error;
-        if (!map.hasImage(layerId)) {
-            map.addImage(layerId, image);
-        }
+    const setLayer = () => {
         map.addSource(layerId, {
             'type': 'geojson',
             'data': option.pointArray
@@ -103,12 +96,19 @@ export function addImgIcon(map, option = {
                     '#23d9fb',
                     option.color ? option.color : "#000"
                 ]
-                // "text-halo-color": "rgba(0,0,0,0.5)",
-                // "text-halo-width": 2,
-                // "text-opacity": 0.8
             }
         })
-    })
+    }
+    if (map.hasImage(layerId)) {
+        setLayer()
+    }
+    else {
+        map.loadImage(option.imgUrl, (error, image) => {
+            map.addImage(layerId, image);
+            setLayer()
+        })
+    }
+
 }
 
 export function removeMarker() {

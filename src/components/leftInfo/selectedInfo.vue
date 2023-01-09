@@ -305,9 +305,7 @@ export default {
     },
     currentArea() {
       this.$nextTick(() => {
-        setTimeout(() => {
-          this.handleNeedReomvedCheck()
-        }, 2000)
+        this.handleNeedReomvedCheck()
       })
       //切换图层再重新请求数据再添加图层
       this.initLayer()
@@ -378,9 +376,7 @@ export default {
           if (this.currentTab === 1) {
             item.checked = false
             this.$nextTick(() => {
-              setTimeout(() => {
-                this.handleClick(item)
-              }, index * 500)
+              this.handleClick(item)
             })
           }
         })

@@ -75,11 +75,9 @@ export default {
   methods: {
     async initMap() {
       const geoData1 = await get_infrared_camera_geojson(this.orgId)
+      this.setLayer(1, mapId[0], geoData1)
       const geoData2 = await get_video_camera_geojson(this.orgId)
-      const datas = [geoData1, geoData2]
-      mapId.forEach((id, index) => {
-        this.setLayer(1, id, datas[index])
-      })
+      this.setLayer(1, mapId[1], geoData2)
     },
     formatOrgId(orgId) {
       const org = this.orgIds.find((item) => item.id == orgId)

@@ -90,7 +90,7 @@
     </info-block>
     <info-block title="统计">
       <div slot="titleRight" class="icon" @click="exportUserCount">
-        <img src="../../assets/icons/export.svg" />
+        <img src="../../assets/icons/export.svg" title="导出统计数据" />
       </div>
 
       <div class="info-content">
@@ -196,6 +196,16 @@ export default {
         time = formatTime(this.fenceData.collectTime)
       }
       return time
+    },
+    orgId() {
+      return this.$store.getters["app/GET_AREA_ID"]
+    }
+  },
+
+  watch: {
+    orgId() {
+      this.initHeatMap()
+      this.initPersonMap()
     }
   },
   beforeDestroy() {
@@ -233,11 +243,11 @@ export default {
       this.fenceData.numOfGeneralAreas = data.numOfGeneralAreas
     },
     async initHeatMap() {
-      const geoData = await get_elec_heatmap_geojson()
+      const geoData = await get_elec_heatmap_geojson(this.orgId)
       this.setLayer(4, mapId, geoData)
     },
     async initPersonMap() {
-      const geoData = await get_elec_person_geojson()
+      const geoData = await get_elec_person_geojson(this.orgId)
       this.setLayer(2, mapId1, geoData)
     },
     async getPersonHis() {
@@ -330,6 +340,7 @@ export default {
   overflow: hidden;
   width: 26px;
   height: 26px;
+  cursor: pointer;
 
   img {
     position: relative;

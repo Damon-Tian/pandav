@@ -1,7 +1,7 @@
 <template>
   <div id="map">
-    <!-- <div class="map-button">
-      <button type="button" @click="Polygon()">添加面</button>
+    <div v-if="hasOparatePermission" class="map-button">
+      <!-- <button type="button" @click="Polygon()">添加面</button>
       <button type="button" @click="point()">添加点位</button>
       <button type="button" @click="line()">添加线</button>
       <button type="button" @click="view">获取视角</button>
@@ -29,12 +29,12 @@
       >
         边界
       </button>
-      <button type="button" @click="removelayer('chengdu')">删除</button>
+      <button type="button" @click="removelayer('chengdu')">删除</button> -->
       <button type="button" @click="drawPoint">点</button>
       <button type="button" @click="drawLine">线</button>
       <button type="button" @click="drawPolygon">面</button>
       <button type="button" @click="deleteDraw">删除</button>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -66,6 +66,11 @@ export default {
       currentView: null,
       PlottingObj: null, //测量对象
       currentLayer: null //当前图层
+    }
+  },
+  computed: {
+    hasOparatePermission() {
+      return this.$store.state.user.name == "maintain"
     }
   },
   mounted() {
