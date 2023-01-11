@@ -7,7 +7,9 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 module.exports = {
+  productionSourceMap: false,
   configureWebpack: config => {
     return {
       optimization: {
@@ -30,7 +32,21 @@ module.exports = {
             },
           },
         },
-      }
+      },
+      plugins: [
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            //生产环境自动删除console
+            compress: {
+              drop_debugger: true,
+              drop_console: true,
+              pure_funcs: ['console.log']
+            }
+          },
+          sourceMap: false,
+          parallel: true
+        })
+      ]
     }
   },
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
