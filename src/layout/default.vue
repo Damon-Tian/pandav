@@ -38,7 +38,6 @@ import leftBar from "@/components/leftBar"
 import camera from "@/components/camera.vue"
 import rightInfo from "@/components/rightInfo"
 import wether from "@/components/wether"
-import mapBox from "@/components/map/index"
 import ResourcesInfo from "@/components/mapPopupInfo/resourcesInfo.vue"
 import CameraInfo from "@/components/mapPopupInfo/cameraInfo.vue"
 import PipeCareStation from "@/components/mapPopupInfo/pipeCareStation.vue"
@@ -53,7 +52,7 @@ export default {
     camera,
     rightInfo,
     wether,
-    mapBox,
+    mapBox: () => import("../components/map/index.vue"),
     ResourcesInfo,
     CameraInfo,
     PipeCareStation,
@@ -82,9 +81,6 @@ export default {
       this.setBorder()
     }
   },
-  mounted() {
-    this.$store.commit("app/SET_MAPBOX", this.$refs.mapBox)
-  },
   methods: {
     handleClick(currentFeature, features) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
@@ -92,6 +88,7 @@ export default {
       this.handleFeature(currentFeature)
     },
     handleOnLoad() {
+      this.$store.commit("app/SET_MAPBOX", this.$refs.mapBox)
       this.$refs.mapBox.background("#081940")
       this.setBorder()
       this.reset()

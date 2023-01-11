@@ -1,5 +1,5 @@
 <template>
-  <div id="map">
+  <div id="map" ref="mapBox">
     <div v-if="hasOparatePermission" class="map-button">
       <!-- <button type="button" @click="Polygon()">添加面</button>
       <button type="button" @click="point()">添加点位</button>

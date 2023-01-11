@@ -1,8 +1,8 @@
 // 电子围栏 api
 const img = require("@/assets/img/3931670557158_.pic.jpg")
 import request from '@/utils/request'
-import area from "@/assets/stationdata/line01.json"
 import { getRandomRgb } from '@/utils'
+import axios from 'axios'
 /**
  * 电子围栏列表
  * @param {*} data
@@ -198,12 +198,13 @@ export async function get_elec_person_geojson(orgId) {
         item.properties.color = getRandomRgb()
         item.id = (index + 1)
     })
-    console.log(geoJson);
     return geoJson
 }
 
+
 export async function get_elec_area_geojson() {
-    const geoJson = area.features
+    const data = await axios.get('/static/line01.json')
+    const geoJson = data.data
     geoJson[0].img = img
     geoJson[0].tip = '总长度：221.6KM'
     return geoJson

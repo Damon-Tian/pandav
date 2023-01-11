@@ -6,7 +6,7 @@
  * @Description: In User Settings Edit
  * @FilePath: \mapbox\src\page\plotting.js
  */
-import * as turf from './truf.js'
+import * as turf from '../truf'
 export default class Plotting {
     constructor(map) {
         this.map = map;

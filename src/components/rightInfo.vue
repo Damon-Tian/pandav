@@ -10,21 +10,14 @@
 </template>
 
 <script>
-// import homeInfo from "./pageInfo/home"
-import environment from "./pageInfo/environment"
-import resource from "./pageInfo/resource"
-import basicPort from "./pageInfo/basicPort/index"
-import equipmentManagement from "./pageInfo/equipmentManagement.vue"
-import patrolMgr from "./pageInfo/patrolMgr/index"
-import electron from "./pageInfo/electron.vue"
 export default {
   components: {
-    environment,
-    resource,
-    basicPort,
-    patrolMgr,
-    equipmentManagement,
-    electron
+    environment: () => import("./pageInfo/environment.vue"),
+    resource: () => import("./pageInfo/resource"),
+    basicPort: () => import("./pageInfo/basicPort/index.vue"),
+    equipmentManagement: () => import("./pageInfo/equipmentManagement.vue"),
+    patrolMgr: () => import("./pageInfo/patrolMgr/index.vue"),
+    electron: () => import("./pageInfo/electron.vue")
   },
   data() {
     return {
