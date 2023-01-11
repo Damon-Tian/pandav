@@ -8,10 +8,12 @@
  */
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const isPrd = process.env.NODE_ENV === 'development'
+console.log(isPrd);
 module.exports = {
   productionSourceMap: false,
   configureWebpack: config => {
-    return {
+    const tmpConfig = {
       optimization: {
         runtimeChunk: 'single',
         splitChunks: {
@@ -33,7 +35,9 @@ module.exports = {
           },
         },
       },
-      plugins: [
+    }
+    if (!isPrd) {
+      tmpConfig.plugins = [
         new UglifyJsPlugin({
           uglifyOptions: {
             //生产环境自动删除console
@@ -48,6 +52,7 @@ module.exports = {
         })
       ]
     }
+    return tmpConfig
   },
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
   devServer: {
