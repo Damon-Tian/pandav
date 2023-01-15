@@ -25,10 +25,10 @@
         <span>规划管护面积： </span>
         <span>{{ dataDetail.protectArea || "--" }}公顷</span>
       </div>
-      <div class="p-label-info" style="margin-bottom: 20px">
+      <!-- <div class="p-label-info" style="margin-bottom: 20px">
         <span>站点位置是否在大熊猫公园内： </span>
         <span>是</span>
-      </div>
+      </div> -->
       <SwiperTable
         v-if="alarmList.length"
         :config="config"

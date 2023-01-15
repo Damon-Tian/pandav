@@ -85,7 +85,7 @@
             </div>
           </div>
         </div>
-        <div class="env-second__chart">
+        <div v-show="chartX.length" class="env-second__chart">
           <div class="env-second__chart-title">
             <span>空气质量小时变化</span>
             <div class="chart-title__legend">
@@ -222,7 +222,6 @@ export default {
       }
     },
     positionClick(item) {
-      console.log(item)
       if (item && item.fkOrgId !== this.currentPosition) {
         this.currentPosition = item.fkOrgId
         this.labelInfo = item
@@ -278,31 +277,35 @@ export default {
       })
     },
     initChart() {
+      if (!this.chartX.length) {
+        return
+      }
       if (!this.envChart) {
         const chart = document.querySelector(".env-second__chart-content")
         this.envChart = new Charts(chart)
+        console.log(this.envChart)
       }
       let that = this
       const option1 = {
         title: {},
         xAxis: {
           boundaryGap: false,
-          // axisLabel: {
-          //   formatter: function (v) {
-          //     if (that.chartX.length > 10) {
-          //       if (v.index % 2 === 0) {
-          //         return v.value
-          //       } else {
-          //         return ""
-          //       }
-          //     } else {
-          //       return v.value
-          //     }
-          //   },
-          //   style: {
-          //     fill: "white"
-          //   }
-          // },
+          axisLabel: {
+            formatter: function (v) {
+              if (that.chartX.length > 10) {
+                if (v.index % 2 === 0) {
+                  return v.value
+                } else {
+                  return ""
+                }
+              } else {
+                return v.value
+              }
+            },
+            style: {
+              fill: "white"
+            }
+          },
           axisLine: {
             style: {
               stroke: "rgba(178, 231, 255, 1)"

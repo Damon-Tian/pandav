@@ -3,6 +3,18 @@
       left: isCollapse ? '134px' : '264px'
     }" -->
   <div class="selected-info" :style="`${isCollapse && 'left:110px'}`">
+    <span
+      v-if="showButton"
+      class="btn"
+      style="
+        position: static;
+        width: 50px;
+        margin-bottom: 10px;
+        text-align: center;
+      "
+      @click="$refs.topNav.reset()"
+      >复位</span
+    >
     <div>
       <div class="selected-info-list">
         <div
@@ -40,6 +52,7 @@
     <selected-info
       v-for="(item, index) in subselectedInfoList"
       :key="item.id"
+      :show-button="false"
       :select-list="item.children"
       class="sub-selected"
       :style="`${
@@ -149,6 +162,10 @@ export default {
     selectList: {
       type: Array,
       default: () => []
+    },
+    showButton: {
+      type: Boolean,
+      default: true
     }
   },
   data() {

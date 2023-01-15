@@ -15,7 +15,6 @@
         @markerClick="handleMarkerClick"
       />
 
-      <span class="btn" @click="$refs.topNav.reset()">复位</span>
       <!-- <router-view /> -->
     </div>
     <camera ref="cameraRef" class="main-right" />
