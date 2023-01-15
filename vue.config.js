@@ -9,51 +9,9 @@
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const isPrd = process.env.NODE_ENV === 'development'
-console.log(isPrd);
+
 module.exports = {
   productionSourceMap: false,
-  configureWebpack: config => {
-    const tmpConfig = {
-      optimization: {
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-          maxInitialRequests: Infinity,
-          minSize: 0,
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name(module) {
-                // get the name. E.g. node_modules/packageName/not/this/part.js
-                // or node_modules/packageName
-                const packageName = module.context.match(/[\\/]node_modules[\\/](.*?)([\\/]|$)/)[1];
-
-                // npm package names are URL-safe, but some servers don't like @ symbols
-                return `npm.${packageName.replace('@', '')}`;
-              },
-            },
-          },
-        },
-      },
-    }
-    if (!isPrd) {
-      tmpConfig.plugins = [
-        new UglifyJsPlugin({
-          uglifyOptions: {
-            //生产环境自动删除console
-            compress: {
-              drop_debugger: true,
-              drop_console: true,
-              pure_funcs: ['console.log']
-            }
-          },
-          sourceMap: false,
-          parallel: true
-        })
-      ]
-    }
-    return tmpConfig
-  },
   // rules: [{ test: /\.less$/, loader: "!css-loader!less-loader" }]
   devServer: {
     proxy: {

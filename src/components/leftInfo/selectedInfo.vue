@@ -12,7 +12,7 @@
         margin-bottom: 10px;
         text-align: center;
       "
-      @click="$refs.topNav.reset()"
+      @click="reset()"
       >复位</span
     >
     <div>
