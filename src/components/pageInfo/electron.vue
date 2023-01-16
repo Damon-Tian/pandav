@@ -2,86 +2,118 @@
   <div class="electron">
     <info-block title="电子围栏">
       <div slot="titleRight" style="font-size: 12px">
-        数据采集时间：{{ collectTime }}
+        热力图数据采集时间：{{ collectTime }}
       </div>
       <div class="info-content">
         <div class="electron__row">
           <div class="electron__row__title">核心区域</div>
-          <div class="electron__row__info">
-            <div class="electron-area">
-              <div class="area-title">上一时段</div>
-              <div class="area-number">
-                <countTo
-                  :start-val="0"
-                  :end-val="fenceData.personCountPrev.coreNum"
-                  :duration="3000"
-                />
+          <div
+            class="electron__row__info"
+            style="
+              border: none;
+              background-color: transparent;
+              box-shadow: none;
+            "
+          >
+            <div class="electron__row__info__left">
+              <div class="electron-area">
+                <div class="area-title">上一时段</div>
+                <div class="area-number">
+                  <countTo
+                    :start-val="0"
+                    :end-val="fenceData.personCountPrev.coreNum"
+                    :duration="3000"
+                  />
+                </div>
+              </div>
+              <div class="separated-line"></div>
+              <div class="electron-area">
+                <div class="area-title">当前时段</div>
+                <div class="area-number" style="color: #00eaff">
+                  <countTo
+                    :start-val="0"
+                    :end-val="fenceData.personCountNow.coreNum"
+                    :duration="3000"
+                  />
+                </div>
               </div>
             </div>
-            <div class="separated-line"></div>
-            <div class="electron-area">
-              <div class="area-title">当前时段</div>
-              <div class="area-number" style="color: #00eaff">
-                <countTo
-                  :start-val="0"
-                  :end-val="fenceData.personCountNow.coreNum"
-                  :duration="3000"
-                />
-              </div>
-            </div>
-            <div class="separated-line"></div>
-            <div class="electron-area">
-              <div class="area-title">短信通知人次</div>
-              <div class="area-number" style="color: #d9ea16">
-                <countTo
-                  :start-val="0"
-                  :end-val="fenceData.numOfCoreAreas"
-                  :duration="3000"
-                />
+            <!-- <div class="separated-line"></div> -->
+            <div class="electron__row__info__right">
+              <div class="electron-area">
+                <div class="area-title">短信通知人次</div>
+                <div class="area-number" style="color: #d9ea16">
+                  <countTo
+                    :start-val="0"
+                    :end-val="fenceData.numOfCoreAreas"
+                    :duration="3000"
+                  />
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="electron__row">
           <div class="electron__row__title">一般区域</div>
+          <!-- border: 1px solid #1286b1;
+              background: rgba(0, 29, 155, 40%);
+              box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset; -->
           <div
             class="electron__row__info"
             style="
-              border: 1px solid #1286b1;
-              background: rgba(0, 29, 155, 40%);
-              box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
+              border: none;
+              background-color: transparent;
+              box-shadow: none;
             "
           >
-            <div class="electron-area">
-              <div class="area-title">上一时段</div>
-              <div class="area-number">
-                <countTo
-                  :start-val="0"
-                  :end-val="fenceData.personCountPrev.generalNum"
-                  :duration="3000"
-                />
+            <div
+              class="electron__row__info__left"
+              style="
+                border: 1px solid #1286b1;
+                background: rgba(0, 29, 155, 40%);
+                box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
+              "
+            >
+              <div class="electron-area">
+                <div class="area-title">上一时段</div>
+                <div class="area-number">
+                  <countTo
+                    :start-val="0"
+                    :end-val="fenceData.personCountPrev.generalNum"
+                    :duration="3000"
+                  />
+                </div>
+              </div>
+              <div class="separated-line"></div>
+              <div class="electron-area">
+                <div class="area-title">当前时段</div>
+                <div class="area-number" style="color: #00eaff">
+                  <countTo
+                    :start-val="0"
+                    :end-val="fenceData.personCountNow.generalNum"
+                    :duration="3000"
+                  />
+                </div>
               </div>
             </div>
-            <div class="separated-line"></div>
-            <div class="electron-area">
-              <div class="area-title">当前时段</div>
-              <div class="area-number" style="color: #00eaff">
-                <countTo
-                  :start-val="0"
-                  :end-val="fenceData.personCountNow.generalNum"
-                  :duration="3000"
-                />
-              </div>
-            </div>
-            <div class="separated-line"></div>
-            <div class="electron-area">
-              <div class="area-title">短信通知人次</div>
-              <div class="area-number" style="color: #d9ea16">
-                <countTo
-                  :start-val="0"
-                  :end-val="fenceData.numOfGeneralAreas"
-                  :duration="1000"
-                />
+            <!-- <div class="separated-line"></div> -->
+            <div
+              class="electron__row__info__right"
+              style="
+                border: 1px solid #1286b1;
+                background: rgba(0, 29, 155, 40%);
+                box-shadow: 0 0 12px 0 rgba(0, 175, 255, 40%) inset;
+              "
+            >
+              <div class="electron-area">
+                <div class="area-title">短信通知人次</div>
+                <div class="area-number" style="color: #d9ea16">
+                  <countTo
+                    :start-val="0"
+                    :end-val="fenceData.numOfGeneralAreas"
+                    :duration="1000"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -310,6 +342,35 @@ export default {
       margin-bottom: 20px;
       background: rgba(255, 91, 90, 22%);
       box-shadow: 0 0 12px 0 rgba(255, 91, 90, 40%) inset;
+
+      &__left {
+        display: flex;
+        width: 59%;
+        height: 100%;
+        align-items: center;
+        border: 1px solid #ff5b5a;
+        margin-right: 7px;
+        background: rgba(255, 91, 90, 22%);
+        box-shadow: 0 0 12px 0 rgba(255, 91, 90, 40%) inset;
+
+        .electron-area {
+          width: 50% !important;
+        }
+      }
+
+      &__right {
+        display: flex;
+        width: 39%;
+        height: 100%;
+        align-items: center;
+        border: 1px solid #ff5b5a;
+        background: rgba(255, 91, 90, 22%);
+        box-shadow: 0 0 12px 0 rgba(255, 91, 90, 40%) inset;
+
+        .electron-area {
+          width: 100% !important;
+        }
+      }
 
       .area-title {
         margin-bottom: 6px;

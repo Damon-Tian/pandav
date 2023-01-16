@@ -30,7 +30,10 @@
           v-for="(item, index) in data"
           :key="index"
           class="swiper-slide"
-          :class="{ 'is-active': item.checked }"
+          :class="{
+            'is-active':
+              (item.checked && !isRadio) || (isActive === item.id && isRadio)
+          }"
           @click="handleClick(item)"
         >
           <tr v-if="!$slots.swiperData" align="left" class="swiper-table__data">
@@ -79,10 +82,15 @@ export default {
     data: {
       type: Array,
       default: () => []
+    },
+    isRadio: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
     return {
+      isActive: null
       // needRemoveChecked: []
     }
   },
@@ -144,7 +152,15 @@ export default {
     // },
     handleClick(item) {
       //source 0,1红外相机，2事件上传
-      item.checked = !item.checked
+      if (this.isRadio) {
+        if (this.isActive == item.id) {
+          this.isActive = null
+        } else {
+          this.isActive = item.id
+        }
+      } else {
+        item.checked = !item.checked
+      }
       this.$emit("swiperItemClick", item)
     }
   }

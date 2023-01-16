@@ -119,6 +119,7 @@
         v-if="alarmList.length"
         :config="config"
         :data="alarmList"
+        is-radio
         @swiperItemClick="swiperItemClick"
       />
     </div>
@@ -175,7 +176,8 @@ export default {
         headerBGC: "rgba(0, 108, 255, 0.2)",
         headerBorder: "none",
         slidesPerView: 9
-      }
+      },
+      isActive: null
     }
   },
   computed: {
@@ -236,7 +238,11 @@ export default {
     },
 
     async swiperItemClick(item) {
-      if (item.checked) {
+      if (this.isActive == item.id) {
+        this.removelayer(2, item.patrolNum)
+        this.reset()
+      } else {
+        this.isActive = item.id
         const data = await get_patrol_detail({ id: item.id })
         const geoData = [get_patrol_detail_geojson_item(data)]
         this.setLayer(2, item.patrolNum, geoData)
@@ -244,9 +250,6 @@ export default {
           center: [Number(data.startLon), Number(data.startLat)],
           zoom: 20
         })
-      } else {
-        this.removelayer(2, item.patrolNum)
-        this.reset()
       }
     }
   }
