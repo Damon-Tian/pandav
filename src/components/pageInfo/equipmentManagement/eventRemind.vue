@@ -18,6 +18,7 @@
         v-if="alarmList.length"
         :config="config"
         :data="alarmList"
+        is-radio
         @swiperItemClick="swiperItemClick"
       />
     </div>
@@ -54,13 +55,17 @@ export default {
       },
       needRemoveChecked: [],
       tabs: ["事件列表", "设备列表"],
-      currentTab: "事件列表"
+      currentTab: "事件列表",
+      isActive: null
     }
   },
   methods: {
     async swiperItemClick(item) {
       // // 绘制红外相机点位
-      if (item.checked) {
+      if (this.isActive == item.id) {
+        this.reset()
+      } else {
+        this.isActive = item.id
         const cameraDetail = await get_device_by_devicesn({
           deviceSn: item.deviceSn
         })
@@ -70,8 +75,6 @@ export default {
           center: center,
           zoom: 19
         })
-      } else {
-        this.reset()
       }
     }
   }
@@ -86,6 +89,14 @@ export default {
     padding: 20px;
     font-size: 13px;
     overflow-x: hidden;
+  }
+
+  :deep .swiper-table .is-active {
+    color: #fff;
+
+    .swiper-table__data__box {
+      background-color: #0b90c2;
+    }
   }
 
   ::-webkit-scrollbar {
