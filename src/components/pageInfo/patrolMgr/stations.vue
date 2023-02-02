@@ -246,10 +246,8 @@ export default {
         const data = await get_patrol_detail({ id: item.id })
         const geoData = [get_patrol_detail_geojson_item(data)]
         this.setLayer(2, item.patrolNum, geoData)
-        this.flyTo({
-          center: [Number(data.startLon), Number(data.startLat)],
-          zoom: 20
-        })
+        const center = [Number(data.startLon), Number(data.startLat)]
+        this.flyToDetailZoom(center)
       }
     }
   }

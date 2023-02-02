@@ -48,6 +48,7 @@ import {
 } from "@/api/line"
 import { get_device_by_devicesn, get_camera_geojson_item } from "@/api/device"
 import mapUtil from "@/mixins/mapUtil"
+import { features } from "process"
 export default {
   components: { SwiperTable },
   mixins: [mapUtil],
@@ -73,7 +74,6 @@ export default {
     }
   },
   beforeDestroy() {
-    console.log(this.needRemoveChecked)
     this.needRemoveChecked.forEach((item) => {
       this.removelayer(item.source == 2 ? 2 : 1, item.deviceSn)
     })
@@ -101,10 +101,7 @@ export default {
           )
           const center = [currentReport.longitude, currentReport.latitude]
           //飞到定位点位
-          this.flyTo({
-            center: center,
-            zoom: 20
-          })
+          this.flyToDetailZoom(center)
         } else {
           this.removelayer(2, item.deviceSn)
           this.reset()
@@ -118,10 +115,7 @@ export default {
           const geoData = [get_camera_geojson_item(cameraDetail)]
           this.setLayer(1, item.deviceSn, geoData)
           const center = geoData[0].geometry.coordinates
-          this.flyTo({
-            center: center,
-            zoom: 18
-          })
+          this.flyToDetailZoom(center, geoData[0])
         } else {
           this.removelayer(1, item.deviceSn)
           this.reset()

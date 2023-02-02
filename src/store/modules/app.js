@@ -8,7 +8,8 @@ const state = {
     },
     currentArea: 'chengdu',
     currentTab: 1,
-    isRightCollapse: false
+    isRightCollapse: false,
+    defaultComponent: null
 }
 
 const mutations = {
@@ -29,6 +30,9 @@ const mutations = {
     },
     SET_RIGHT_COLLAPSE: (state, isCollapse) => {
         state.isRightCollapse = isCollapse
+    },
+    SET_DEFAULT_COMPONENT: (state, defaultComponent) => {
+        state.defaultComponent = defaultComponent
     }
 }
 

@@ -71,10 +71,7 @@ export default {
         })
         const geoData = [get_camera_geojson_item(cameraDetail)]
         const center = geoData[0].geometry.coordinates
-        this.flyTo({
-          center: center,
-          zoom: 19
-        })
+        this.flyToDetailZoom(center, geoData[0])
       }
     }
   }

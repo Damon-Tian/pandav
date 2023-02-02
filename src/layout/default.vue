@@ -80,6 +80,9 @@ export default {
       this.setBorder()
     }
   },
+  mounted() {
+    this.$store.commit("app/SET_DEFAULT_COMPONENT", this)
+  },
   methods: {
     handleClick(currentFeature, features) {
       this.$store.commit("app/SET_MAPFEATURE", currentFeature)
@@ -99,6 +102,7 @@ export default {
     },
     //图层点击
     async handleFeature(currentFeature) {
+      console.log(currentFeature)
       //设备
       if (currentFeature.properties.equipmentType) {
         if (

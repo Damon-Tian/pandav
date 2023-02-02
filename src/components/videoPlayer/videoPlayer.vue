@@ -46,7 +46,7 @@ export default {
     this.cancelContentMenu()
   },
   beforeDestroy() {
-    this.player.removeEventListener("fullscreenchange", () => {})
+    this.player && this.player.removeEventListener("fullscreenchange", () => {})
   },
   methods: {
     async getVideoList() {},

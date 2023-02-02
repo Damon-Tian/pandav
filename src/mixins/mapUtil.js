@@ -183,6 +183,7 @@ export default {
             this.$store.state.app.map.mapBox.fly(view)
         },
         reset() {
+            this.$store.state.app.map.mapBox.removePoup()
             const currentItem = this.hrefs.find((item) => item.id == this.$store.state.app.currentArea)
             this.$store.state.app.map.mapBox.fly(currentItem.view)
         },
@@ -202,7 +203,15 @@ export default {
         },
         hasLayer(layerId) {
             return this.$store.state.app.map.mapBox.getLayer(layerId)
-        }
+        },
+        flyToDetailZoom(center, feature) {
+            this.$store.state.app.map.mapBox.removePoup()
+            this.$store.state.app.map.mapBox.fly({
+                center,
+                zoom: 17
+            })
+            feature && this.$store.state.app.defaultComponent.handleClick(feature, [feature])
+        },
     }
 
 }

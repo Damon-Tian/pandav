@@ -48,8 +48,8 @@ export function addImgIcon(map, option = {
         }
     }
 }) {
-
     layerId = option.id ? option.id : 'points'
+    console.log(layerId, map.hasImage(layerId));
     markerObj[layerId] = []
     if (map.getLayer(layerId)) {
         map.removeLayer(layerId);
@@ -104,7 +104,10 @@ export function addImgIcon(map, option = {
     }
     else {
         map.loadImage(option.imgUrl, (error, image) => {
-            map.addImage(layerId, image);
+            console.log(error);
+            if (!error) {
+                map.addImage(layerId, image);
+            }
             setLayer()
         })
     }
