@@ -32,7 +32,7 @@
                   type="password"
                   class="form-item"
                   placeholder="请输入密码"
-                  @keyup.enter="submitForm"
+                  @keyup.native.enter="submitForm"
                 />
               </div>
             </el-form-item>
@@ -43,7 +43,7 @@
                   v-model="param.code"
                   class="form-item"
                   placeholder="请输入验证码"
-                  @keyup.enter="submitForm"
+                  @keyup.native.enter="submitForm"
                 />
                 <img :src="codeInfo.img" @click="getVeriCode" />
               </div>
