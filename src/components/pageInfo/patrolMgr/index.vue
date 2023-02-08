@@ -99,7 +99,7 @@ export default {
       patrolTypeList: [
         { value: "DAILY", label: "日常巡护" },
         { value: "TRANSECT", label: "样线巡护" },
-        { value: "OTHER", label: "其它" }
+        { value: "OTHER", label: "其它巡护" }
       ],
       pickerOptions: {
         onPick: ({ maxDate, minDate }) => {

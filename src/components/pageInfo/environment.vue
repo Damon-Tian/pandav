@@ -579,7 +579,7 @@ export default {
           display: inline-block;
           width: 16px;
           height: 8px;
-          margin: 0 10px;
+          margin: 0 4px;
           content: "";
         }
 

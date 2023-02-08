@@ -273,6 +273,12 @@ export default {
       text-align: center;
     }
   }
+
+  .swiper-table__data__td:first-child {
+    .swiper-table__data__box {
+      text-align: left;
+    }
+  }
 }
 
 :deep .swiper-table__header {

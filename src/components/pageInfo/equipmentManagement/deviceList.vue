@@ -3,7 +3,7 @@
   <div ref="deviceList" class="device-list">
     <table>
       <tr class="header">
-        <th width="170" align="left">
+        <th align="left" width="170">
           <div class="th-cell">
             <div>设备名称</div>
             <el-popover
@@ -185,7 +185,11 @@
             :class="{ active: currentDevice.deviceSn === item.deviceSn }"
             @click="handleClick(item)"
           >
-            <td class="name">{{ item.deviceName }}</td>
+            <td :title="item.deviceName">
+              <div class="name">
+                {{ item.deviceName }}
+              </div>
+            </td>
             <td>
               {{ item.modelType == "infrared_camera" ? "红外相机" : "摄像机" }}
             </td>
@@ -347,8 +351,12 @@ export default {
   }
 
   .name {
+    overflow: hidden;
+    width: 130px;
     color: #00e4ff;
     cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .error {
