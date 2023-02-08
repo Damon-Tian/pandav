@@ -87,7 +87,7 @@
         </div>
         <div v-show="chartX.length" class="env-second__chart">
           <div class="env-second__chart-title">
-            <span>空气质量小时变化</span>
+            <span>空气质量小时变化(单位：ug/m³）</span>
             <div class="chart-title__legend">
               <span>PM10</span>
               <span>PM2.5</span>
@@ -267,7 +267,7 @@ export default {
         orgId: this.labelInfo.fkOrgId
       })
       const PM10 = trends.find((item) => item.type == "PM10")
-      const PM25 = trends.find((item) => item.type == "空气指数")
+      const PM25 = trends.find((item) => item.type == "PM25")
       if (!PM10) return
       this.chartX = PM10.trendInfoVOS.map((item) => item.time + ":00")
       this.PM10List = PM10.trendInfoVOS.map((item) => Number(item.value))
@@ -585,7 +585,7 @@ export default {
 
         /* stylelint-disable-next-line no-descending-specificity */
         &:first-child {
-          margin-right: 20px;
+          margin-right: 4px;
 
           &::before {
             background-color: #2fc;

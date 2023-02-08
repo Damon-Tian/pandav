@@ -108,8 +108,7 @@
         a.click()
     }
     download.onclick = () => {
-        fetch(`/front/downloadPatrolAPPUrl`).then(resp => {
-            console.log(resp);
+        fetch(`/front/edmp/largeScreen/downloadPatrolAPPUrl`).then(resp => {
             if (resp.status === 200 && resp.data) {
                 downloadMethod(resp.data.data)
             }
