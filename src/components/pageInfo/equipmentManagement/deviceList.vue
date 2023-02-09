@@ -258,6 +258,11 @@ export default {
       }
       const { records } = await get_device_list_item(params)
       this.data = records
+      this.data.map((item) => {
+        if (item.modelType == "infrared_camera") {
+          item.deviceName = item.deviceAddress
+        }
+      })
     },
     async getOrg() {
       const { records } = await get_org({
