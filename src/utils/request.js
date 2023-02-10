@@ -6,7 +6,7 @@ import { getToken } from "./auth"
 const messageOnce = new domMessage()
 const service = axios.create({
     // baseURL: import.meta.env.VITE_BASE_API,
-    timeout: 20000 // request timeout
+    timeout: 200000 // request timeout
 })
 
 // 请求拦截器
