@@ -198,6 +198,7 @@ export async function get_elec_person_geojson(orgId) {
         item.properties.color = getRandomRgb()
         item.id = (index + 1)
     })
+    geoJson[0].linePoint = true
     return geoJson
 }
 

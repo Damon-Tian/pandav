@@ -206,6 +206,7 @@ export async function get_video_camera_geojson(orgId) {
     const json = get_camera_geojson_item(item)
     geoJson.push(json)
   })
+  console.log(geoJson);
   return geoJson
 }
 

@@ -35,6 +35,24 @@ const setConfig = (data) => {
   })
   return el
 }
+function createPoint(point, map, pointStyle) {
+  map.addSource('linePoint', {
+    type: 'geojson',
+    data: point
+  })
+  map.addLayer({
+    id: 'linePoint',
+    type: 'circle',
+    source: 'linePoint',
+    paint: {
+      'circle-color': pointStyle ? pointStyle.circleColor : '#ffffff',
+      'circle-radius': pointStyle ? pointStyle.circleRadius : 2,
+      'circle-stroke-width': pointStyle ? pointStyle.circleStrokeWidth : 1,
+      'circle-stroke-color': pointStyle ? pointStyle.circleStrokeColor : '#5388e1'
+    }
+  })
+
+}
 export function addLine(map, data, option) {
   const layerId = data.id ? data.id : uuid()
   markerObj[layerId] = []
@@ -77,6 +95,15 @@ export function addLine(map, data, option) {
       // 'line-width': 2,
     }
   })
+  console.log(option, data);
+  if (option && option.linePoint) {
+    data.geojson.features.forEach(item => {
+      item.geometry.type = 'MultiPoint'
+    })
+    console.log(data);
+    createPoint(data.geojson, map)
+  }
+
   // [103.432937,30.878296]
   //样线名称点位
   if (data.textName || data.start || data.end) {
@@ -195,6 +222,11 @@ export function removeline(map, layerId) {
     map.removeLayer(layerId)
     map.getLayer("arrowline") ? map.removeLayer("arrowline") : null
     map.getSource(layerId) ? map.removeSource(layerId) : null
+  }
+  debugger
+  if (map.getLayer('linePoint')) {
+    map.removeLayer('linePoint')
+    map.getSource('linePoint') ? map.removeSource('linePoint') : null
   }
   if (Array.isArray(markerObj[layerId])) {
     markerObj[layerId].forEach((item) => {
