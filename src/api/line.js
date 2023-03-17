@@ -174,10 +174,9 @@ export function get_patrol_detail_geojson_item(detail) {
     },
     geometry: {
       type: "LineString",
-      coordinates: detail.pointList.map((item) => [
-        Number(item.lon),
-        Number(item.lat)
-      ])
+      coordinates: Array.isArray(detail.pointList)
+        ? detail.pointList.map((item) => [Number(item.lon), Number(item.lat)])
+        : []
     }
   }
 }

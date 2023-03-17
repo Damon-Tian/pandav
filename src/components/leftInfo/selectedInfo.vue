@@ -289,9 +289,13 @@ export default {
       if (this.selectList && this.selectList.length) {
         return this.selectList
       }
-      return this.currentTab === 1
-        ? this.selectedInfoList1
-        : this.selectedInfoList2
+      if (this.currentTab === 1) {
+        return this.selectedInfoList1
+      } else if (this.currentTab === 7) {
+        return this.selectedInfoList1.slice(0, 5)
+      } else {
+        return this.selectedInfoList2
+      }
     },
     currentArea() {
       return this.$store.state.app.currentArea
@@ -311,11 +315,20 @@ export default {
     //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区,不包括含有子菜单
   },
   watch: {
-    currentTab(oldvalue, newvalue) {
-      if (oldvalue == 1) {
+    currentTab(newvalue, oldvalue) {
+      if (newvalue == 1) {
         this.$nextTick(() => {
           this.handleNeedReomvedCheck()
         })
+      } else if (newvalue == 7) {
+        this.selectedInfoList1
+          .filter((item) => item.title == "电子围栏范围")
+          .forEach((v) => {
+            v.checked = false
+            this.$nextTick(() => {
+              this.handleClick(v)
+            })
+          })
       } else {
         this.handleNeedReomvedCheck()
       }
@@ -330,12 +343,13 @@ export default {
     selectedInfoList: {
       deep: true,
       handler(val) {
-        const list = this.selectedInfoList.filter(
-          (item) =>
+        const list = this.selectedInfoList.filter((item) => {
+          return (
             item.checked &&
             !item.children &&
             !commonSelectInfoList.filter((e) => e.title === item.title).length
-        )
+          )
+        })
         this.needRemoveChecked = list
       }
     }
@@ -390,7 +404,7 @@ export default {
         .forEach((item, index) => {
           this.removelayer(item.type, item.title)
           //首页加载之前勾选的，离开首页删除勾选的图层
-          if (this.currentTab === 1) {
+          if (this.currentTab === 1 || this.currentTab === 7) {
             item.checked = false
             this.$nextTick(() => {
               this.handleClick(item)

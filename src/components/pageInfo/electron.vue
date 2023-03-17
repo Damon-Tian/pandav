@@ -186,11 +186,13 @@ import {
   get_elec_heatmap_geojson,
   get_elec_person_geojson,
   get_electronic_person_his,
-  export_Area_user_count
+  export_Area_user_count,
+  get_elec_area_geojson
 } from "@/api/elec"
 import { formatTime, DateFormat, downloadBlob } from "@/utils"
 const mapId = "人员热力图"
 const mapId1 = "人员轨迹图"
+const mapId2 = "电子围栏范围"
 import mapUtil from "@/mixins/mapUtil"
 export default {
   components: {},
@@ -238,6 +240,7 @@ export default {
     orgId() {
       this.initHeatMap()
       this.initPersonMap()
+      this.initElectronEnclosure()
     }
   },
   beforeDestroy() {
@@ -246,9 +249,10 @@ export default {
   mounted() {
     this.getElectronicFenceCount()
     this.getTargetedSmsData()
-    this.initHeatMap()
-    this.initPersonMap()
+    // this.initHeatMap()
+    // this.initPersonMap()
     this.getPersonHis()
+    // this.initElectronEnclosure()
   },
   methods: {
     async exportUserCount() {
@@ -281,6 +285,10 @@ export default {
     async initPersonMap() {
       const geoData = await get_elec_person_geojson(this.orgId)
       this.setLayer(2, mapId1, geoData)
+    },
+    async initElectronEnclosure() {
+      const geoData = await get_elec_area_geojson()
+      this.setLayer(1, mapId2, geoData)
     },
     async getPersonHis() {
       const params = {}

@@ -21,13 +21,15 @@ const setConfig = (data) => {
   }
   let text = ""
   if (data.text) {
-    text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${data.text ? data.text : ""
-      }</div>`
+    text = `<div style=" white-space:nowrap;padding:5px 10px;fontSize:14px;color:#fff;background:rgba(0,0,0,0.6);margin-bottom:10px">${
+      data.text ? data.text : ""
+    }</div>`
   }
   const iconel = `<div style="margin-top:-72px;display:flex;flex-direction:column;align-items:center;">
         ${text}
-        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width: ${data.imageWidth
-    }px"/>
+        <image src="${data.icon ? data.icon : DEFAULT_ICON}" style="width: ${
+    data.imageWidth
+  }px"/>
         </div>`
   el.innerHTML = iconel
   el.addEventListener("click", () => {
@@ -36,22 +38,23 @@ const setConfig = (data) => {
   return el
 }
 function createPoint(point, map, pointStyle) {
-  map.addSource('linePoint', {
-    type: 'geojson',
+  map.addSource("linePoint", {
+    type: "geojson",
     data: point
   })
   map.addLayer({
-    id: 'linePoint',
-    type: 'circle',
-    source: 'linePoint',
+    id: "linePoint",
+    type: "circle",
+    source: "linePoint",
     paint: {
-      'circle-color': pointStyle ? pointStyle.circleColor : '#ffffff',
-      'circle-radius': pointStyle ? pointStyle.circleRadius : 2,
-      'circle-stroke-width': pointStyle ? pointStyle.circleStrokeWidth : 1,
-      'circle-stroke-color': pointStyle ? pointStyle.circleStrokeColor : '#5388e1'
+      "circle-color": pointStyle ? pointStyle.circleColor : "#ffffff",
+      "circle-radius": pointStyle ? pointStyle.circleRadius : 2,
+      "circle-stroke-width": pointStyle ? pointStyle.circleStrokeWidth : 1,
+      "circle-stroke-color": pointStyle
+        ? pointStyle.circleStrokeColor
+        : "#5388e1"
     }
   })
-
 }
 export function addLine(map, data, option) {
   const layerId = data.id ? data.id : uuid()
@@ -81,26 +84,26 @@ export function addLine(map, data, option) {
       //     : "#f00",
       "line-width": option && option.lineWidth ? option.lineWidth : 2,
       "line-color": [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        '#00b4ff',
+        "case",
+        ["boolean", ["feature-state", "hover"], false],
+        "#00b4ff",
         data.geojson.features[0].properties.color
           ? ["get", "color"]
           : option && option.lineColor
-            ? option.lineColor
-            : "#f00"
+          ? option.lineColor
+          : "#f00"
       ],
       "line-opacity": option && option.opacity ? option.opacity : 1
       // 'line-color': '#f00',
       // 'line-width': 2,
     }
   })
-  console.log(option, data);
+  console.log(option, data)
   if (option && option.linePoint) {
-    data.geojson.features.forEach(item => {
-      item.geometry.type = 'MultiPoint'
+    data.geojson.features.forEach((item) => {
+      item.geometry.type = "MultiPoint"
     })
-    console.log(data);
+    console.log(data)
     createPoint(data.geojson, map)
   }
 
@@ -199,21 +202,21 @@ export function addLine(map, data, option) {
 
   option.arrow
     ? map.loadImage(ARRAOW_ICON, (error, image) => {
-      if (!map.hasImage(layerId)) {
-        map.addImage(layerId, image)
-      }
-      map.addLayer({
-        id: "arrowline",
-        type: "symbol",
-        source: layerId,
-        layout: {
-          "symbol-placement": "line",
-          "symbol-spacing": 50, // 图标间隔，默认为250
-          "icon-image": layerId, //箭头图标
-          "icon-size": option.arrow.size ? option.arrow.size : 1
+        if (!map.hasImage(layerId)) {
+          map.addImage(layerId, image)
         }
+        map.addLayer({
+          id: "arrowline",
+          type: "symbol",
+          source: layerId,
+          layout: {
+            "symbol-placement": "line",
+            "symbol-spacing": 50, // 图标间隔，默认为250
+            "icon-image": layerId, //箭头图标
+            "icon-size": option.arrow.size ? option.arrow.size : 1
+          }
+        })
       })
-    })
     : null
 }
 
@@ -223,10 +226,10 @@ export function removeline(map, layerId) {
     map.getLayer("arrowline") ? map.removeLayer("arrowline") : null
     map.getSource(layerId) ? map.removeSource(layerId) : null
   }
-  debugger
-  if (map.getLayer('linePoint')) {
-    map.removeLayer('linePoint')
-    map.getSource('linePoint') ? map.removeSource('linePoint') : null
+  // debugger
+  if (map.getLayer("linePoint")) {
+    map.removeLayer("linePoint")
+    map.getSource("linePoint") ? map.removeSource("linePoint") : null
   }
   if (Array.isArray(markerObj[layerId])) {
     markerObj[layerId].forEach((item) => {
