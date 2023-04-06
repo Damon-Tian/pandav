@@ -96,9 +96,8 @@ export function time_to_sec(time) {
   }
 }
 
-
 export const chngeTime = (seconds) => {
-  if (!seconds) return;
+  if (!seconds) return
   let d = Math.floor(seconds / (3600000 * 24))
   let h = Math.floor((seconds % (3600000 * 24)) / 3600000)
   let m = Math.floor((seconds % 3600000) / 60000)
@@ -117,21 +116,24 @@ export const getRandomRgb = () => {
 }
 
 export const downloadBlob = (response) => {
-  const disposition = response.headers['content-disposition']
-  let fileName = disposition.substring(disposition.indexOf('filename=') + 9, disposition.length)
+  const disposition = response.headers["content-disposition"]
+  let fileName = disposition.substring(
+    disposition.indexOf("filename=") + 9,
+    disposition.length
+  )
   // iso8859-1的字符转换成中文
   fileName = decodeURIComponent(fileName)
   // 去掉双引号
-  fileName = fileName.replace(/\\"/g, '')
+  fileName = fileName.replace(/\\"/g, "")
   const content = response.data
-  console.info('rep:', disposition)
-  console.info('fileName:', fileName)
+  console.info("rep:", disposition)
+  console.info("fileName:", fileName)
   // 创建a标签并点击， 即触发下载
   let url = window.URL.createObjectURL(new Blob([content]))
-  let link = document.createElement('a')
-  link.style.display = 'none'
+  let link = document.createElement("a")
+  link.style.display = "none"
   link.href = url
-  link.setAttribute('download', fileName)
+  link.setAttribute("download", fileName)
   //link.download = "测试下载文件.xls"
   // 模拟
   document.body.appendChild(link)
@@ -142,23 +144,22 @@ export const downloadBlob = (response) => {
 }
 
 export const formatOrgName = (name) => {
-  if (name.indexOf('成都') !== -1) {
-    return '成都分局'
-  }
-  else if (name.indexOf('崇州') !== -1) {
-    return '崇州总站'
-  }
-  else if (name.indexOf('大邑') !== -1) {
-    return '大邑总站'
-  }
-  else if (name.indexOf('彭州') !== -1) {
-    return '彭州总站'
-  }
-  else if (name.indexOf('都江堰') !== -1) {
-    return '都江堰总站'
-  }
-  else {
-    return name
+  if (name) {
+    if (name.indexOf("成都") !== -1) {
+      return "成都分局"
+    } else if (name.indexOf("崇州") !== -1) {
+      return "崇州总站"
+    } else if (name.indexOf("大邑") !== -1) {
+      return "大邑总站"
+    } else if (name.indexOf("彭州") !== -1) {
+      return "彭州总站"
+    } else if (name.indexOf("都江堰") !== -1) {
+      return "都江堰总站"
+    } else {
+      return name
+    }
+  } else {
+    return ""
   }
 }
 //扁平化数组转树形
@@ -181,4 +182,32 @@ export const transListToTreeData = (list, parentId) => {
 
   // 3. 返回结果数组
   return res
+}
+export const deepClone = function (obj) {
+  //可传入对象 或 数组
+  //  判断是否为 null 或 undefined 直接返回该值即可,
+  if (obj === null || !obj) return obj
+  // 判断 是要深拷贝 对象 还是 数组
+  if (Object.prototype.toString.call(obj) === "[object Object]") {
+    //对象字符串化的值会为 "[object Object]"
+    let target = {} //生成新的一个对象
+    const keys = Object.keys(obj) //取出对象所有的key属性 返回数组 keys = [ ]
+    //遍历复制值, 可用 for 循环代替性能较好
+    keys.forEach((key) => {
+      if (obj[key] && typeof obj[key] === "object")
+        //如果遇到的值又是 引用类型的 [ ] {} ,得继续深拷贝
+        target[key] = deepClone(obj[key])
+      //递归
+      else target[key] = obj[key]
+    })
+    return target //返回新的对象
+  } else if (Array.isArray(obj)) {
+    // 数组同理
+    let arr = []
+    obj.forEach((item, index) => {
+      if (item && typeof item === "object") arr[index] = deepClone(item)
+      else arr[index] = item
+    })
+    return arr
+  }
 }

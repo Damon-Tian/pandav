@@ -126,6 +126,7 @@
               v-for="item in currentBioList"
               :key="item.id"
               class="detail-item"
+              @click="handleClick(item)"
             >
               <img :src="item.picUrl" alt="" />
               <div class="tip">
@@ -140,9 +141,9 @@
 </template>
 
 <script>
-import { get_bio_list } from "@/api/animal"
+import { get_bio_point_list, get_bio_geosjon } from "@/api/animal"
 import mapUtil from "@/mixins/mapUtil"
-import { getImageUrl } from "@/utils"
+import { deepClone } from "@/utils"
 const mapId = "自然资源"
 const baseConfig = {
   radius: "40",
@@ -288,7 +289,11 @@ export default {
           level1: 0,
           level2: 0
         }
-      }
+      },
+      imgUrlList: [],
+      geoData: [],
+      mapIds: [],
+      filterGeoData: []
     }
   },
   computed: {
@@ -296,9 +301,19 @@ export default {
       return this.$store.state.app.currentArea
     },
     currentBioList() {
+      this.bioList.forEach((item) => {
+        item.picUrl = item.picUrl.split(",")[0]
+        item.flag = false
+      })
+      // 展示图片前去重
+      const list = this.bioList.reduce(
+        (pre, next) =>
+          pre.some((v) => v.name == next.name) ? pre : [...pre, next],
+        []
+      )
       return this.currentDetailTab == "动物多样性"
-        ? this.bioList.filter((item) => item.kingdom == 0)
-        : this.bioList.filter((item) => item.kingdom == 1)
+        ? list.filter((item) => item.kingdom == 0)
+        : list.filter((item) => item.kingdom == 1)
     }
   },
   watch: {
@@ -315,9 +330,12 @@ export default {
     this.removeMap()
   },
   async mounted() {
-    // this.initMap()
-    const { records } = await get_bio_list({ pageNumber: 1, pageSize: 999 })
-    this.bioList = records
+    const data = await get_bio_point_list({
+      pageNumber: 1,
+      pageSize: 999
+    })
+    this.bioList = data
+    this.initMap()
   },
   methods: {
     changeDetail(tab) {
@@ -352,13 +370,75 @@ export default {
         ]
       }
     },
-    async initMap() {
-      // const geoData = await get_bio_geosjon()
-      // console.log(geoData)
-      // this.setLayer(1, mapId, geoData)
+    initMap() {
+      const cloneData = deepClone(this.bioList)
+      this.geoData = get_bio_geosjon(cloneData)
+      this.imgUrlList = [...new Set(this.geoData.map((item) => item.img))]
+      if (this.imgUrlList.length > 1) {
+        this.imgUrlList.forEach((item, i) => {
+          this.mapIds.push(mapId + i)
+          this.setLayer(
+            1,
+            mapId + i,
+            this.geoData.filter((item) => item.img == this.imgUrlList[i])
+          )
+        })
+      } else {
+        this.setLayer(1, mapId, this.geoData)
+      }
     },
     removeMap() {
+      if (this.imgUrlList.length > 1) {
+        this.imgUrlList.forEach((item, i) => {
+          this.removelayer(1, mapId + i)
+        })
+      }
       this.removelayer(1, mapId)
+    },
+    async handleClick(item) {
+      item.flag = !item.flag
+      if (item.flag) {
+        this.removeMap()
+        const data = await get_bio_point_list({
+          pageNumber: 1,
+          pageSize: 999,
+          name: item.name
+        })
+        this.filterGeoData = get_bio_geosjon(data)
+        this.setLayer(1, mapId, this.filterGeoData)
+      } else {
+        this.initMap()
+      }
+
+      // item.flag = !item.flag
+      // // 获取地图点位要素
+      // let features = this.$store.state.app.map.mapBox.map.queryRenderedFeatures(
+      //   { layers: this.mapIds }
+      // )
+      // console.log(this.mapIds)
+      // // 筛选某条数据
+      // let filteredFeatures = features.filter(function (feature) {
+      //   return feature.properties.name === item.name
+      // })
+      // // 获取其他同一批次的其他点位的要素
+      // let otherFeatures = features.filter(function (feature) {
+      //   return feature.properties.name !== item.name
+      // })
+      // let idList = filteredFeatures.map((item) => item.id)
+      // if (item.flag) {
+      //   // 隐藏其他同一批次的其他点位 id在idList之中才保留
+      //   this.mapIds.forEach((item) => {
+      //     if (idList.length > 0) {
+      //       this.$store.state.app.map.mapBox.map.setFilter(item, [
+      //         "in",
+      //         "id",
+      //         ...idList
+      //       ])
+      //     }
+      //   })
+      // } else {
+      //   this.initMap()
+      // }
     }
   }
 }

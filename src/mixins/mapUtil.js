@@ -12,7 +12,7 @@ export default {
         {
           name: "综合概况",
           id: "chengdu",
-          url: "/map/xiongmao/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          // url: "/map/xiongmao/ArcGis/_alllayers/{z}/{y}/{x}.png",
           view: {
             center: [103.3440669299489, 30.675952923426294],
             zoom: 10.019816714374489,

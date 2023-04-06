@@ -124,9 +124,7 @@ export default {
         pageNumber: 1,
         pageSize: 10
       })
-      console.log(records)
       records = records.map((item) => item.realtimeShootVos[0])
-      console.log(records)
       records.forEach((item) => {
         const oldItem = this.alarmList.find(
           (alarm) => alarm.deviceSn == item.deviceSn

@@ -1,8 +1,8 @@
 /*
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-04 16:53:51
- * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-13 14:04:52
+ * @LastEditors: ywy yinwy@goktech.cn
+ * @LastEditTime: 2023-03-29 09:54:12
  * @FilePath: \pandav\src\components\map\src\ylkj\line.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -10,6 +10,9 @@ import { uuid } from "./util.js"
 import ARRAOW_ICON from "./lib/returnbtn.png"
 import DEFAULT_ICON from "@/assets/img/patrol_records.png"
 import EVENT_ICON from "@/assets/img/patrol_events.png"
+import * as truf from "@/components/map/src/ylkj/lib/truf.js"
+import { deepClone } from "@/utils/index.js"
+import { getRandomRgb } from "@/utils"
 const { createMarker } = window.egis
 let markerObj = {}
 const setConfig = (data) => {
@@ -64,8 +67,28 @@ export function addLine(map, data, option) {
     map.getLayer("arrowline") ? map.removeLayer("arrowline") : null
     map.getSource(layerId) ? map.removeSource(layerId) : null
   }
+  // 轨迹路线改成贝塞尔曲线
+  const lineList = deepClone(data.geojson)
+  if (option.linePoint) {
+    lineList.features = lineList?.features.map((item) => {
+      return truf.bezierSpline({
+        type: "Feature",
+        properties: {},
+        geometry: {
+          type: "LineString",
+          coordinates: item.geometry.coordinates
+        }
+      })
+    })
+    lineList.features.forEach((item, index) => {
+      item.properties.color = getRandomRgb()
+      item.id = index + 1
+    })
+  }
+
   map.addSource(layerId, {
     type: "geojson",
+    // data: option.linePoint ? lineList : data.geojson
     data: data.geojson
   })
 
@@ -98,12 +121,10 @@ export function addLine(map, data, option) {
       // 'line-width': 2,
     }
   })
-  console.log(option, data)
   if (option && option.linePoint) {
     data.geojson.features.forEach((item) => {
       item.geometry.type = "MultiPoint"
     })
-    console.log(data)
     createPoint(data.geojson, map)
   }
 
@@ -115,12 +136,17 @@ export function addLine(map, data, option) {
         let start = []
         let end = []
         if (item.geometry.type == "MultiLineString") {
-          start = item.geometry.coordinates[0][0]
-          end =
-            item.geometry.coordinates[0][item.geometry.coordinates.length - 1]
+          if (item.geometry.coordinates.length) {
+            start = item.geometry.coordinates[0][0]
+            end =
+              item.geometry.coordinates[0][item.geometry.coordinates.length - 1]
+          }
         } else {
-          start = item.geometry.coordinates[0]
-          end = item.geometry.coordinates[item.geometry.coordinates.length - 1]
+          if (item.geometry.coordinates.length) {
+            start = item.geometry.coordinates[0]
+            end =
+              item.geometry.coordinates[item.geometry.coordinates.length - 1]
+          }
         }
         if (data.textName) {
           const idmarker = createMarker(start, {
@@ -134,8 +160,7 @@ export function addLine(map, data, option) {
           })
           markerObj[layerId].push(idmarker)
         }
-
-        if (data.start) {
+        if (data.start && start.length) {
           const idmarker = createMarker(start, {
             element: setConfig({
               icon: data.icon ? data.icon : DEFAULT_ICON,
@@ -155,7 +180,7 @@ export function addLine(map, data, option) {
           })
           markerObj[layerId].push(idmarker)
         }
-        if (data.end && start.toString() !== end.toString()) {
+        if (data.end && end.length && start.toString() !== end.toString()) {
           const idmarker = createMarker(end, {
             element: setConfig({
               icon: data.icon ? data.icon : DEFAULT_ICON,

@@ -1,14 +1,15 @@
 /*
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-10-31 15:54:28
- * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-08 18:09:36
+ * @LastEditors: ywy yinwy@goktech.cn
+ * @LastEditTime: 2023-04-04 18:08:09
  * @FilePath: \pandav\vue.config.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const isPrd = process.env.NODE_ENV === 'development'
+const BundleAnalyzerPlugin =
+  require("webpack-bundle-analyzer").BundleAnalyzerPlugin
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin")
+const isPrd = process.env.NODE_ENV === "development"
 
 module.exports = {
   productionSourceMap: false,
@@ -36,8 +37,7 @@ module.exports = {
         pathRewrite: {
           "^/group1": ""
         }
-      },
+      }
     }
   }
-
 }

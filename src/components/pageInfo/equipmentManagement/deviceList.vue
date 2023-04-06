@@ -17,13 +17,13 @@
                 <div class="el-icon-caret-bottom"></div>
               </template>
               <el-input
-                v-model="filters.deviceName"
+                v-model="filters.equipmentName"
                 size="small"
                 placeholder="请输入设备名称"
               ></el-input>
               <div class="operate">
                 <el-link
-                  :disabled="!filters.deviceName"
+                  :disabled="!filters.equipmentName"
                   size="mini"
                   :underline="false"
                   @click="filterChange"
@@ -33,7 +33,7 @@
                   size="mini"
                   :underline="false"
                   @click="
-                    filters.deviceName = ''
+                    filters.equipmentName = ''
                     filterChange()
                   "
                   >重置</el-link
@@ -56,7 +56,7 @@
                 <div class="el-icon-caret-bottom"></div>
               </template>
               <el-checkbox-group
-                v-model="filters.modelTypes"
+                v-model="filters.equipmentType"
                 class="checkbox-group"
               >
                 <el-checkbox label="infrared_camera">红外相机</el-checkbox>
@@ -64,7 +64,9 @@
               </el-checkbox-group>
               <div class="operate">
                 <el-link
-                  :disabled="!(filters.modelTypes && filters.modelTypes.length)"
+                  :disabled="
+                    !(filters.equipmentType && filters.equipmentType.length)
+                  "
                   size="mini"
                   :underline="false"
                   @click="filterChange"
@@ -74,7 +76,7 @@
                   size="mini"
                   :underline="false"
                   @click="
-                    filters.modelTypes = []
+                    filters.equipmentType = []
                     filterChange()
                   "
                   >重置</el-link
@@ -98,10 +100,10 @@
               <div class="tree-container">
                 <el-tree
                   ref="tree"
-                  :data="orgIdsTree"
+                  :data="orgIdssTree"
                   show-checkbox
                   node-key="id"
-                  :default-checked-keys="filters.fkOrgId"
+                  :default-checked-keys="filters.orgIds"
                   :check-strictly="true"
                   :props="defaultProps"
                   accordion
@@ -111,7 +113,7 @@
               </div>
               <div class="operate">
                 <el-link
-                  :disabled="!(filters.fkOrgId && filters.fkOrgId.length)"
+                  :disabled="!(filters.orgIds && filters.orgIds.length)"
                   size="mini"
                   :underline="false"
                   @click="filterChange"
@@ -121,7 +123,7 @@
                   size="mini"
                   :underline="false"
                   @click="
-                    filters.fkOrgId = []
+                    filters.orgIds = []
                     filterChange()
                     $refs.tree.setCheckedKeys([])
                   "
@@ -145,7 +147,7 @@
                 <div class="el-icon-caret-bottom"></div>
               </template>
               <el-checkbox-group
-                v-model="filters.deviceStatus"
+                v-model="filters.status"
                 class="checkbox-group"
               >
                 <el-checkbox :label="0">正常</el-checkbox>
@@ -153,9 +155,7 @@
               </el-checkbox-group>
               <div class="operate">
                 <el-link
-                  :disabled="
-                    !(filters.deviceStatus && filters.deviceStatus.length)
-                  "
+                  :disabled="!(filters.status && filters.status.length)"
                   size="mini"
                   :underline="false"
                   @click="filterChange"
@@ -165,7 +165,7 @@
                   size="mini"
                   :underline="false"
                   @click="
-                    filters.deviceStatus = []
+                    filters.status = []
                     filterChange()
                   "
                   >重置</el-link
@@ -180,28 +180,30 @@
       <table>
         <tbody>
           <tr
-            v-for="item in data"
-            :key="item.deviceSn"
+            v-for="(item, index) in tableData"
+            :key="item.deviceSn + index"
             :class="{ active: currentDevice.deviceSn === item.deviceSn }"
             @click="handleClick(item)"
           >
-            <td :title="item.deviceName">
+            <td :title="item.equipmentName">
               <div class="name">
-                {{ item.deviceName }}
+                {{ item.equipmentName }}
               </div>
             </td>
             <td>
-              {{ item.modelType == "infrared_camera" ? "红外相机" : "摄像机" }}
+              {{
+                item.equipmentType == "infrared_camera" ? "红外相机" : "摄像机"
+              }}
             </td>
-            <td>{{ formatOrg(item.fkOrgId) }}</td>
+            <td>{{ formatOrg(item.orgIds) }}</td>
             <td>
               <span
                 :class="{
-                  error: item.deviceStatus === 1,
-                  success: item.deviceStatus === 0
+                  error: item.status === 1,
+                  success: item.status === 0
                 }"
               >
-                {{ item.deviceStatus === 1 ? "异常" : "正常" }}
+                {{ item.status === 1 ? "异常" : "正常" }}
               </span>
             </td>
           </tr>
@@ -213,31 +215,38 @@
 
 <script>
 import {
-  get_device_list_item,
+  get_device_list_new,
   get_device_by_devicesn,
   get_camera_geojson_item
 } from "@/api/device"
 import { get_org } from "@/api/station"
 import { formatOrgName, transListToTreeData } from "@/utils"
 import mapUtil from "@/mixins/mapUtil"
+const mapId = ["红外相机", "摄像机"]
+
 export default {
   mixins: [mapUtil],
   data() {
     return {
-      data: [],
+      tableData: [],
       currentDevice: {},
       filters: {
-        deviceName: "",
-        modelTypes: ["infrared_camera", "video_camera"],
-        fkOrgId: [],
-        deviceStatus: []
+        equipmentName: "",
+        equipmentType: ["infrared_camera", "video_camera"],
+        orgIds: [],
+        status: []
       },
-      orgIds: [],
-      orgIdsTree: [],
+      orgIdss: [],
+      orgIdssTree: [],
       defaultProps: {
         children: "children",
         label: "name"
       }
+    }
+  },
+  computed: {
+    videoCameraIcon() {
+      return this.$store.state.app.videoCameraIcon
     }
   },
   mounted() {
@@ -246,6 +255,15 @@ export default {
   },
   methods: {
     async filterChange() {
+      console.log(this.videoCameraIcon, "图标列表")
+      if (this.videoCameraIcon && this.videoCameraIcon.length > 0) {
+        this.videoCameraIcon.forEach((item, i) => {
+          this.removelayer(1, "设备管理" + i)
+        })
+        this.$store.commit("app/SET_VIDEO_CAMERA_ICON", [])
+      } else {
+        this.removelayer(1, "设备管理")
+      }
       const params = {
         pageNumber: 1,
         pageSize: 9999
@@ -256,30 +274,47 @@ export default {
           params[key] = value
         }
       }
-      const { records } = await get_device_list_item(params)
-      this.data = records
-      this.data.map((item) => {
-        if (item.modelType == "infrared_camera") {
-          item.deviceName = item.deviceAddress
+      const data = await get_device_list_new(params)
+      this.tableData = data
+      const geoJson = []
+      this.tableData.forEach((item) => {
+        if (item.equipmentType == "infrared_camera") {
+          item.equipmentName = item.deviceAddress
         }
+        const json = get_camera_geojson_item(item)
+        geoJson.push(json)
       })
+
+      const list = [...new Set(geoJson.map((item) => item.img))]
+      if (list.length > 1) {
+        this.$store.commit("app/SET_VIDEO_CAMERA_ICON", list)
+        list.forEach((item, i) => {
+          this.setLayer(
+            1,
+            "设备管理" + i,
+            geoJson.filter((item) => item.img == list[i])
+          )
+        })
+      } else {
+        this.setLayer(1, "设备管理", geoJson)
+      }
     },
     async getOrg() {
       const { records } = await get_org({
         pageNumber: 1,
         pageSize: 9999
       })
-      this.orgIds = Object.freeze(records)
-      this.orgIdsTree = transListToTreeData(records, 0)
+      this.orgIdss = Object.freeze(records)
+      this.orgIdssTree = transListToTreeData(records, 0)
     },
-    formatOrg(orgId) {
-      const org = this.orgIds.find((item) => item.id == orgId)
+    formatOrg(orgIds) {
+      const org = this.orgIdss.find((item) => item.id == orgIds)
       const name = org && org.name
       return formatOrgName(name)
     },
     handleCheckChange() {
       const keys = this.$refs.tree.getCheckedKeys()
-      this.filters.fkOrgId = keys
+      this.filters.orgIds = keys
     },
     async handleClick(item) {
       if (item.deviceSn == this.currentDevice.deviceSn) {

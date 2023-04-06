@@ -28,8 +28,8 @@ import InfrareCamera from "./equipmentManagement/InfrareCamera.vue"
 import eventRemind from "./equipmentManagement/eventRemind.vue"
 const mapId = ["红外相机", "摄像机"]
 import {
-  get_infrared_camera_geojson,
-  get_video_camera_geojson,
+  get_infrared_camera_geojson_new,
+  get_video_camera_geojson_new,
   get_vidicon,
   get_event_by_orgId
 } from "@/api/device"
@@ -45,7 +45,11 @@ export default {
       activeName: tabs[0],
       vidiconData: {},
       alarmList: [],
-      orgIds: []
+      orgIds: [],
+      geoData2: [],
+      geoData1: [],
+      list1: [],
+      list2: []
     }
   },
   computed: {
@@ -74,10 +78,34 @@ export default {
   },
   methods: {
     async initMap() {
-      const geoData1 = await get_infrared_camera_geojson(this.orgId)
-      this.setLayer(1, mapId[0], geoData1)
-      const geoData2 = await get_video_camera_geojson(this.orgId)
-      this.setLayer(1, mapId[1], geoData2)
+      this.geoData2 = await get_video_camera_geojson_new(this.orgId)
+      this.list2 = [...new Set(this.geoData2.map((item) => item.img))]
+      if (this.list2.length > 1) {
+        this.$store.commit("app/SET_VIDEO_CAMERA_ICON", this.list2)
+        this.list2.forEach((item, i) => {
+          this.setLayer(
+            1,
+            "设备管理" + i,
+            this.geoData2.filter((item) => item.img == this.list2[i])
+          )
+        })
+      } else {
+        this.setLayer(1, "设备管理", this.geoData2)
+      }
+      // this.geoData1 = await get_infrared_camera_geojson_new(this.orgId)
+      // this.list1 = [...new Set(this.geoData1.map((item) => item.img))]
+      // if (this.list1.length > 1) {
+      //   this.$store.commit("app/SET_INFRARED_CAMERA_ICON", this.list1)
+      //   this.list1.forEach((item, i) => {
+      //     this.setLayer(
+      //       1,
+      //       mapId[0] + i,
+      //       this.geoData1.filter((item) => item.img == this.list1[i])
+      //     )
+      //   })
+      // } else {
+      //   this.setLayer(1, mapId[0], this.geoData1)
+      // }
     },
     formatOrgId(orgId) {
       const org = this.orgIds.find((item) => item.id == orgId)
@@ -106,9 +134,21 @@ export default {
       })
     },
     removeMap() {
-      mapId.forEach((id) => {
-        this.removelayer(1, id)
-      })
+      // if (this.list1.length > 1) {
+      //   this.list1.forEach((item, i) => {
+      //     this.removelayer(1, mapId[0] + i)
+      //   })
+      // } else {
+      //   this.removelayer(1, mapId[0])
+      // }
+      if (this.list2.length > 1) {
+        this.list2.forEach((item, i) => {
+          this.removelayer(1, "设备管理" + i)
+        })
+      } else {
+        this.removelayer(1, "设备管理")
+      }
+      this.$store.commit("app/SET_VIDEO_CAMERA_ICON", [])
     }
   }
 }

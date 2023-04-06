@@ -23,14 +23,25 @@ export function get_device_list(
   })
 }
 /*
+ * 设备点位（new）
+ * @param {*} data
+ * @returns
+ */
+export function get_device_list_new(data, params) {
+  return request({
+    url: "/front/edmp/largeScreen/getEPList",
+    method: "post",
+    data,
+    params
+  })
+}
+/*
  * 设备列表
  * @param {*} data
  * @returns
  */
 
-export function get_device_list_item(
-  data
-) {
+export function get_device_list_item(data) {
   return request({
     url: "/front/edmp/device/list",
     method: "post",
@@ -142,8 +153,6 @@ export function get_video_list() {
   })
 }
 
-
-
 //获取设备 geojson
 
 export function get_camera_geojson_item(detail) {
@@ -151,6 +160,9 @@ export function get_camera_geojson_item(detail) {
     type: "Feature",
     img: getImageUrl(detail.icon),
     // circle: true,
+    // deviceSn: detail.deviceSn,
+    // bioId: detail.bioId,
+    id: detail.id,
     properties: {
       ...detail
     }, //其中必须包含id字段，用于高亮点钟图标
@@ -160,7 +172,9 @@ export function get_camera_geojson_item(detail) {
     }
   }
 }
-
+// 数据处理成geojson格式
+// export function handleDataTogeojson(data){
+// }
 /*
  * 获取红外相机geojson
  * @param {*} data
@@ -178,6 +192,29 @@ export async function get_infrared_camera_geojson(orgId) {
   })
   const geoJson = []
   rows.forEach((item) => {
+    const json = get_camera_geojson_item(item)
+    geoJson.push(json)
+  })
+  return geoJson
+}
+
+export async function get_infrared_camera_geojson_new(orgId) {
+  const params = {
+    equipmentName: "",
+    equipmentType: [],
+    orgIds: [],
+    status: []
+  }
+  if (orgId) {
+    params.orgIds = [orgId]
+  }
+  const data = await get_device_list_new({
+    equipmentType: ["infrared_camera"],
+    ...params
+  })
+
+  const geoJson = []
+  data.forEach((item) => {
     const json = get_camera_geojson_item(item)
     geoJson.push(json)
   })
@@ -201,15 +238,35 @@ export async function get_video_camera_geojson(orgId) {
     equipmentType: ["video_camera"],
     ...params
   })
+
   const geoJson = []
   rows.forEach((item) => {
     const json = get_camera_geojson_item(item)
     geoJson.push(json)
   })
-  console.log(geoJson);
   return geoJson
 }
-
+export async function get_video_camera_geojson_new(orgId) {
+  const params = {
+    equipmentName: "",
+    equipmentType: [],
+    orgIds: [],
+    status: []
+  }
+  if (orgId) {
+    params.orgIds = [orgId]
+  }
+  const data = await get_device_list_new({
+    ...params,
+    equipmentType: ["video_camera", "infrared_camera"]
+  })
+  const geoJson = []
+  data.forEach((item) => {
+    const json = get_camera_geojson_item(item)
+    geoJson.push(json)
+  })
+  return geoJson
+}
 /*
  * 获取生态设备geojson
  * @param {*} data

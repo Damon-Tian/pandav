@@ -49,7 +49,7 @@
             <span
               v-if="capture && capture.length"
               style="color: #fff; cursor: pointer"
-              @click="goRealtimeCapture(dataDetail.deviceSn)"
+              @click="goRealtimeCapture(dataDetail.deviceSn,dataDetail.createTime)"
               >查看更多></span
             >
             <span v-else style="color: #fff"> 暂无</span>
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { get_device_by_id } from "@/api/device"
+import { get_device_by_id,get_event_by_device_sn } from "@/api/device"
 import { get_real_time_shoot } from "@/api/mapPopupInfo"
 import videoPlayer from "../videoPlayer/videoPlayer.vue"
 import mixins from "@/mixins"
@@ -114,7 +114,7 @@ export default {
         this.$emit("onlineUrl", this.dataDetail.deviceOnlineUrl)
       }
       if (this.type == "infrared_camera") {
-        const { records } = await get_real_time_shoot({
+        const { records } = await get_event_by_device_sn({
           deviceSn: this.dataDetail.deviceSn,
           pageSize: 2,
           pageNumber: 1

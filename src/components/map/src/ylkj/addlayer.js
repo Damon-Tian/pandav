@@ -19,30 +19,22 @@ let {
   DrawControl,
   getDrawGeoJSON,
   moveLayer
-} = window.egis;
+} = window.egis
 // interface AnyObject {
 //   [key: string]: any
 // }
-import {
-  uuid,
-  isString
-} from "./util.js";
-import {
-  addHeatMap
-} from "./heatmap.js"
+import { uuid, isString } from "./util.js"
+import { addHeatMap } from "./heatmap.js"
 class CreatMap {
   // eslint-disable-next-line no-undef
   // [x: string]: any
   constructor(id, url) {
     this.map = null
     this.int(id, url)
-    this.currentId = null;
+    this.currentId = null
   }
 
-  int(
-    id,
-    url = ""
-  ) {
+  int(id, url = "") {
     this.map = setMap({
       container: id,
       center: [103.46345144619704, 30.466287355910467],
@@ -54,7 +46,7 @@ class CreatMap {
       zoom: 11.99715452226343,
       bearing: 0,
       touchZoomRotate: true,
-      style: '/map/POI/hbnew/p12/resources/styles/root.json'
+      style: "/map/POI/hbnew/p12/resources/styles/root.json"
     })
     // this.addterrian()
     // onComponentMount (()=>{
@@ -66,41 +58,40 @@ class CreatMap {
     //  },1000);
     // addControl(new MeasureControl());
     // this.map.addControl()
-
   }
   getMap() {
     return this.map
   }
   /**
    * @Descripttion:添加图层区域
-   * @Author: 
+   * @Author:
    * @Date: 2022-11-01 10:48:21
-   * @LastEditors: 
+   * @LastEditors:
    * @param {*} url
    * @param {*} id
    * @return {*}
    */
   addlayer(url, id) {
     if (!url) {
-      console.error('请传入正确地址')
+      console.error("请传入正确地址")
     }
-    const layerId = (id ? id : uuid());
-    this.currentId = layerId;
+    const layerId = id ? id : uuid()
+    this.currentId = layerId
     addSource(layerId, {
-      type: 'raster',
+      type: "raster",
       tiles: Array.isArray(url) ? url : [url],
-      tileSize: 256,
-    });
+      tileSize: 256
+    })
     addLayer({
       id: layerId,
       type: "raster",
-      source: layerId,
-    });
-    console.log('返回1', this.map.getStyle())
+      source: layerId
+    })
+    console.log("返回1", this.map.getStyle())
     return id
   }
   addVector() {
-    let _this = this;
+    let _this = this
     // this.map.setStyle('http://3888z2k945.wicp.vip:6150/file/POI/hbPOI/p12/resources/styles/root.json')
     // this.map.addSource('mapillary', {
     //   'type': 'vector',
@@ -125,50 +116,48 @@ class CreatMap {
     //     // "text-opacity": 0.8
     //   }
     // })
-    fetch('http://3888z2k945.wicp.vip:6150/file/POI/hbPOI/p12/resources/styles/root.json').then(response => response.json())
+    fetch(
+      "http://3888z2k945.wicp.vip:6150/file/POI/hbPOI/p12/resources/styles/root.json"
+    )
+      .then((response) => response.json())
       .then((data) => {
         // data.id = "mypbf";
         // data.type = "symbol"
         // data.source = data.sources.esri;
         // data['source-layer'] = "mypbf";
         // this.map.addLayer(data)
-        console.log('返回1', _this.map.getStyle())
+        console.log("返回1", _this.map.getStyle())
         try {
-          _this.map.setStyle(data);
+          _this.map.setStyle(data)
         } catch (error) {
           console.error(error)
         }
 
-
         // moveLayer(_this.currentId)
-
       })
     // this.map.addLayer('http://3888z2k945.wicp.vip:6150/file/POI/hbPOI/p12/resources/styles/root.json')
-
-
   }
   // 删除图层
   removelayer(id) {
     if (getLayer(id)) {
-      removeLayer(id);
+      removeLayer(id)
     }
     if (getSource(id)) {
-      removeSource(id);
+      removeSource(id)
     }
-
   }
   /**
    * @Descripttion: 添加地形区域
    * @Author:
    * @Date: 2022-11-01 10:48:39
-   * @LastEditors: 
+   * @LastEditors:
    * @return {*}
    */
   addterrian(
     url = "http://10.51.100.105/profile/xiongmao_dem/chongzhou_dem/{z}/{x}/{y}.png",
     id
   ) {
-    const terrianId = (id ? id : uuid())
+    const terrianId = id ? id : uuid()
     if (!getSource(id)) {
       addSource(terrianId, {
         // 类型（必填）
@@ -184,7 +173,7 @@ class CreatMap {
       })
     }
     setTerrain({
-      source: id,
+      source: id
     })
     return terrianId
   }
@@ -195,13 +184,8 @@ class CreatMap {
         source: id,
         exaggeration: 0
       })
-
     }
   }
-
-
-
-
 }
 
 export default CreatMap

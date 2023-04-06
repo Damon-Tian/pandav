@@ -213,6 +213,10 @@ export default {
         return
       }
       this.Map2d.removelayer(id)
+      if (this.map.hasImage(id)) {
+        // 如果存在图标信息，移除
+        this.map.removeImage(id)
+      }
       if (id == "电子围栏范围") {
         removeMarker()
       }
@@ -292,40 +296,7 @@ export default {
       flyBounds(this.map, polygon)
     },
     // 添加点
-    point(
-      data = {
-        imgUrl: ELEC_ICON,
-        id: "测试",
-        textName: "text",
-        pointArray: {
-          type: "FeatureCollection",
-          features: [
-            {
-              id: 1,
-              type: "Feature",
-              properties: {
-                text: "测试点位"
-              }, //其中必须包含id字段，用于高亮点钟图标
-              geometry: {
-                type: "Point",
-                coordinates: [103.513296, 30.589647]
-              }
-            },
-            {
-              id: 2,
-              type: "Feature",
-              properties: {
-                text: "测试点位1"
-              }, //其中必须包含id字段，用于高亮点钟图标
-              geometry: {
-                type: "Point",
-                coordinates: [109.678943564, 35.559617265]
-              }
-            }
-          ]
-        }
-      }
-    ) {
+    point(data) {
       addImgIcon(this.map, data)
       // this.flybound(data.pointArray)
     },

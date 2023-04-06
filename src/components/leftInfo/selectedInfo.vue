@@ -51,7 +51,7 @@
     </div>
     <selected-info
       v-for="(item, index) in subselectedInfoList"
-      :key="item.id"
+      :key="item.index"
       :show-button="false"
       :select-list="item.children"
       class="sub-selected"
@@ -119,7 +119,8 @@ import {
   get_eleccore_geojson,
   get_elec_heatmap_geojson,
   get_elec_person_geojson,
-  get_elec_area_geojson
+  get_elec_area_geojson,
+  get_elec_area_geojson2
 } from "@/api/elec"
 import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
 import {
@@ -142,7 +143,7 @@ const commonSelectInfoList = [
   },
   {
     img: require("../../assets/img/selectedInfo/general.png"),
-    title: "一般保护区",
+    title: "一般控制区",
     checked: false,
     type: 3,
     id: "2",
@@ -194,7 +195,15 @@ export default {
           checked: false,
           type: 1,
           id: "16",
-          getData: get_elec_area_geojson
+          getData: get_elec_area_geojson,
+          lines: true,
+          geoData2: {
+            title: "电子围栏",
+            checked: false,
+            type: 2,
+            id: "20",
+            getData: get_elec_area_geojson2
+          }
         },
         {
           img: require("../../assets/img/selectedInfo/site.png"),
@@ -210,6 +219,7 @@ export default {
           checked: false,
           type: 1,
           id: "6",
+          showChildren: false,
           children: [
             {
               title: "红外相机",
@@ -249,6 +259,7 @@ export default {
           checked: false,
           type: 1,
           id: "7",
+          showChildren: false,
           children: [
             {
               title: "巡护样线",
@@ -272,17 +283,17 @@ export default {
       currentTime: 24,
       // 筛选热力图人数
       currentHeatMapRange: "",
-      needRemoveChecked: []
+      needRemoveChecked: [],
+      moreCheckedList: []
     }
   },
   computed: {
     showHeatmap() {
       return (
         !this.selectList.length &&
-        (this.selectedInfoList.some(
+        this.selectedInfoList.some(
           (item) => item.title == "人员热力图" && item.checked
-        ) ||
-          this.currentTab == 7)
+        )
       )
     },
     selectedInfoList() {
@@ -312,7 +323,7 @@ export default {
     isRightCollapse() {
       return this.$store.state.app.isRightCollapse
     }
-    //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般保护区,不包括含有子菜单
+    //只对首页选中的图层移除，其他页面的图层其他页面单独操作,不包括公共图层核心保护区一般控制区,不包括含有子菜单
   },
   watch: {
     currentTab(newvalue, oldvalue) {
@@ -366,17 +377,56 @@ export default {
       item.checked = !item.checked
       const { type, title } = item
       if (item.checked) {
+        // 电子围栏另外3条线
+        if (item.geoData2) {
+          const geoData = await item.geoData2.getData(this.orgId)
+          this.setLayer(item.geoData2.type, item.geoData2.title, geoData)
+        }
         if (item.getData) {
           // 绘制图层
           const geoData = await item.getData(this.orgId)
-          this.setLayer(type, title, geoData)
+          const list = [
+            ...new Set(geoData.map((item) => item.img).filter((v) => v))
+          ]
+          if (list.length > 1) {
+            list.forEach((item, i) => {
+              this.moreCheckedList.push({ type, title: title + i })
+              this.setLayer(
+                type,
+                title + i,
+                geoData.filter((item) => item.img == list[i])
+              )
+            })
+          } else {
+            this.setLayer(type, title, geoData)
+          }
         }
       } else {
-        this.removelayer(type, title)
+        if (item.geoData2) {
+          this.removelayer(item.geoData2.type, item.geoData2.title)
+        }
+        if (item.getData) {
+          const geoData = await item.getData(this.orgId)
+          const list = [
+            ...new Set(geoData.map((item) => item.img).filter((v) => v))
+          ]
+          if (list.length > 1) {
+            list.forEach((item, i) => {
+              this.moreCheckedList = []
+              this.removelayer(
+                type,
+                title + i,
+                geoData.map((item) => item.img == list[i])
+              )
+            })
+          } else {
+            this.removelayer(type, title)
+          }
+        }
       }
-
       //加载子菜单
       if (item.children && item.checked) {
+        item.showChildren = !item.showChildren
         this.subselectedInfo.push(item)
       } else {
         const index = this.subselectedInfo.findIndex(
@@ -399,10 +449,15 @@ export default {
           subNeedRemoveCheckedFilter.push(item)
         }
       })
+      this.moreCheckedList.forEach((v) => this.removelayer(v.type, v.title))
       this.needRemoveChecked
         .concat(subNeedRemoveCheckedFilter)
         .forEach((item, index) => {
+          if (item.geoData2) {
+            this.removelayer(item.geoData2.type, item.geoData2.title)
+          }
           this.removelayer(item.type, item.title)
+
           //首页加载之前勾选的，离开首页删除勾选的图层
           if (this.currentTab === 1 || this.currentTab === 7) {
             item.checked = false
@@ -413,7 +468,7 @@ export default {
         })
       this.currentHeatMapRange = ""
     },
-    //初始化图层 核心保护区和一般保护区 热力图 人员轨迹图
+    //初始化图层 核心保护区和一般控制区 热力图 人员轨迹图
     async initLayer() {
       this.selectedInfoList1.slice(0, 2).forEach((item) => {
         if (item.checked) {

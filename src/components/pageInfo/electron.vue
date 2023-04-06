@@ -108,11 +108,7 @@
               <div class="electron-area">
                 <div class="area-title">短信通知人次</div>
                 <div class="area-number" style="color: #d9ea16">
-                  <countTo
-                    :start-val="0"
-                    :end-val="fenceData.numOfGeneralAreas"
-                    :duration="1000"
-                  />
+                  <countTo :start-val="0" :end-val="0" :duration="1000" />
                 </div>
               </div>
             </div>
