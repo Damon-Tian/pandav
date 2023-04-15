@@ -43,7 +43,7 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="newNum" label="新设备" width="70">
+        <el-table-column prop="newNum" label="实时设备" width="70">
           <template slot-scope="scope">
             <span
               style="
@@ -59,7 +59,7 @@
             /></span>
           </template>
         </el-table-column>
-        <el-table-column prop="oldNum" label="旧设备" width="70">
+        <el-table-column prop="oldNum" label="传统设备" width="70">
           <template slot-scope="scope">
             <span
               style="
