@@ -2,7 +2,7 @@
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-01 18:19:37
  * @LastEditors: ywy yinwy@goktech.cn
- * @LastEditTime: 2023-04-15 15:51:28
+ * @LastEditTime: 2023-04-15 17:25:44
  * @FilePath: \pandav\src\components\map\src\ylkj\point.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -84,8 +84,8 @@ export function addImgIcon(
         "icon-anchor": "bottom",
         "icon-size": 1,
         "text-size": 14,
-        "icon-allow-overlap": true,
-        "icon-ignore-placement": true
+        "icon-allow-overlap": option.tip ? false : true,
+        "icon-ignore-placement": option.tip ? false : true
       },
       option.textName
         ? {

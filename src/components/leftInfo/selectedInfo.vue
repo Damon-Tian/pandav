@@ -120,7 +120,8 @@ import {
   get_elec_heatmap_geojson,
   get_elec_person_geojson,
   get_elec_area_geojson,
-  get_elec_area_geojson2
+  get_elec_area_geojson2,
+  get_new_geojson
 } from "@/api/elec"
 import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
 import {
@@ -148,6 +149,14 @@ const commonSelectInfoList = [
     type: 3,
     id: "2",
     getData: get_elec_geojson
+  },
+  {
+    img: require("../../assets/img/selectedInfo/general.png"),
+    title: "新增图层",
+    checked: false,
+    type: 2,
+    id: "21",
+    getData: get_new_geojson
   }
 ]
 export default {
@@ -385,9 +394,12 @@ export default {
         if (item.getData) {
           // 绘制图层
           const geoData = await item.getData(this.orgId)
-          const list = [
-            ...new Set(geoData.map((item) => item.img).filter((v) => v))
-          ]
+          let list = []
+          if (Array.isArray(geoData)) {
+            list = [
+              ...new Set(geoData.map((item) => item.img).filter((v) => v))
+            ]
+          }
           if (list.length > 1) {
             list.forEach((item, i) => {
               this.moreCheckedList.push({ type, title: title + i })
@@ -398,6 +410,7 @@ export default {
               )
             })
           } else {
+            console.log(type, title, geoData)
             this.setLayer(type, title, geoData)
           }
         }
@@ -407,9 +420,12 @@ export default {
         }
         if (item.getData) {
           const geoData = await item.getData(this.orgId)
-          const list = [
-            ...new Set(geoData.map((item) => item.img).filter((v) => v))
-          ]
+          let list = []
+          if (Array.isArray(geoData)) {
+            list = [
+              ...new Set(geoData.map((item) => item.img).filter((v) => v))
+            ]
+          }
           if (list.length > 1) {
             list.forEach((item, i) => {
               this.moreCheckedList = []

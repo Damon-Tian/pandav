@@ -196,6 +196,7 @@ export async function get_elec_person_geojson(orgId) {
     item.id = index + 1
   })
   geoJson[0].linePoint = true
+  console.log(geoJson)
   return geoJson
 }
 // 电子围栏geojson数据
@@ -223,4 +224,9 @@ export async function get_elec_area_geojson2() {
   })
   const geoJson = data
   return geoJson
+}
+
+export async function get_new_geojson() {
+  const data = await axios.get("/static/gridLine.json")
+  return data.data
 }
