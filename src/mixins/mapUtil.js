@@ -112,8 +112,8 @@ export default {
           }
         }
         const option = {
-          lineColor: geoData[0].properties.color || "#F4BD1A",
-          linePoint: geoData[0].linePoint,
+          lineColor: geoData[0].properties?.color || "#F4BD1A",
+          linePoint: geoData[0]?.linePoint,
           lineWidth: 4,
           arrow: false
         }
