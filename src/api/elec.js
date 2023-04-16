@@ -226,12 +226,13 @@ export async function get_elec_area_geojson2() {
   return geoJson
 }
 
-export async function get_new_geojson() {
+export async function get_grid_geojson() {
   const data = await axios.get("/static/gridLine.json")
   const geojson = data.data
   geojson.forEach((item, index) => {
     item.properties = {}
     item.id = index + 1
+    item.lineType = "gridLine"
   })
   return geojson
 }

@@ -121,7 +121,7 @@ import {
   get_elec_person_geojson,
   get_elec_area_geojson,
   get_elec_area_geojson2,
-  get_new_geojson
+  get_grid_geojson
 } from "@/api/elec"
 import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
 import {
@@ -131,7 +131,7 @@ import {
 } from "@/api/device"
 import { get_bio_geosjon } from "@/api/animal"
 import { get_station_geojson } from "@/api/station"
-import { DateFormat, debounce } from "@/utils"
+import { DateFormat, debounce, deepClone } from "@/utils"
 import mapUtil from "@/mixins/mapUtil"
 const commonSelectInfoList = [
   {
@@ -149,14 +149,16 @@ const commonSelectInfoList = [
     type: 3,
     id: "2",
     getData: get_elec_geojson
-  },
+  }
+]
+const gridInfoList = [
   {
-    img: require("../../assets/img/selectedInfo/general.png"),
-    title: "新增图层",
+    img: require("../../assets/img/selectedInfo/patrol.png"),
+    title: "红外相机网格",
     checked: false,
     type: 2,
     id: "21",
-    getData: get_new_geojson
+    getData: get_grid_geojson
   }
 ]
 export default {
@@ -289,6 +291,7 @@ export default {
       ],
       selectedInfoList2: [...commonSelectInfoList],
       subselectedInfo: [],
+      selectedInfoList3: [...commonSelectInfoList, ...gridInfoList],
       currentTime: 24,
       // 筛选热力图人数
       currentHeatMapRange: "",
@@ -313,6 +316,8 @@ export default {
         return this.selectedInfoList1
       } else if (this.currentTab === 7) {
         return this.selectedInfoList1.slice(0, 5)
+      } else if (this.currentTab === 3 || this.currentTab === 5) {
+        return this.selectedInfoList3
       } else {
         return this.selectedInfoList2
       }
@@ -349,7 +354,24 @@ export default {
               this.handleClick(v)
             })
           })
+      } else if (newvalue == 3 || newvalue == 5) {
+        this.selectedInfoList3.forEach((item) => {
+          if (item.title == "红外相机网格") {
+            item.checked = true
+            this.$nextTick(() => {
+              this.handleClick(item)
+            })
+          }
+        })
       } else {
+        this.selectedInfoList1
+          .filter((item) => item.title == "电子围栏范围")
+          .forEach((v) => {
+            v.checked = true
+            this.$nextTick(() => {
+              this.handleClick(v)
+            })
+          })
         this.handleNeedReomvedCheck()
       }
     },
@@ -406,11 +428,10 @@ export default {
               this.setLayer(
                 type,
                 title + i,
-                geoData.filter((item) => item.img == list[i])
+                geoData.filter((v) => v.img == list[i])
               )
             })
           } else {
-            console.log(type, title, geoData)
             this.setLayer(type, title, geoData)
           }
         }

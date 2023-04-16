@@ -17,6 +17,7 @@
   "dependencies": {
     "@jiaminghi/data-view": "^2.10.0",
     "axios": "^1.2.0",
+    "chokidar": "^2.1.8",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.10",
     "normalize.css": "^8.0.1",

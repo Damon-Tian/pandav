@@ -83,9 +83,9 @@ export function addImgIcon(
         "icon-image": layerId, // reference the image
         "icon-anchor": "bottom",
         "icon-size": 1,
-        "text-size": 14,
-        "icon-allow-overlap": option.tip ? false : true,
-        "icon-ignore-placement": option.tip ? false : true
+        "text-size": 14
+        // "icon-allow-overlap": option.tip ? false : true,
+        // "icon-ignore-placement": option.tip ? false : true
       },
       option.textName
         ? {
@@ -110,7 +110,7 @@ export function addImgIcon(
           "#23d9fb",
           option.color ? option.color : "#000"
         ],
-        "icon-opacity": 0.7
+        "icon-opacity": 0.9
       }
     })
   }

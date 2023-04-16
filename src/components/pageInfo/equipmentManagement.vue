@@ -92,7 +92,6 @@ export default {
       } else {
         this.setLayer(1, "设备管理", this.geoData2)
       }
-      console.log(this.$store.state.app.map.mapBox, "map")
       // this.geoData1 = await get_infrared_camera_geojson_new(this.orgId)
       // this.list1 = [...new Set(this.geoData1.map((item) => item.img))]
       // if (this.list1.length > 1) {
