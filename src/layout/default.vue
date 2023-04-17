@@ -17,7 +17,7 @@
 
       <!-- <router-view /> -->
     </div>
-    <!-- <camera ref="cameraRef" class="main-right" /> -->
+    <camera ref="cameraRef" class="main-right" />
     <!-- // 地图弹窗 -->
     <div style="display: none">
       <component

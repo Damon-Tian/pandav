@@ -342,6 +342,14 @@ export default {
   watch: {
     currentTab(newvalue, oldvalue) {
       if (newvalue == 1) {
+        this.selectedInfoList3.forEach((item) => {
+          if (item.title == "红外相机网格") {
+            item.checked = true
+            this.$nextTick(() => {
+              this.handleClick(item)
+            })
+          }
+        })
         this.$nextTick(() => {
           this.handleNeedReomvedCheck()
         })
@@ -354,15 +362,6 @@ export default {
               this.handleClick(v)
             })
           })
-      } else if (newvalue == 3 || newvalue == 5) {
-        this.selectedInfoList3.forEach((item) => {
-          if (item.title == "红外相机网格") {
-            item.checked = true
-            this.$nextTick(() => {
-              this.handleClick(item)
-            })
-          }
-        })
       } else {
         this.selectedInfoList1
           .filter((item) => item.title == "电子围栏范围")
