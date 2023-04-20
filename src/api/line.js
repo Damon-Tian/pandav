@@ -138,23 +138,23 @@ export async function get_line_geojson(orgId) {
  * @returns
  */
 
-export async function get_patrol_detail_geojson(orgId, query = {}) {
+export async function get_patrol_detail_geojson(orgId) {
   const params = {}
   if (orgId) {
-    params.orgIds = [orgId]
+    params.orgId = orgId
   }
-  const { records } = await get_patrol_list({
-    pageNum: 1,
+  const data = await get_patrol_by_orgid({
     pageSize: 10,
-    ...query
+    ...params
+    // ...query
   })
   const requsets = []
-  records.forEach((item) => {
-    requsets.push(get_patrol_detail({ id: item.patrolId }))
+  data.forEach((item) => {
+    requsets.push(get_patrol_detail({ id: item.id }))
   })
-  const data = await Promise.allSettled(requsets)
+  const dataList = await Promise.allSettled(requsets)
   const geoJson = []
-  data.forEach((detail) => {
+  dataList.forEach((detail) => {
     if (detail.status == "fulfilled") {
       const json = get_patrol_detail_geojson_item(detail.value)
       geoJson.push(json)

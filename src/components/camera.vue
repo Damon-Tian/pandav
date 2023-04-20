@@ -1,8 +1,8 @@
 <!--
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-04 16:53:50
- * @LastEditors: night-white-up 1030884759@qq.com
- * @LastEditTime: 2022-11-14 09:49:18
+ * @LastEditors: ywy yinwy@goktech.cn
+ * @LastEditTime: 2023-04-20 16:37:22
  * @FilePath: \pandav\src\components\camera.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -25,6 +25,11 @@
       <video-player
         v-for="(item, index) in list"
         :key="item"
+        :ref="
+          (el) => {
+            if (el) refList[index] = el
+          }
+        "
         style="width: 100%; flex: 1"
         :video-url="formatUrl(item)"
         :class="{ 'camera-space': index === 1 }"
@@ -48,7 +53,8 @@ export default {
       startIndex: 0,
       list: [],
       step: 3,
-      timer: null
+      timer: null,
+      refList: []
     }
   },
   mounted() {
@@ -98,9 +104,17 @@ export default {
       return url.replace(/^\s+|\s+$/g, "")
     },
     handleAutoPlay() {
+      if (this.timer) clearInterval(this.timer)
       this.timer = setInterval(() => {
+        this.refList.forEach((item, index) => {
+          let player = item.$el
+          player.src = "about:blank"
+          player?.contentWindow.document.write("")
+          player?.contentWindow.document.close()
+          // player?.parentNode.removeChild(item)
+        })
         this.getList()
-      }, 5 * 60 * 1000)
+      }, 5 * 1000)
     },
     handleFullscreen(isFullscreen) {
       if (isFullscreen) {
