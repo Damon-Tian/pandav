@@ -26,6 +26,24 @@ export default {
   computed: {
     currentArea() {
       return this.$store.state.app.currentArea
+    },
+    currentTab() {
+      return this.$store.state.app.currentTab
+    }
+  },
+  watch: {
+    currentTab(value) {
+      const item = this.hrefs.find((item) => item.id == this.currentArea)
+      if (value == 3 || value == 5) {
+        this.$store.state.app.map.mapBox.fly(item.view)
+        this.$store.state.app.map.mapBox.addlayer(
+          "/map/xiongmao/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          "chengdu"
+        )
+      } else {
+        this.$store.state.app.map.mapBox.fly(item.view)
+        this.$store.state.app.map.mapBox.addlayer(item.url, item.id)
+      }
     }
   },
   methods: {
@@ -56,8 +74,16 @@ export default {
     },
     handleClick(item) {
       this.$store.commit("app/SET_CURRENTAREA", item.id)
-      this.$store.state.app.map.mapBox.fly(item.view)
-      this.$store.state.app.map.mapBox.addlayer(item.url, item.id)
+      if (this.currentTab == 3 || this.currentTab == 5) {
+        this.$store.state.app.map.mapBox.fly(item.view)
+        this.$store.state.app.map.mapBox.addlayer(
+          "/map/xiongmao/ArcGis/_alllayers/{z}/{y}/{x}.png",
+          "chengdu"
+        )
+      } else {
+        this.$store.state.app.map.mapBox.fly(item.view)
+        this.$store.state.app.map.mapBox.addlayer(item.url, item.id)
+      }
     }
   }
 }

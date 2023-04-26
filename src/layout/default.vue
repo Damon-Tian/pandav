@@ -78,6 +78,9 @@ export default {
   watch: {
     currentArea() {
       this.setBorder()
+    },
+    currentTab() {
+      this.setBorder()
     }
   },
   mounted() {

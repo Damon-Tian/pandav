@@ -81,6 +81,10 @@ export default {
     this.map.on("load", () => {
       this.background("rgba(8,25,64,0.5)")
       this.addterrian("/map/xiongmao_dem/{z}/{x}/{y}.png", "terrian")
+      // this.addterrian(
+      //   "http://43.142.118.250:7070/geoserver/gwc/service/tms/1.0.0/panda%3A%E5%A4%A7%E7%86%8A%E7%8C%AB%E6%A0%96%E6%81%AF%E5%9C%B0%E5%9D%80%E9%80%82%E5%AE%9C%E5%8C%BA@EPSG%3A3857@pbf/{z}/{x}/{y}.pbf",
+      //   "panda"
+      // )
       this.$emit("onload")
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)

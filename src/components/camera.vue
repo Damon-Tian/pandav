@@ -2,7 +2,7 @@
  * @Author: night-white-up 1030884759@qq.com
  * @Date: 2022-11-04 16:53:50
  * @LastEditors: ywy yinwy@goktech.cn
- * @LastEditTime: 2023-04-20 16:37:22
+ * @LastEditTime: 2023-04-21 11:30:36
  * @FilePath: \pandav\src\components\camera.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -114,7 +114,7 @@ export default {
           // player?.parentNode.removeChild(item)
         })
         this.getList()
-      }, 5 * 1000)
+      }, 5 * 60 * 1000)
     },
     handleFullscreen(isFullscreen) {
       if (isFullscreen) {

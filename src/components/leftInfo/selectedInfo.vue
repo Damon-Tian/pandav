@@ -121,7 +121,8 @@ import {
   get_elec_person_geojson,
   get_elec_area_geojson,
   get_elec_area_geojson2,
-  get_grid_geojson
+  get_grid_geojson,
+  get_panda_area_geojson
 } from "@/api/elec"
 import { get_line_geojson, get_patrol_detail_geojson } from "@/api/line"
 import {
@@ -149,6 +150,16 @@ const commonSelectInfoList = [
     type: 3,
     id: "2",
     getData: get_elec_geojson
+  }
+]
+const pandaAreaList = [
+  {
+    img: require("../../assets/img/selectedInfo/general.png"),
+    title: "大熊猫宜居区",
+    checked: false,
+    type: 3,
+    id: "22",
+    getData: get_panda_area_geojson
   }
 ]
 const gridInfoList = [
@@ -292,6 +303,11 @@ export default {
       selectedInfoList2: [...commonSelectInfoList],
       subselectedInfo: [],
       selectedInfoList3: [...commonSelectInfoList, ...gridInfoList],
+      selectedInfoList4: [
+        ...commonSelectInfoList,
+        ...gridInfoList,
+        ...pandaAreaList
+      ],
       currentTime: 24,
       // 筛选热力图人数
       currentHeatMapRange: "",
@@ -314,10 +330,12 @@ export default {
       }
       if (this.currentTab === 1) {
         return this.selectedInfoList1
+      } else if (this.currentTab === 3) {
+        return this.selectedInfoList4
+      } else if (this.currentTab === 5) {
+        return this.selectedInfoList3
       } else if (this.currentTab === 7) {
         return this.selectedInfoList1.slice(0, 5)
-      } else if (this.currentTab === 3 || this.currentTab === 5) {
-        return this.selectedInfoList3
       } else {
         return this.selectedInfoList2
       }
@@ -342,35 +360,19 @@ export default {
   watch: {
     currentTab(newvalue, oldvalue) {
       if (newvalue == 1) {
-        this.selectedInfoList3.forEach((item) => {
-          if (item.title == "红外相机网格") {
-            item.checked = true
-            this.$nextTick(() => {
-              this.handleClick(item)
-            })
-          }
-        })
+        this.addAndRemoveLayer(this.selectedInfoList4, true, "红外相机网格")
+        this.addAndRemoveLayer(this.selectedInfoList4, true, "大熊猫宜居区")
+        this.addAndRemoveLayer(this.selectedInfoList2, false)
         this.$nextTick(() => {
           this.handleNeedReomvedCheck()
         })
+      } else if (newvalue == 4) {
+        this.addAndRemoveLayer(this.selectedInfoList2, true)
       } else if (newvalue == 7) {
-        this.selectedInfoList1
-          .filter((item) => item.title == "电子围栏范围")
-          .forEach((v) => {
-            v.checked = false
-            this.$nextTick(() => {
-              this.handleClick(v)
-            })
-          })
+        this.addAndRemoveLayer(this.selectedInfoList1, false, "电子围栏范围")
       } else {
-        this.selectedInfoList1
-          .filter((item) => item.title == "电子围栏范围")
-          .forEach((v) => {
-            v.checked = true
-            this.$nextTick(() => {
-              this.handleClick(v)
-            })
-          })
+        this.addAndRemoveLayer(this.selectedInfoList1, true, "电子围栏范围")
+        this.addAndRemoveLayer(this.selectedInfoList2, false)
         this.handleNeedReomvedCheck()
       }
     },
@@ -567,6 +569,26 @@ export default {
       }
 
       this.setLayer(type, id, filterGeoData)
+    },
+    // 针对不同菜单加载移除图层
+    addAndRemoveLayer(array, checked, title) {
+      if (title) {
+        array.forEach((item) => {
+          if (item.title == title) {
+            item.checked = checked
+            this.$nextTick(() => {
+              this.handleClick(item)
+            })
+          }
+        })
+      } else {
+        array.forEach((item) => {
+          item.checked = checked
+          this.$nextTick(() => {
+            this.handleClick(item)
+          })
+        })
+      }
     }
   }
 }

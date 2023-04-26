@@ -87,7 +87,7 @@ class CreatMap {
       type: "raster",
       source: layerId
     })
-    console.log("返回1", this.map.getStyle())
+    // console.log("返回1", this.map.getStyle())
     return id
   }
   addVector() {
@@ -126,7 +126,7 @@ class CreatMap {
         // data.source = data.sources.esri;
         // data['source-layer'] = "mypbf";
         // this.map.addLayer(data)
-        console.log("返回1", _this.map.getStyle())
+        // console.log("返回1", _this.map.getStyle())
         try {
           _this.map.setStyle(data)
         } catch (error) {

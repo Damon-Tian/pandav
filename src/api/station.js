@@ -52,30 +52,35 @@ export async function get_station_geojson(orgId) {
   }
   const { records } = await get_station_list(params)
   const geoJson = []
-  records.filter(item => item.lot && item.lat).forEach(item => {
-    let geo = {
-      "type": "Polygon", "coordinates": [[Number(item.lot), Number(item.lat)]]
-    }
-    if (item.protectMap) {
-      geo = JSON.parse(item.protectMap).geometry
-    }
-    const json = {
-      id: item.id,
-      type: "Feature",
-      img: stationImg,
-      textName: 'name',
-      properties: {
-        stationName: item.name,
-        ...item,
-        coordinates: [Number(item.lot), Number(item.lat)],
-        protectMap: null
-      },
-      geometry: {
-        ...geo
+  records
+    .filter((item) => item.lot && item.lat)
+    .forEach((item) => {
+      let geo = {
+        type: "Polygon",
+        coordinates: [[Number(item.lot), Number(item.lat)]]
       }
-    }
+      if (item.protectMap) {
+        geo = JSON.parse(item.protectMap).geometry
+      }
+      const json = {
+        id: item.id,
+        type: "Feature",
+        img: stationImg,
+        textName: "name",
+        properties: {
+          stationName: item.name,
+          ...item,
+          coordinates: [Number(item.lot), Number(item.lat)],
+          protectMap: null
+        },
+        geometry: {
+          ...geo
+        }
+      }
 
-    geoJson.push(json)
-  })
+      geoJson.push(json)
+    })
+  geoJson[0].properties.lineColor = "#0B9FFB"
+  geoJson[0].properties.fillColor = "rgba(11,159,251,0.4)"
   return geoJson
 }

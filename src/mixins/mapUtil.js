@@ -73,6 +73,11 @@ export default {
       ]
     }
   },
+  computed: {
+    currentTab() {
+      return this.$store.state.app.currentTab
+    }
+  },
   methods: {
     //通过map方法生成图层
     async setLayer(type, id, geoData) {
@@ -134,10 +139,14 @@ export default {
       if (type == 3) {
         const data = {
           id,
-          fillColor: geoData[0].properties.fillColor || "rgba(11,159,251,0.4)",
+          fillColor: geoData[0].properties.fillColor
+            ? geoData[0].properties.fillColor
+            : "",
           opacity: 0.2,
           width: 1,
-          lineColor: geoData[0].properties.lineColor || "#0B9FFB",
+          lineColor: geoData[0].properties.lineColor
+            ? geoData[0].properties.lineColor
+            : "",
           polygon: {
             type: "FeatureCollection",
             features: geoData
@@ -192,7 +201,11 @@ export default {
     },
     //设置地图边界
     setBorder() {
-      if (this.$store.state.app.currentArea === "chengdu") {
+      if (
+        this.$store.state.app.currentArea === "chengdu" ||
+        this.currentTab == 3 ||
+        this.currentTab == 5
+      ) {
         this.$refs.mapBox.regionBorder("regionborder", {
           lineColor: "#FFFF00",
           lineWidth: 2
