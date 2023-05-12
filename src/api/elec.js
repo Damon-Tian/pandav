@@ -236,9 +236,3 @@ export async function get_grid_geojson() {
   })
   return geojson
 }
-
-// 大熊猫宜居区域
-export async function get_panda_area_geojson() {
-  const data = await axios.get("/static/pandaArea.json")
-  return data.data
-}

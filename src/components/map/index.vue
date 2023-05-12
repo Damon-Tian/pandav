@@ -40,6 +40,11 @@
 
 <script>
 import "./src/index.less"
+// import "ol/ol.css";
+// import Map from "ol/Map";
+// import View from "ol/View";
+// import { Tile as TileLayer } from 'ol/layer'
+// import { TileWMS } from 'ol/source'
 // import "@egis/map/theme-default/index.scss"
 import CreatMap from "./src/ylkj/addlayer.js"
 import { addHeatMap } from "./src/ylkj/heatmap.js"
@@ -81,10 +86,6 @@ export default {
     this.map.on("load", () => {
       this.background("rgba(8,25,64,0.5)")
       this.addterrian("/map/xiongmao_dem/{z}/{x}/{y}.png", "terrian")
-      // this.addterrian(
-      //   "http://43.142.118.250:7070/geoserver/gwc/service/tms/1.0.0/panda%3A%E5%A4%A7%E7%86%8A%E7%8C%AB%E6%A0%96%E6%81%AF%E5%9C%B0%E5%9D%80%E9%80%82%E5%AE%9C%E5%8C%BA@EPSG%3A3857@pbf/{z}/{x}/{y}.pbf",
-      //   "panda"
-      // )
       this.$emit("onload")
       this.map.on("click", (e) => {
         const features = this.map.queryRenderedFeatures(e.point)
@@ -412,6 +413,10 @@ export default {
     // 删除绘制
     deleteDraw() {
       this.PlottingObj.clear()
+    },
+    // 添加熊猫宜居区栅格图层
+    addPandaAreaRaster(url, id) {
+      this.Map2d.addRatser(url, id)
     }
   }
 }

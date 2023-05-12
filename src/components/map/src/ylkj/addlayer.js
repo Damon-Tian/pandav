@@ -18,7 +18,8 @@ let {
   addControl,
   DrawControl,
   getDrawGeoJSON,
-  moveLayer
+  moveLayer,
+  setPaintProperty
 } = window.egis
 // interface AnyObject {
 //   [key: string]: any
@@ -176,6 +177,27 @@ class CreatMap {
       source: id
     })
     return terrianId
+  }
+  // 添加栅格图层
+  addRatser(url, id) {
+    if (!getSource(id)) {
+      addSource(id, {
+        // 类型（必填）
+        type: "raster",
+        // 用于指定一个或多个切片数据源的请求地址（可选，和 TileJSON 中的 tiles 属性一致）
+        tiles: [url],
+        tileSize: 256
+      })
+
+      addLayer({
+        id: id,
+        type: "raster",
+        source: id,
+        paint: {
+          "raster-opacity": 1
+        }
+      })
+    }
   }
   // 删除地形
   removterrian(id) {

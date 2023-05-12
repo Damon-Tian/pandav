@@ -234,8 +234,8 @@ export default {
 
   watch: {
     orgId() {
-      this.initHeatMap()
-      this.initPersonMap()
+      // this.initHeatMap()
+      // this.initPersonMap()
       this.initElectronEnclosure()
     }
   },

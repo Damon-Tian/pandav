@@ -110,6 +110,23 @@
         @change="timeChange"
       />
     </div>
+    <div
+      v-if="showColortips"
+      class="colorTips"
+      :style="{
+        right: isRightCollapse ? 'calc(22% + 80px)' : 'calc(47% + 80px)'
+      }"
+    >
+      <div v-for="item in colorList" :key="item.color" class="contentBox">
+        <div
+          class="colorBox"
+          :style="{
+            background: item.color
+          }"
+        ></div>
+        <div class="tipName">{{ item.name }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -157,9 +174,8 @@ const pandaAreaList = [
     img: require("../../assets/img/selectedInfo/general.png"),
     title: "大熊猫宜居区",
     checked: false,
-    type: 3,
-    id: "22",
-    getData: get_panda_area_geojson
+    type: 4,
+    id: "22"
   }
 ]
 const gridInfoList = [
@@ -312,10 +328,21 @@ export default {
       // 筛选热力图人数
       currentHeatMapRange: "",
       needRemoveChecked: [],
-      moreCheckedList: []
+      moreCheckedList: [],
+      colorList: [
+        { color: "#C2523E", name: "不适宜" },
+        { color: "#F7D708", name: "次适宜" },
+        { color: "#0FC345", name: "适宜" },
+        { color: "#0E2B79", name: "最适宜" }
+      ]
     }
   },
   computed: {
+    showColortips() {
+      return this.selectedInfoList.some(
+        (item) => item.title == "大熊猫宜居区" && item.checked
+      )
+    },
     showHeatmap() {
       return (
         !this.selectList.length &&
@@ -368,16 +395,22 @@ export default {
         })
       } else if (newvalue == 4) {
         this.addAndRemoveLayer(this.selectedInfoList2, true)
+        this.addAndRemoveLayer(this.selectedInfoList4, true, "大熊猫宜居区")
+        this.handleNeedReomvedCheck()
       } else if (newvalue == 7) {
+        this.addAndRemoveLayer(this.selectedInfoList4, true, "大熊猫宜居区")
         this.addAndRemoveLayer(this.selectedInfoList1, false, "电子围栏范围")
+        this.handleNeedReomvedCheck()
       } else {
         this.addAndRemoveLayer(this.selectedInfoList1, true, "电子围栏范围")
+        this.addAndRemoveLayer(this.selectedInfoList4, true, "大熊猫宜居区")
         this.addAndRemoveLayer(this.selectedInfoList2, false)
         this.handleNeedReomvedCheck()
       }
     },
     currentArea() {
       this.$nextTick(() => {
+        this.addAndRemoveLayer(this.selectedInfoList4, true, "大熊猫宜居区")
         this.handleNeedReomvedCheck()
       })
       //切换图层再重新请求数据再添加图层
@@ -435,6 +468,8 @@ export default {
           } else {
             this.setLayer(type, title, geoData)
           }
+        } else {
+          this.setLayer(type, title)
         }
       } else {
         if (item.geoData2) {
@@ -460,6 +495,8 @@ export default {
           } else {
             this.removelayer(type, title)
           }
+        } else {
+          this.removelayer(type, title)
         }
       }
       //加载子菜单
@@ -710,5 +747,26 @@ export default {
   bottom: 5px;
   width: 400px;
   transition: right 0.5s;
+}
+
+.colorTips {
+  position: fixed;
+  bottom: 5px;
+  transition: right 0.5s;
+
+  .contentBox {
+    display: flex;
+    align-items: center;
+
+    .colorBox {
+      width: 40px;
+      height: 20px;
+    }
+
+    .tipName {
+      margin-left: 15px;
+      color: #fff;
+    }
+  }
 }
 </style>

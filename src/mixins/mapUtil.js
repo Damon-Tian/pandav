@@ -70,7 +70,9 @@ export default {
             zoom: 10.784372529307735
           }
         }
-      ]
+      ],
+      pandaAreaUrl:
+        "http://182.151.51.158:7070/geoserver/panda/wms?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&FORMAT=image/png8&TRANSPARENT=true&STYLES&LAYERS=panda:panda_area&exceptions=application/vnd.ogc.se_inimage&SRS=EPSG:3857&WIDTH=691&HEIGHT=768&BBOX={bbox-epsg-3857}"
     }
   },
   computed: {
@@ -83,6 +85,10 @@ export default {
     async setLayer(type, id, geoData) {
       this.removelayer(type, id)
       if (!geoData || !geoData[0]) {
+        this.$store.state.app.map.mapBox.addPandaAreaRaster(
+          this.pandaAreaUrl,
+          id
+        )
         return
       }
 
