@@ -195,7 +195,7 @@
                 item.equipmentType == "infrared_camera" ? "红外相机" : "摄像机"
               }}
             </td>
-            <td>{{ formatOrg(item.orgIds) }}</td>
+            <td>{{ formatOrg(item.orgId) }}</td>
             <td>
               <span
                 :class="{
@@ -392,7 +392,7 @@ export default {
 
   .name {
     overflow: hidden;
-    width: 130px;
+    width: 110px;
     color: #00e4ff;
     cursor: pointer;
     text-overflow: ellipsis;

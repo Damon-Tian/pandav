@@ -447,56 +447,60 @@ export default {
           const geoData = await item.geoData2.getData(this.orgId)
           this.setLayer(item.geoData2.type, item.geoData2.title, geoData)
         }
-        if (item.getData) {
-          // 绘制图层
-          const geoData = await item.getData(this.orgId)
-          let list = []
-          if (Array.isArray(geoData)) {
-            list = [
-              ...new Set(geoData.map((item) => item.img).filter((v) => v))
-            ]
-          }
-          if (list.length > 1) {
-            list.forEach((item, i) => {
-              this.moreCheckedList.push({ type, title: title + i })
-              this.setLayer(
-                type,
-                title + i,
-                geoData.filter((v) => v.img == list[i])
-              )
-            })
-          } else {
-            this.setLayer(type, title, geoData)
-          }
-        } else {
+        if (item.title == "大熊猫宜居区") {
           this.setLayer(type, title)
+        } else {
+          if (item.getData) {
+            // 绘制图层
+            const geoData = await item.getData(this.orgId)
+            let list = []
+            if (Array.isArray(geoData)) {
+              list = [
+                ...new Set(geoData.map((item) => item.img).filter((v) => v))
+              ]
+            }
+            if (list.length > 1) {
+              list.forEach((item, i) => {
+                this.moreCheckedList.push({ type, title: title + i })
+                this.setLayer(
+                  type,
+                  title + i,
+                  geoData.filter((v) => v.img == list[i])
+                )
+              })
+            } else {
+              this.setLayer(type, title, geoData)
+            }
+          }
         }
       } else {
         if (item.geoData2) {
           this.removelayer(item.geoData2.type, item.geoData2.title)
         }
-        if (item.getData) {
-          const geoData = await item.getData(this.orgId)
-          let list = []
-          if (Array.isArray(geoData)) {
-            list = [
-              ...new Set(geoData.map((item) => item.img).filter((v) => v))
-            ]
-          }
-          if (list.length > 1) {
-            list.forEach((item, i) => {
-              this.moreCheckedList = []
-              this.removelayer(
-                type,
-                title + i,
-                geoData.map((item) => item.img == list[i])
-              )
-            })
-          } else {
-            this.removelayer(type, title)
-          }
-        } else {
+        if (item.title == "大熊猫宜居区") {
           this.removelayer(type, title)
+        } else {
+          if (item.getData) {
+            const geoData = await item.getData(this.orgId)
+            let list = []
+            if (Array.isArray(geoData)) {
+              list = [
+                ...new Set(geoData.map((item) => item.img).filter((v) => v))
+              ]
+            }
+            if (list.length > 1) {
+              list.forEach((item, i) => {
+                this.moreCheckedList = []
+                this.removelayer(
+                  type,
+                  title + i,
+                  geoData.map((item) => item.img == list[i])
+                )
+              })
+            } else {
+              this.removelayer(type, title)
+            }
+          }
         }
       }
       //加载子菜单
