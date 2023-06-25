@@ -195,82 +195,82 @@ export default {
       statistic: {
         chengdu: {
           plant: {
-            ke: 325,
-            shu: 1358,
-            zhong: 3629,
-            level1: 9,
-            level2: 23
+            ke: 178,
+            shu: 893,
+            zhong: 2417,
+            level1: 1,
+            level2: 18
           },
           animal: {
             mu: 40,
-            ke: 127,
-            zhong: 551,
-            level1: 14,
-            level2: 64
+            ke: 150,
+            zhong: 615,
+            level1: 15,
+            level2: 60
           }
         },
         dujiangyan: {
           plant: {
-            ke: 250,
-            shu: 1045,
-            zhong: 2792,
-            level1: 4,
-            level2: 8
+            ke: 178,
+            shu: 893,
+            zhong: 2417,
+            level1: 1,
+            level2: 18
           },
           animal: {
-            mu: 31,
-            ke: 96,
-            zhong: 415,
-            level1: 10,
-            level2: 40
+            mu: 40,
+            ke: 150,
+            zhong: 615,
+            level1: 15,
+            level2: 60
           }
         },
         pengzhou: {
           plant: {
-            ke: 166,
-            shu: 716,
-            zhong: 1760,
-            level1: 7,
-            level2: 15
+            ke: 178,
+            shu: 893,
+            zhong: 2417,
+            level1: 1,
+            level2: 18
           },
           animal: {
-            mu: 27,
-            ke: 98,
-            zhong: 424,
-            level1: 11,
-            level2: 37
+            mu: 40,
+            ke: 150,
+            zhong: 615,
+            level1: 15,
+            level2: 60
           }
         },
         chongzhou: {
           plant: {
-            ke: 184,
-            shu: 623,
-            zhong: 1526,
-            level1: 3,
-            level2: 9
+            ke: 178,
+            shu: 893,
+            zhong: 2417,
+            level1: 1,
+            level2: 18
           },
           animal: {
-            mu: 26,
-            ke: 90,
-            zhong: 322,
-            level1: 9,
-            level2: 31
+            mu: 40,
+            ke: 150,
+            zhong: 615,
+            level1: 15,
+            level2: 60
           }
         },
         dayi: {
           plant: {
-            ke: 230,
-            shu: 929,
-            zhong: 2063,
-            level1: 5,
-            level2: 8
+            ke: 178,
+            shu: 893,
+            zhong: 2417,
+            level1: 1,
+            level2: 18
           },
           animal: {
-            mu: 29,
-            ke: 89,
-            zhong: 367,
-            level1: 8,
-            level2: 37
+            mu: 40,
+            ke: 150,
+            zhong: 615,
+            level1: 15,
+            level2: 60
           }
         }
       },

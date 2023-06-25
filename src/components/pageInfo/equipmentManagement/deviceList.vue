@@ -203,7 +203,7 @@
                   success: item.status === 0
                 }"
               >
-                {{ item.status === 1 ? "异常" : "正常" }}
+                {{ item.status === '1' ? "异常" : "正常" }}
               </span>
             </td>
           </tr>
