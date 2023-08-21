@@ -166,7 +166,7 @@ export default {
         }
         this.$store.state.app.map.mapBox.Polygon(data)
       }
-      if (type == 4) {
+      if (type == 4 || type == 5) {
         const data = {
           id,
           magName: "mag",
@@ -191,7 +191,7 @@ export default {
         this.$store.state.app.map.mapBox.rmline(id)
       } else if (type === 3) {
         this.$store.state.app.map.mapBox.removePolygon(id)
-      } else if (type === 4) {
+      } else if (type === 4 || type == 5) {
         this.$store.state.app.map.mapBox.removelayer(id)
       }
     },

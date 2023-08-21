@@ -174,7 +174,7 @@ const pandaAreaList = [
     img: require("../../assets/img/selectedInfo/general.png"),
     title: "大熊猫宜居区",
     checked: false,
-    type: 4,
+    type: 5,
     id: "22"
   }
 ]

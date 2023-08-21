@@ -203,7 +203,7 @@
                   success: item.status === 0
                 }"
               >
-                {{ item.status === '1' ? "异常" : "正常" }}
+                {{ item.status === "1" ? "异常" : "正常" }}
               </span>
             </td>
           </tr>
@@ -223,6 +223,7 @@ import { get_org } from "@/api/station"
 import { formatOrgName, transListToTreeData } from "@/utils"
 import mapUtil from "@/mixins/mapUtil"
 const mapId = ["红外相机", "摄像机"]
+import { Message } from "element-ui"
 
 export default {
   mixins: [mapUtil],
@@ -275,28 +276,34 @@ export default {
         }
       }
       const data = await get_device_list_new(params)
-      this.tableData = data
-      const geoJson = []
-      this.tableData.forEach((item) => {
-        if (item.equipmentType == "infrared_camera") {
-          item.equipmentName = item.deviceAddress
-        }
-        const json = get_camera_geojson_item(item)
-        geoJson.push(json)
-      })
-
-      const list = [...new Set(geoJson.map((item) => item.img))]
-      if (list.length > 1) {
-        this.$store.commit("app/SET_VIDEO_CAMERA_ICON", list)
-        list.forEach((item, i) => {
-          this.setLayer(
-            1,
-            "设备管理" + i,
-            geoJson.filter((item) => item.img == list[i])
-          )
+      if (data.length > 0) {
+        this.tableData = data
+        const geoJson = []
+        this.tableData.forEach((item) => {
+          if (item.equipmentType == "infrared_camera") {
+            item.equipmentName = item.deviceAddress
+          }
+          const json = get_camera_geojson_item(item)
+          geoJson.push(json)
         })
+
+        const list = [...new Set(geoJson.map((item) => item.img))]
+        if (list.length > 1) {
+          console.log(geoJson, "1")
+          this.$store.commit("app/SET_VIDEO_CAMERA_ICON", list)
+          list.forEach((item, i) => {
+            this.setLayer(
+              1,
+              "设备管理" + i,
+              geoJson.filter((item) => item.img == list[i])
+            )
+          })
+        } else {
+          console.log(geoJson, "2")
+          this.setLayer(1, "设备管理", geoJson)
+        }
       } else {
-        this.setLayer(1, "设备管理", geoJson)
+        Message.warning("未查询到相关设备")
       }
     },
     async getOrg() {
